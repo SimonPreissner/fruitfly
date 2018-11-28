@@ -4,14 +4,14 @@ from matplotlib import cm
 import pandas as pd
 from sklearn.decomposition import PCA
 
-def readDM(dm_file):
+def readDM(dm_file): # read word vectors
     dm_dict = {}
     version = ""
     with open(dm_file) as f:
         dmlines=f.readlines()
     f.close()
 
-    #Make dictionary with key=row, value=vector
+    #Make dictionary with key=word, value=vector
     for l in dmlines:
         items=l.rstrip().split()
         row=items[0]
@@ -30,7 +30,7 @@ def readCols(cols_file):
         i_to_cols[c] = l
         cols_to_i[l] = c
         c+=1
-    return i_to_cols, cols_to_i
+    return i_to_cols, cols_to_i # dimension_number : word and word : dimension_number
 
 def parse_pod(pod):
     pod_dict = {}
