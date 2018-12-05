@@ -14,8 +14,8 @@ def readDM(dm_file): # read word vectors
     #Make dictionary with key=word, value=vector
     for l in dmlines:
         items=l.rstrip().split()
-        row=items[0]
-        vec=[float(i) for i in items[1:]]
+        row=items[0] # word
+        vec=[float(i) for i in items[1:]] # vector values
         vec=np.array(vec)
         dm_dict[row]=vec
     return dm_dict

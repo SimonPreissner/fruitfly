@@ -58,16 +58,30 @@ def show_projections(word,hashed_kenyon):
                     important_words[w]=1
     print(word,"BEST PNS", sorted(important_words, key=important_words.get, reverse=True)[:proj_size]) # only print the most important words
 
-def projection(projection_layer):
-    """
-    DO THE FLATTENING HERE?
-    """
+def projection(projection_layer): # Doing the flattening here is possible, but not efficient.
     kenyon_layer = np.zeros(KC_size)
     for cell in range(KC_size):
         activated_pns = projection_functions[cell] # array of the connected cells
         for pn in activated_pns:
             kenyon_layer[cell]+=projection_layer[pn] # sum the activation values of the pn nodes in the kc
+            #kenyon_layer[cell]+=np.log(1+3000*projection_layer[pn]) # direct flattening with intuitively chosen factor
     return kenyon_layer
+
+def flatten_log(frequency_vector): 
+    factor = zipf_approximation(len(frequency_vector)) # in order to reverse-engineer to absolute frequencies
+    for i, freq in enumerate(frequency_vector):
+        frequency_vector[i] = np.log(1+factor*freq) # add 1 to make sure that no value is below 1
+    #print(frequency_vector[:10], "\n===s")
+    return frequency_vector
+
+def zipf_approximation(voc_size): # approximates the number of words of a text using Zipf's Law
+    wordcount = 0
+    rank = 1
+    while round(voc_size*(1.0/rank)) >= 1:
+        wordcount+=voc_size*(1.0/rank) # adding up expected occurrances of a word according to its rank
+        rank+=1
+    #print("approximated word count for", voc_size, "words:", wordcount)
+    return wordcount
 
 def hash_kenyon(kenyon_layer):
     #print(kenyon_layer[:100])
@@ -79,16 +93,19 @@ def hash_kenyon(kenyon_layer):
     return kenyon_activations
 
 def hash_input(word):
-    projection_layer = english_space[word] # get full word vector of 'word'
+    #projection_layer = flatten_log(english_space[word]) # get full word vector of 'word' and flatten it already
+    projection_layer = flatten_(english_space[word]) # get full word vector of 'word' and flatten it already
+    #projection_layer = flatten(english_space[word]) # get full word vector of 'word' and flatten it already
     kenyon_layer = projection(projection_layer)
     hashed_kenyon = hash_kenyon(kenyon_layer) # same dimensionality as 'kenyon_layer'
     if len(sys.argv) == 6 and sys.argv[5] == "-v":
         show_projections(word,hashed_kenyon)
     return hashed_kenyon # this is the pattern obtained from the FFA
 
-english_space_hashed = {} # a dict of word : binary_vector (= after "flying")
 
-for w in english_space: # every word in the vocabulary gets hashed
+
+english_space_hashed = {} # a dict of word : binary_vector (= after "flying")
+for w in english_space: # iterate through dictionary 
     hw = hash_input(w) # has the same dimension as the KC layer, but is binary
     english_space_hashed[w]=hw
 
