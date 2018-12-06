@@ -5,8 +5,8 @@ import numpy as np
 
 '''Parameter input'''
 
-if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki"):
-    print("\nUSAGE: python3 projection.py bnc|wiki [num-kc] [size-proj] [percent-hash]\n\
+if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki"):
+    print("\nUSAGE: python3 projection.py bnc|wiki|rawiki [num-kc] [size-proj] [percent-hash]\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
     - percent-hash: how much of the Kenyon layer to keep in the final hash.\n")
@@ -16,9 +16,13 @@ if sys.argv[1] == "bnc":
     data = "data/BNC-MEN.dm"
     column_labels = "data/BNC-MEN.cols"
     MEN_annot = "data/MEN_dataset_lemma_form_full"
-else:
+elif sys.argv[1] == "wiki":
     data = "data/wiki_all.dm"
     column_labels = "data/wiki_all.cols"
+    MEN_annot = "data/MEN_dataset_natural_form_full"
+else:
+    data = "data/wiki_abs-freq.dm"
+    column_labels = "data/wiki_abs-freq.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 
 english_space = utils.readDM(data) # returns dict of word : word_vector
@@ -68,9 +72,10 @@ def projection(projection_layer): # Doing the flattening here is possible, but n
     return kenyon_layer
 
 def flatten_log(frequency_vector): 
-    factor = zipf_approximation(len(frequency_vector)) # in order to reverse-engineer to absolute frequencies
+    #factor = zipf_approximation(len(frequency_vector)) # in order to reverse-engineer to absolute frequencies
     for i, freq in enumerate(frequency_vector):
-        frequency_vector[i] = np.log(1+factor*freq) # add 1 to make sure that no value is below 1
+        frequency_vector[i] = np.log(1+freq) # add 1 to make sure that no value is below 1
+        #frequency_vector[i] = np.log(1+factor*freq) # 'factor' when dealing with relative frequencies as input
     #print(frequency_vector[:10], "\n===s")
     return frequency_vector
 
@@ -93,15 +98,14 @@ def hash_kenyon(kenyon_layer):
     return kenyon_activations
 
 def hash_input(word):
-    #projection_layer = flatten_log(english_space[word]) # get full word vector of 'word' and flatten it already
-    projection_layer = flatten_(english_space[word]) # get full word vector of 'word' and flatten it already
+    projection_layer = flatten_log(english_space[word]) # get full word vector of 'word' and flatten it already
+    #projection_layer = flatten_(english_space[word]) # get full word vector of 'word' and flatten it already
     #projection_layer = flatten(english_space[word]) # get full word vector of 'word' and flatten it already
     kenyon_layer = projection(projection_layer)
     hashed_kenyon = hash_kenyon(kenyon_layer) # same dimensionality as 'kenyon_layer'
     if len(sys.argv) == 6 and sys.argv[5] == "-v":
         show_projections(word,hashed_kenyon)
     return hashed_kenyon # this is the pattern obtained from the FFA
-
 
 
 english_space_hashed = {} # a dict of word : binary_vector (= after "flying")
