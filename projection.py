@@ -71,14 +71,26 @@ def projection(projection_layer): # Doing the flattening here is possible, but n
             #kenyon_layer[cell]+=np.log(1+3000*projection_layer[pn]) # direct flattening with intuitively chosen factor
     return kenyon_layer
 
-def flatten_log(frequency_vector): 
+def flatten(frequency_vector, method="log"): 
     #factor = zipf_approximation(len(frequency_vector)) # in order to reverse-engineer to absolute frequencies
-    for i, freq in enumerate(frequency_vector):
-        frequency_vector[i] = np.log(1+freq) # add 1 to make sure that no value is below 1
-        #frequency_vector[i] = np.log(1+factor*freq) # 'factor' when dealing with relative frequencies as input
-    #print(frequency_vector[:10], "\n===s")
+    if method == "log":
+        for i, freq in enumerate(frequency_vector):
+            frequency_vector[i] = np.log(1+freq) # add 1 to make sure that no value is below 1
+
+    elif method == "sigmoid":
+        for i, freq in enumerate(frequency_vector):
+            frequency_vector[i] = sigmoid(freq) 
+
+    elif method == "softmax":
+        exp_vector = np.exp(frequency_vector)
+        return exp_vector/exp_vector.sum(0)
+
+    else: 
+        print("No flattening method specified. Continuing without flattening.")
+    
     return frequency_vector
 
+"""
 def zipf_approximation(voc_size): # approximates the number of words of a text using Zipf's Law
     wordcount = 0
     rank = 1
@@ -87,6 +99,10 @@ def zipf_approximation(voc_size): # approximates the number of words of a text u
         rank+=1
     #print("approximated word count for", voc_size, "words:", wordcount)
     return wordcount
+"""    
+
+def sigmoid(x):
+    return (1 / (1 + np.exp(-x)))
 
 def hash_kenyon(kenyon_layer):
     #print(kenyon_layer[:100])
@@ -98,15 +114,19 @@ def hash_kenyon(kenyon_layer):
     return kenyon_activations
 
 def hash_input(word):
-    projection_layer = flatten_log(english_space[word]) # get full word vector of 'word' and flatten it already
-    #projection_layer = flatten_(english_space[word]) # get full word vector of 'word' and flatten it already
-    #projection_layer = flatten(english_space[word]) # get full word vector of 'word' and flatten it already
+    # flatten before hitting the PNs
+    projection_layer = flatten(english_space[word], "log") 
+    #projection_layer = flatten(english_space[word], "sigmoid") 
+    #projection_layer = flatten(english_space[word], "softmax") 
+    
     kenyon_layer = projection(projection_layer)
     hashed_kenyon = hash_kenyon(kenyon_layer) # same dimensionality as 'kenyon_layer'
     if len(sys.argv) == 6 and sys.argv[5] == "-v":
         show_projections(word,hashed_kenyon)
     return hashed_kenyon # this is the pattern obtained from the FFA
 
+sp,count = MEN.compute_men_spearman(english_space,MEN_annot)
+print ("SPEARMAN BEFORE FLYING:",sp, "(calculated over",count,"items.)")
 
 english_space_hashed = {} # a dict of word : binary_vector (= after "flying")
 for w in english_space: # iterate through dictionary 
@@ -116,7 +136,5 @@ for w in english_space: # iterate through dictionary
 #print(utils.neighbours(english_space,sys.argv[1],10))
 #print(utils.neighbours(english_space_hashed,sys.argv[1],10))
 
-sp,count = MEN.compute_men_spearman(english_space,MEN_annot)
-print ("SPEARMAN BEFORE FLYING:",sp, "(calculated over",count,"items.)")
 sp,count = MEN.compute_men_spearman(english_space_hashed,MEN_annot)
 print ("SPEARMAN AFTER FLYING:",sp, "(calculated over",count,"items.)")
