@@ -1,9 +1,16 @@
 import sys
 import utils
+import Fruitfly
 import MEN
 import numpy as np
 
-'''Parameter input'''
+
+"""
+This script reads command line options and feeds data to a Fruitfly object. 
+"""
+
+
+#=============== PARAMETER INPUT
 
 if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki"):
     print("\nUSAGE: python3 projection.py bnc|wiki|rawiki [num-kc] [size-proj] [percent-hash]\n\
@@ -25,116 +32,38 @@ else:
     column_labels = "data/wiki_abs-freq.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 
-english_space = utils.readDM(data) # returns dict of word : word_vector
+unhashed_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
 
-PN_size = len(english_space.popitem()[1]) # length of word vector (= input dimension)
-KC_size = int(sys.argv[2])
+pn_size = len(unhashed_space.popitem()[1]) # length of word vector (= input dimension)
+kc_size = int(sys.argv[2])
 proj_size = int(sys.argv[3]) # number of connections to any given KC
-percent_hash = int(sys.argv[4])
-print("SIZES PN LAYER:",PN_size,"KC LAYER:",KC_size)
-print("SIZE OF PROJECTIONS:",proj_size)
-print("SIZE OF FINAL HASH:",percent_hash,"%")
-
-projection_layer = np.zeros(PN_size) # input layer
-kenyon_layer = np.zeros(KC_size)
-projection_functions = [] # will contain the connections from PN to KC 
+hash_percent = int(sys.argv[4])
+#print("SIZES PN LAYER:",pn_size,"KC LAYER:",kc_size)
+#print("SIZE OF PROJECTIONS:",proj_size)
+#print("SIZE OF FINAL HASH:",hash_percent,"%")
 
 
-'''Create random projections'''
-print("Creating",KC_size,"random projections...")
-projection_functions = {} # dict of kc_i:array_of_connections that contains the transitions from PNs to KCs
-for cell in range(KC_size):
-    activated_pns = np.random.randint(PN_size, size=proj_size)
-    projection_functions[cell] = activated_pns
 
-def show_projections(word,hashed_kenyon):
-    important_words = {} # dict of word:number
-    for i in range(len(hashed_kenyon)):
-        if hashed_kenyon[i] == 1:
-            activated_pns = projection_functions[i] # retrieve transitions of an activated KC
-            #print(word,[i_to_cols[pn] for pn in activated_pns])
-            for pn in activated_pns: # count which word helped how many times to lead to 'hashed_kenyon'
-                w = i_to_cols[pn] # retrieve word from PN index
-                if w in important_words:
-                    important_words[w]+=1
-                else:
-                    important_words[w]=1
-    print(word,"BEST PNS", sorted(important_words, key=important_words.get, reverse=True)[:proj_size]) # only print the most important words
 
-def projection(projection_layer): # Doing the flattening here is possible, but not efficient.
-    kenyon_layer = np.zeros(KC_size)
-    for cell in range(KC_size):
-        activated_pns = projection_functions[cell] # array of the connected cells
-        for pn in activated_pns:
-            kenyon_layer[cell]+=projection_layer[pn] # sum the activation values of the pn nodes in the kc
-            #kenyon_layer[cell]+=np.log(1+3000*projection_layer[pn]) # direct flattening with intuitively chosen factor
-    return kenyon_layer
 
-def flatten(frequency_vector, method="log"): 
-    #factor = zipf_approximation(len(frequency_vector)) # in order to reverse-engineer to absolute frequencies
-    if method == "log":
-        for i, freq in enumerate(frequency_vector):
-            frequency_vector[i] = np.log(1+freq) # add 1 to make sure that no value is below 1
+#=============== INITIATING AND OPERATING FRUITFLY
 
-    elif method == "sigmoid":
-        for i, freq in enumerate(frequency_vector):
-            frequency_vector[i] = sigmoid(freq) 
+fruitfly = Fruitfly.Fruitfly(pn_size, kc_size, proj_size, hash_percent)
+print(fruitfly.show_off())
+space_hashed = fruitfly.fly(unhashed_space, "log") # a dict of word : binary_vector (= after "flying")
+if len(sys.argv) == 6 and sys.argv[5] == "-v": 
+    for w in space_hashed:
+        fruitfly.show_projections(w, space_hashed[w], i_to_cols)
 
-    elif method == "softmax":
-        exp_vector = np.exp(frequency_vector)
-        return exp_vector/exp_vector.sum(0)
 
-    else: 
-        print("No flattening method specified. Continuing without flattening.")
-    
-    return frequency_vector
 
-"""
-def zipf_approximation(voc_size): # approximates the number of words of a text using Zipf's Law
-    wordcount = 0
-    rank = 1
-    while round(voc_size*(1.0/rank)) >= 1:
-        wordcount+=voc_size*(1.0/rank) # adding up expected occurrances of a word according to its rank
-        rank+=1
-    #print("approximated word count for", voc_size, "words:", wordcount)
-    return wordcount
-"""    
+#=============== EVALUATION SECTION
 
-def sigmoid(x):
-    return (1 / (1 + np.exp(-x)))
-
-def hash_kenyon(kenyon_layer):
-    #print(kenyon_layer[:100])
-    kenyon_activations = np.zeros(KC_size)
-    top = int(percent_hash * KC_size / 100) # number of winners (highest activation)
-    activated_kcs = np.argpartition(kenyon_layer, -top)[-top:]
-    for cell in activated_kcs:
-        kenyon_activations[cell] = 1 # assign 1 to the winners
-    return kenyon_activations
-
-def hash_input(word):
-    # flatten before hitting the PNs
-    projection_layer = flatten(english_space[word], "log") 
-    #projection_layer = flatten(english_space[word], "sigmoid") 
-    #projection_layer = flatten(english_space[word], "softmax") 
-    
-    kenyon_layer = projection(projection_layer)
-    hashed_kenyon = hash_kenyon(kenyon_layer) # same dimensionality as 'kenyon_layer'
-    if len(sys.argv) == 6 and sys.argv[5] == "-v":
-        show_projections(word,hashed_kenyon)
-    return hashed_kenyon # this is the pattern obtained from the FFA
-
-sp,count = MEN.compute_men_spearman(english_space,MEN_annot)
+#print(utils.neighbours(unhashed_space,sys.argv[1],10))
+#print(utils.neighbours(space_hashed,sys.argv[1],10))
+sp,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
 print ("SPEARMAN BEFORE FLYING:",sp, "(calculated over",count,"items.)")
 
-english_space_hashed = {} # a dict of word : binary_vector (= after "flying")
-for w in english_space: # iterate through dictionary 
-    hw = hash_input(w) # has the same dimension as the KC layer, but is binary
-    english_space_hashed[w]=hw
-
-#print(utils.neighbours(english_space,sys.argv[1],10))
-#print(utils.neighbours(english_space_hashed,sys.argv[1],10))
-
-sp,count = MEN.compute_men_spearman(english_space_hashed,MEN_annot)
-print ("SPEARMAN AFTER FLYING:",sp, "(calculated over",count,"items.)")
+sp,count = MEN.compute_men_spearman(space_hashed, MEN_annot)
+print ("SPEARMAN AFTER FLYING: ",sp, "(calculated over",count,"items.)")

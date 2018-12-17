@@ -16,29 +16,29 @@ if len(sys.argv) < 6:
 
 pod_space = utils.parse_pod(sys.argv[1])
 
-PN_size = len(pod_space.popitem()[1])
-KC_size = int(sys.argv[2])
+pn_size = len(pod_space.popitem()[1])
+kc_size = int(sys.argv[2])
 proj_size = int(sys.argv[3])
-percent_hash = int(sys.argv[4])
-print("SIZES PN LAYER:",PN_size,"KC LAYER:",KC_size)
+hash_percent = int(sys.argv[4])
+print("SIZES PN LAYER:",pn_size,"KC LAYER:",kc_size)
 print("SIZE OF PROJECTIONS:",proj_size)
-print("SIZE OF FINAL HASH:",percent_hash,"%")
+print("SIZE OF FINAL HASH:",hash_percent,"%")
 
-projection_layer = np.zeros(PN_size)
-kenyon_layer = np.zeros(KC_size)
+projection_layer = np.zeros(pn_size)
+kenyon_layer = np.zeros(kc_size)
 projection_functions = []
 
 
 '''Create random projections'''
-print("Creating",KC_size,"random projections...")
+print("Creating",kc_size,"random projections...")
 projection_functions = {}
-for cell in range(KC_size):
-    activated_pns = np.random.randint(PN_size, size=proj_size)
+for cell in range(kc_size):
+    activated_pns = np.random.randint(pn_size, size=proj_size)
     projection_functions[cell] = activated_pns
 
 def projection(projection_layer):
-    kenyon_layer = np.zeros(KC_size)
-    for cell in range(KC_size):
+    kenyon_layer = np.zeros(kc_size)
+    for cell in range(kc_size):
         activated_pns = projection_functions[cell]
         for pn in activated_pns:
             kenyon_layer[cell]+=projection_layer[pn]
@@ -46,8 +46,8 @@ def projection(projection_layer):
 
 def hash_kenyon(kenyon_layer):
     #print(kenyon_layer[:100])
-    kenyon_activations = np.zeros(KC_size)
-    top = int(percent_hash * KC_size / 100)
+    kenyon_activations = np.zeros(kc_size)
+    top = int(hash_percent * kc_size / 100)
     activated_kcs = np.argpartition(kenyon_layer, -top)[-top:]
     for cell in activated_kcs:
         kenyon_activations[cell] = 1
