@@ -63,6 +63,9 @@ class Fruitfly:
         print(w,"BEST PNS", sorted(important_words, key=important_words.get, reverse=True)[:self.proj_size]) # only print the most important words
 
 
+"""
+TODO: implement a method to extend the pn layer (affects pn_size, pn_layer, proj_functions)
+"""
 
 
     def flatten(self, frequency_vector, method): 
