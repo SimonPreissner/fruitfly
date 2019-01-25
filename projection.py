@@ -1,6 +1,7 @@
 import sys
 import utils
 import Fruitfly
+from Fruitfly import Fruitfly
 import MEN
 import numpy as np
 
@@ -49,21 +50,34 @@ hash_percent = int(sys.argv[4])
 
 #=============== INITIATING AND OPERATING FRUITFLY
 
-fruitfly = Fruitfly.Fruitfly(pn_size, kc_size, proj_size, hash_percent)
-print(fruitfly.show_off())
-space_hashed = fruitfly.fly(unhashed_space, "log") # a dict of word : binary_vector (= after "flying")
-if len(sys.argv) == 6 and sys.argv[5] == "-v": 
-    for w in space_hashed:
-        fruitfly.show_projections(w, space_hashed[w], i_to_cols)
+
+
+#differences = 0 #CLEANUP
+
+#for i in range(10): #CLEANUP
+    #print ("run number",i+1) #CLEANUP
+
+    fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
+    #fruitfly = Fruitfly.from_config("ff-params_flattening_show-down.txt") # default parameters: filename="ff_config.txt"
+    #print(Flying with this configuration:", fruitfly.show_off())
+    space_hashed = fruitfly.fly(unhashed_space, "log") # a dict of word : binary_vector (= after "flying")
+    if len(sys.argv) == 6 and sys.argv[5] == "-v": 
+        for w in space_hashed:
+            fruitfly.show_projections(w, space_hashed[w], i_to_cols)
 
 
 
-#=============== EVALUATION SECTION
+    #=============== EVALUATION SECTION
 
-#print(utils.neighbours(unhashed_space,sys.argv[1],10))
-#print(utils.neighbours(space_hashed,sys.argv[1],10))
-sp,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
-print ("SPEARMAN BEFORE FLYING:",sp, "(calculated over",count,"items.)")
+    #print(utils.neighbours(unhashed_space,sys.argv[1],10))
+    #print(utils.neighbours(space_hashed,sys.argv[1],10))
+    spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
+    print("Spearman before flying:",round(spb, 4), "(calculated over",count,"items.)")
 
-sp,count = MEN.compute_men_spearman(space_hashed, MEN_annot)
-print ("SPEARMAN AFTER FLYING: ",sp, "(calculated over",count,"items.)")
+    spa,count = MEN.compute_men_spearman(space_hashed, MEN_annot)
+    print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)")
+
+    print("difference:",round(spa-spb, 4))
+    #differences += spa-spb #CLEANUP
+
+#print("finished 10 runs. Average performance:",round(differences/10, 4)) #CLEANUP

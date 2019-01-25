@@ -1,13 +1,13 @@
 import sys
 import utils
-import Fruitfly
 import numpy as np
 import MEN
+from Fruitfly import Fruitfly # in order to workaround the classmethod issues
 
 """
 this script is for hyperparameter optimizaton. 
 It is basically brute-force grid search, but could be modified
-to a kind of early-stopping grid search
+to a kind of early-stopping grid search.
 """
 
 
@@ -32,7 +32,7 @@ else:
 if len(sys.argv) > 2: 
     log_dest = sys.argv[2]
 else: 
-    log_dest = None
+    log_dest = performance_log.txt
 
 in_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
@@ -54,9 +54,9 @@ sp_diffs = {}
 
 
 
-def evaluate(original_space, result_space, goldstandard, log_dest=None):
-    sp_before, count_before = MEN.compute_men_spearman(original_space, goldstandard)
-    sp_after, count_after = MEN.compute_men_spearman(result_space, goldstandard)
+def evaluate(orig_space, result_space, goldstd, verbose=False, logfile="performance_log.txt"):
+    sp_before, count_before = MEN.compute_men_spearman(orig_space, goldstd)
+    sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
     sp_diff = sp_after-sp_before
 
     results_statement = "evaluated items: " + str(count_after)+\
@@ -64,11 +64,12 @@ def evaluate(original_space, result_space, goldstandard, log_dest=None):
                         "\tsp_after: " + str(round(sp_after,5))+\
                         "\tsp_difference: " + str(round(sp_diff,5))
 
-    if log_dest is not None: # TODO extract this so that it only opens once
-        logfile = open(log_dest, "a")
-        logfile.write(fruitfly.show_off()+"\n")
-        logfile.write(results_statement+"\n")
-    else: 
+    # TODO extract this so that it only opens once
+    with open("log/results/"+logfile, "a") as f:
+        f.write(fruitfly.show_off()+"\n")
+        f.write(results_statement+"\n")
+    f.close()
+    if(verbose):
         print(fruitfly.show_off())
         print(results_statement, "\n")
 
@@ -76,27 +77,30 @@ def evaluate(original_space, result_space, goldstandard, log_dest=None):
 
 
 
-
+""" gridsearch """
 run = 0
 for kc_factor in range(kc_factor_min, kc_factor_max+1):
     for projections in range(projections_min, projections_max+1):
         for hash_size in range(hash_perc_min, hash_perc_max+1):
 
-            fruitfly = Fruitfly.Fruitfly(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
-            #print("New fruitfly -- configuration: ", fruitfly.show_off())
+            fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
+            print("New fruitfly -- configuration: ", fruitfly.show_off())
             out_space = fruitfly.fly(in_space, flattening) # this is where the magic happens 
             
             all_ff_specs[run] = fruitfly.get_specs() # record all training runs
-            internal_log[run] = evaluate(in_space, out_space, MEN_annot, log_dest)
+            internal_log[run] = evaluate(in_space, out_space, MEN_annot, verbose=True, log_dest)
             sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
             run += 1
 
 print ("Finished grid search. Number of runs:",run)
 
-"""
-TODO
-find the (10) best configurations
-"""
+
+
+""" Find the best 10% of runs """
+best_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True)[:round(0.1*len(sp_diffs))+1]
+print("configurations of the best runs:")
+for run in best_runs:
+    print("improvement:",sp_diffs[run],"with configuration:",all_ff_specs[run])
 
 
 

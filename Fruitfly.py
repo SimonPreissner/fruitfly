@@ -1,4 +1,5 @@
 import sys
+import time # for logging
 import utils
 import MEN
 import numpy as np
@@ -11,8 +12,8 @@ class Fruitfly:
     does not handle the data input, the hashing itself, or the evaluations.
     """
 
-    def __init__(self, pn_size, kc_size, proj_size, hash_percent):
-        '''Create layers and random projections'''
+    def __init__(self, pn_size, kc_size, proj_size, hash_percent, old_proj=None):
+        '''Create layers and random projections. For initialization, use one of the classmethods'''
         self.pn_size = pn_size
         self.kc_size = kc_size
         self.proj_size = proj_size
@@ -20,7 +21,28 @@ class Fruitfly:
 
         self.pn_layer = np.zeros(pn_size) # input layer
         self.kc_layer = np.zeros(kc_size)
-        self.proj_functions = self.create_projections() # contains arrays of connections to any given kenyon cell
+        if (old_proj is None): 
+            self.proj_functions = self.create_projections() # contains arrays of connections to any given kenyon cell
+        else: 
+            self.proj_functions = old_proj   
+
+    @classmethod
+    def from_config(cls, filename="ff_config.txt"):
+        """ load parameters from a file in the log/configs folder """
+        with open("log/configs/"+filename, "r") as f:
+            lines = f.readlines()
+        f.close()
+        connections = {}
+        for line in lines[4:]:
+            values = line.split(" ")
+            connections[int(values[0])] = [int(v) for v in values[1:]]
+
+        return cls(int(lines[0]), int(lines[1]), int(lines[2]), int(lines[3]), connections)
+
+    @classmethod
+    def from_scratch(cls, pn_size, kc_size, proj_size, hash_percent):
+        """ This is a workaround for issues with the default constructor """
+        return cls(pn_size, kc_size, proj_size, hash_percent)
 
     def create_projections(self):
         #print("Creating",KC_size,"random projections...")
@@ -29,7 +51,6 @@ class Fruitfly:
             activated_pns = np.random.randint(self.pn_size, size=self.proj_size)
             proj_functions[cell] = activated_pns
         return proj_functions
-
 
 
 
@@ -48,6 +69,20 @@ class Fruitfly:
                 "proj_size":self.proj_size, 
                 "hash_percent":self.hash_percent}
 
+    def log_params(self, filename="ff_config.txt", timestamp=True):
+        """ writes parameters and projection connections to a specified file"""
+        if(timestamp): filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
+        connections = ""
+        for kc,pns in self.proj_functions.items():
+            connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
+        with open("log/configs/"+filename, "w") as logfile:
+            logfile.write(str(self.pn_size)+"\n"+\
+                          str(self.kc_size)+"\n"+\
+                          str(self.proj_size)+"\n"+\
+                          str(self.hash_percent)+"\n")
+            logfile.write(connections)
+        logfile.close()
+
     def show_projections(self, w, hw, i_to_cols):
         important_words = {} # dict of word:number
         for i in range(len(hw)):
@@ -63,9 +98,12 @@ class Fruitfly:
         print(w,"BEST PNS", sorted(important_words, key=important_words.get, reverse=True)[:self.proj_size]) # only print the most important words
 
 
-"""
-TODO: implement a method to extend the pn layer (affects pn_size, pn_layer, proj_functions)
-"""
+
+    def extend_pn(self):
+        self.pn_size+=1
+        self.pn_layer = np.append(self.pn_layer, [0])
+#\#TODO establish new connections, either by adding them or by "re-wiring"
+
 
 
     def flatten(self, frequency_vector, method): 
@@ -82,6 +120,15 @@ TODO: implement a method to extend the pn layer (affects pn_size, pn_layer, proj
         elif method == "softmax":
             exp_vector = np.exp(frequency_vector)
             return exp_vector/exp_vector.sum(0)
+
+
+        elif method == "log-softmax": # for rawiki
+            for i, freq in enumerate(frequency_vector):
+                frequency_vector[i] = np.log(1.0+freq) # add 1 to make sure that no value is below 1
+            exp_vector = np.exp(frequency_vector)
+            return exp_vector/exp_vector.sum(0)
+
+
         else: 
             print("No flattening method specified. Continuing without flattening.")
         return frequency_vector
@@ -112,7 +159,12 @@ TODO: implement a method to extend the pn layer (affects pn_size, pn_layer, proj
         """
         space_hashed = {} # a dict of word : binary_vector (= after "flying")
         for w in unhashed_space: # iterate through dictionary 
+            #print("starting flattening")
             self.pn_layer = self.flatten(unhashed_space[w], flattening)# flatten before hitting the PNs
+            #print("starting projection")
             self.kc_layer = self.projection()
+            #print("starting hashing")
             space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'
         return space_hashed
+
+
