@@ -66,12 +66,13 @@ def evaluate(orig_space, result_space, goldstd, pair_cos=False):
     if (pair_cos):
         word_pairs, humans = MEN.readMEN(goldstd) # list of tuples (word1, word2) and list of floats
         pair_cosines = {}
-        for i in range(len(pairs)):
+        for i in range(len(word_pairs)):
             human=humans[i]
             a,b=word_pairs[i]
             if a in result_space and b in result_space:
                 cos=utils.cosine_similarity(result_space[a], result_space[b])
-                pair_cosines[a+"_"+b] = (round(human,5), round(cos,5), cos-human)
+                pair_cosines[a+"_"+b] = [round(human,5), round(cos,5), cos-human]
+                #\#TODO get the values into a useful pattern/format
         return results, pair_cosines
 
     else: return results
@@ -83,12 +84,12 @@ def log_results(results, flattening, ff_config, pair_cosines=None, logfile=None,
     proj= ff_config["proj_size"]
     hp  = ff_config["hash_percent"]
     if (logfile is None): # provide a filename containing all parameters
-        logfile = str(kcs/pns)+"-"+str(proj)+"-"+str((hp*kcs)/100)+"-"+flattening+".txt"
+        logfile = str(int(kcs/pns))+"-"+str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
 
     items = results["testset"]
     spb = round(results["sp_before"], 5)
     spa = round(results["sp_after"], 5)
-    diff = results["sp_diff"]
+    diff = round(results["sp_diff"], 5)
     
     specs_statement = "PN_size: " + str(pns)+\
                       "\nKC_fator: " + str(kcs/pns)+\
@@ -107,7 +108,10 @@ def log_results(results, flattening, ff_config, pair_cosines=None, logfile=None,
         f.write(results_statement+"\n")
         if not (pair_cosines is None): 
             for pair in sorted(pair_cosines.keys()): # log the pairwise cosines
-                f.write(pair+" "+pair_cosines[0]+" "+pair_cosines[1]+" "+pair_cosines[2]+"\n")
+                f.write(pair+" "+\
+                        str(pair_cosines[pair][0])+" "+\
+                        str(pair_cosines[pair][1])+" "+\
+                        str(pair_cosines[pair][2])+"\n")
     if(verbose):
         print(specs_statement)
         print(results_statement, "\n")
