@@ -114,23 +114,29 @@ class Fruitfly:
         if method == "log":
             for i, freq in enumerate(frequency_vector):
                 frequency_vector[i] = np.log(1.0+freq) # add 1 to make sure that no value is below 1
+        elif method == "log2":
+            for i, freq in enumerate(frequency_vector):
+                frequency_vector[i] = np.log2(1.0+freq) # add 1 to make sure that no value is below 1
+        elif method == "log10":
+            for i, freq in enumerate(frequency_vector):
+                frequency_vector[i] = np.log10(1.0+freq) # add 1 to make sure that no value is below 1
+
+"""
         elif method == "sigmoid":
             for i, freq in enumerate(frequency_vector):
                 frequency_vector[i] = 1.0 / (1 + np.exp(-freq))
         elif method == "softmax":
             exp_vector = np.exp(frequency_vector)
             return exp_vector/exp_vector.sum(0)
-
-
         elif method == "log-softmax": # for rawiki
             for i, freq in enumerate(frequency_vector):
                 frequency_vector[i] = np.log(1.0+freq) # add 1 to make sure that no value is below 1
             exp_vector = np.exp(frequency_vector)
             return exp_vector/exp_vector.sum(0)
-
+"""
 
         else: 
-            #print("No valid flattening method specified. Continuing without flattening.")
+            print("No valid flattening method specified. Continuing without flattening.")
             pass
         return frequency_vector
 
