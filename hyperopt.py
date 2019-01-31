@@ -56,29 +56,16 @@ sp_diffs = {}
 
 
 
-def evaluate(orig_space, result_space, goldstd, pair_cos=False):
+def evaluate(orig_space, result_space, goldstd):
     sp_before, count_before = MEN.compute_men_spearman(orig_space, goldstd)
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
     sp_diff = sp_after-sp_before
 
     results = {"testset":count_after, "sp_before":sp_before, "sp_after":sp_after, "sp_diff":sp_diff}
-
-    if (pair_cos):
-        word_pairs, humans = MEN.readMEN(goldstd) # list of tuples (word1, word2) and list of floats
-        pair_cosines = {}
-        for i in range(len(word_pairs)):
-            human=humans[i]
-            a,b=word_pairs[i]
-            if a in result_space and b in result_space:
-                cos=utils.cosine_similarity(result_space[a], result_space[b])
-                pair_cosines[a+"_"+b] = [round(human,5), round(cos,5), cos-human]
-                #\#TODO get the values into a useful pattern/format
-        return results, pair_cosines
-
-    else: return results
+    return results
 
 
-def log_results(results, flattening, ff_config, pair_cosines=None, logfile=None, verbose=True):
+def log_results(results, flattening, ff_config, result_space=None, pair_cos=True, logfile=None, verbose=True):
     pns = ff_config["pn_size"]
     kcs = ff_config["kc_size"]
     proj= ff_config["proj_size"]
@@ -91,27 +78,26 @@ def log_results(results, flattening, ff_config, pair_cosines=None, logfile=None,
     spa = round(results["sp_after"], 5)
     diff = round(results["sp_diff"], 5)
     
-    specs_statement = "PN_size: " + str(pns)+\
-                      "\nKC_fator: " + str(kcs/pns)+\
-                      "\nprojections: "+ str(proj)+\
-                      "\nhash_dims: "+ str((hp*kcs)/100)+\
-                      "\nflattening: "+ flattening
+    specs_statement = "PN_size\t" + str(pns)+\
+                      "\nKC_fator\t" + str(kcs/pns)+\
+                      "\nprojections\t"+ str(proj)+\
+                      "\nhash_dims\t"+ str((hp*kcs)/100)+\
+                      "\nflattening\t"+ flattening
 
-    results_statement = "\nevaluated: " + str(items)+\
-                        "\nsp_before: " + str(spb)+\
-                        "\nsp_after: " + str(spa)+\
-                        "\nsp_diff: " + str(diff)
-
+    results_statement = "evaluated\t" + str(items)+\
+                        "\nsp_before\t" + str(spb)+\
+                        "\nsp_after\t" + str(spa)+\
+                        "\nsp_diff\t" + str(diff)+"\n"
 
     with open("log/results/"+logfile, "w") as f:
         f.write(specs_statement+"\n")
         f.write(results_statement+"\n")
-        if not (pair_cosines is None): 
-            for pair in sorted(pair_cosines.keys()): # log the pairwise cosines
-                f.write(pair+" "+\
-                        str(pair_cosines[pair][0])+" "+\
-                        str(pair_cosines[pair][1])+" "+\
-                        str(pair_cosines[pair][2])+"\n")
+
+        if (not (result_space is None) and (pair_cos is True)): 
+            pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, MEN_annot)
+            for i in range(len(pairs)):
+                f.write(str(pairs[i][0])+"\t"+str(pairs[i][1])+"\t"+\
+                        str(men_sim[i])+"\t"+str(fly_sim[i])+"\t"+"\n")
     if(verbose):
         print(specs_statement)
         print(results_statement, "\n")
@@ -133,10 +119,10 @@ for flat in flattening:
                 out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
                 # evaluate
-                internal_log[run], pair_cosines = evaluate(in_space, out_space, MEN_annot, pair_cos=True)
+                internal_log[run] = evaluate(in_space, out_space, MEN_annot)
 
                 # log externally and internally
-                log_results(internal_log[run], flat, fruitfly.get_specs(), pair_cosines)
+                log_results(internal_log[run], flat, fruitfly.get_specs(), out_space)
                 sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
                 all_ff_specs[run] = fruitfly.get_specs()
                 all_ff_specs[run]["flattening"] = flat

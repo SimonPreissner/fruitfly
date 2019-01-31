@@ -23,12 +23,12 @@ def readMEN(annotation_file):
   f.close()
   return pairs, humans
 
-
-def compute_men_spearman(dm_dict, annotation_file):
+def compile_similarity_lists(dm_dict, annotation_file):
     pairs, humans=readMEN(annotation_file)
     system_actual=[]
     human_actual=[]
-    count=0
+    eval_pairs=[]
+
     for i in range(len(pairs)):
         human=humans[i]
         a,b=pairs[i]
@@ -36,7 +36,13 @@ def compute_men_spearman(dm_dict, annotation_file):
             cos=utils.cosine_similarity(dm_dict[a],dm_dict[b])
             system_actual.append(cos)
             human_actual.append(human)
-            count+=1
+            eval_pairs.append(pairs[i])
+
+    return eval_pairs, human_actual, system_actual
+
+def compute_men_spearman(dm_dict, annotation_file):
+    eval_pairs, human_actual, system_actual = compile_similarity_lists(dm_dict, annotation_file)
+    count = len(eval_pairs)
     sp = spearman(human_actual,system_actual)
     return sp,count
 
