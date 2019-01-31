@@ -1,0 +1,646 @@
+pn_size: 4000	kc_size: 8000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48858	sp_difference: 0.17353
+pn_size: 4000	kc_size: 8000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.51666	sp_difference: 0.20161
+pn_size: 4000	kc_size: 8000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46594	sp_difference: 0.15088
+pn_size: 4000	kc_size: 8000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47069	sp_difference: 0.15563
+pn_size: 4000	kc_size: 8000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4526	sp_difference: 0.13754
+pn_size: 4000	kc_size: 8000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46614	sp_difference: 0.15108
+pn_size: 4000	kc_size: 8000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44426	sp_difference: 0.1292
+pn_size: 4000	kc_size: 8000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.50509	sp_difference: 0.19003
+pn_size: 4000	kc_size: 8000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43827	sp_difference: 0.12321
+pn_size: 4000	kc_size: 8000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43764	sp_difference: 0.12259
+pn_size: 4000	kc_size: 8000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44171	sp_difference: 0.12666
+pn_size: 4000	kc_size: 8000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47237	sp_difference: 0.15732
+pn_size: 4000	kc_size: 8000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42382	sp_difference: 0.10877
+pn_size: 4000	kc_size: 8000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44769	sp_difference: 0.13263
+pn_size: 4000	kc_size: 8000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41106	sp_difference: 0.096
+pn_size: 4000	kc_size: 8000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.38867	sp_difference: 0.07361
+pn_size: 4000	kc_size: 8000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.37547	sp_difference: 0.06042
+pn_size: 4000	kc_size: 12000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48951	sp_difference: 0.17446
+pn_size: 4000	kc_size: 12000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48126	sp_difference: 0.16621
+pn_size: 4000	kc_size: 12000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47939	sp_difference: 0.16433
+pn_size: 4000	kc_size: 12000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49471	sp_difference: 0.17966
+pn_size: 4000	kc_size: 12000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46135	sp_difference: 0.14629
+pn_size: 4000	kc_size: 12000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4662	sp_difference: 0.15114
+pn_size: 4000	kc_size: 12000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45794	sp_difference: 0.14288
+pn_size: 4000	kc_size: 12000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46367	sp_difference: 0.14861
+pn_size: 4000	kc_size: 12000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46117	sp_difference: 0.14612
+pn_size: 4000	kc_size: 12000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45069	sp_difference: 0.13564
+pn_size: 4000	kc_size: 12000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44413	sp_difference: 0.12908
+pn_size: 4000	kc_size: 12000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45102	sp_difference: 0.13596
+pn_size: 4000	kc_size: 12000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44241	sp_difference: 0.12736
+pn_size: 4000	kc_size: 12000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44931	sp_difference: 0.13426
+pn_size: 4000	kc_size: 12000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.37984	sp_difference: 0.06478
+pn_size: 4000	kc_size: 12000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39471	sp_difference: 0.07966
+pn_size: 4000	kc_size: 12000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39234	sp_difference: 0.07729
+pn_size: 4000	kc_size: 16000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48269	sp_difference: 0.16763
+pn_size: 4000	kc_size: 16000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.5024	sp_difference: 0.18735
+pn_size: 4000	kc_size: 16000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46065	sp_difference: 0.14559
+pn_size: 4000	kc_size: 16000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47745	sp_difference: 0.1624
+pn_size: 4000	kc_size: 16000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45496	sp_difference: 0.1399
+pn_size: 4000	kc_size: 16000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4753	sp_difference: 0.16025
+pn_size: 4000	kc_size: 16000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46058	sp_difference: 0.14553
+pn_size: 4000	kc_size: 16000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44913	sp_difference: 0.13408
+pn_size: 4000	kc_size: 16000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46314	sp_difference: 0.14808
+pn_size: 4000	kc_size: 16000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44565	sp_difference: 0.1306
+pn_size: 4000	kc_size: 16000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44582	sp_difference: 0.13076
+pn_size: 4000	kc_size: 16000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44202	sp_difference: 0.12697
+pn_size: 4000	kc_size: 16000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4525	sp_difference: 0.13745
+pn_size: 4000	kc_size: 16000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4202	sp_difference: 0.10515
+pn_size: 4000	kc_size: 16000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42582	sp_difference: 0.11076
+pn_size: 4000	kc_size: 16000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40176	sp_difference: 0.0867
+pn_size: 4000	kc_size: 16000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39499	sp_difference: 0.07993
+pn_size: 4000	kc_size: 20000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4744	sp_difference: 0.15934
+pn_size: 4000	kc_size: 20000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.50464	sp_difference: 0.18958
+pn_size: 4000	kc_size: 20000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48584	sp_difference: 0.17078
+pn_size: 4000	kc_size: 20000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47008	sp_difference: 0.15502
+pn_size: 4000	kc_size: 20000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4774	sp_difference: 0.16234
+pn_size: 4000	kc_size: 20000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47715	sp_difference: 0.1621
+pn_size: 4000	kc_size: 20000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4581	sp_difference: 0.14305
+pn_size: 4000	kc_size: 20000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45848	sp_difference: 0.14343
+pn_size: 4000	kc_size: 20000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47085	sp_difference: 0.1558
+pn_size: 4000	kc_size: 20000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47845	sp_difference: 0.1634
+pn_size: 4000	kc_size: 20000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46912	sp_difference: 0.15407
+pn_size: 4000	kc_size: 20000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46299	sp_difference: 0.14793
+pn_size: 4000	kc_size: 20000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45742	sp_difference: 0.14236
+pn_size: 4000	kc_size: 20000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42854	sp_difference: 0.11349
+pn_size: 4000	kc_size: 20000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42817	sp_difference: 0.11311
+pn_size: 4000	kc_size: 20000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39893	sp_difference: 0.08387
+pn_size: 4000	kc_size: 20000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.3966	sp_difference: 0.08155
+pn_size: 4000	kc_size: 24000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47543	sp_difference: 0.16037
+pn_size: 4000	kc_size: 24000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49531	sp_difference: 0.18026
+pn_size: 4000	kc_size: 24000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49229	sp_difference: 0.17723
+pn_size: 4000	kc_size: 24000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4634	sp_difference: 0.14834
+pn_size: 4000	kc_size: 24000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47412	sp_difference: 0.15906
+pn_size: 4000	kc_size: 24000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46542	sp_difference: 0.15036
+pn_size: 4000	kc_size: 24000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4607	sp_difference: 0.14565
+pn_size: 4000	kc_size: 24000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48112	sp_difference: 0.16607
+pn_size: 4000	kc_size: 24000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45819	sp_difference: 0.14314
+pn_size: 4000	kc_size: 24000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46555	sp_difference: 0.1505
+pn_size: 4000	kc_size: 24000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4506	sp_difference: 0.13554
+pn_size: 4000	kc_size: 24000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45891	sp_difference: 0.14385
+pn_size: 4000	kc_size: 24000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43604	sp_difference: 0.12099
+pn_size: 4000	kc_size: 24000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42505	sp_difference: 0.11
+pn_size: 4000	kc_size: 24000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42685	sp_difference: 0.1118
+pn_size: 4000	kc_size: 24000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41777	sp_difference: 0.10272
+pn_size: 4000	kc_size: 24000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39668	sp_difference: 0.08162
+pn_size: 4000	kc_size: 28000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49022	sp_difference: 0.17517
+pn_size: 4000	kc_size: 28000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49783	sp_difference: 0.18278
+pn_size: 4000	kc_size: 28000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48651	sp_difference: 0.17146
+pn_size: 4000	kc_size: 28000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47025	sp_difference: 0.1552
+pn_size: 4000	kc_size: 28000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47074	sp_difference: 0.15569
+pn_size: 4000	kc_size: 28000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46411	sp_difference: 0.14905
+pn_size: 4000	kc_size: 28000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48176	sp_difference: 0.16671
+pn_size: 4000	kc_size: 28000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46951	sp_difference: 0.15446
+pn_size: 4000	kc_size: 28000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46139	sp_difference: 0.14633
+pn_size: 4000	kc_size: 28000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47229	sp_difference: 0.15724
+pn_size: 4000	kc_size: 28000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46762	sp_difference: 0.15257
+pn_size: 4000	kc_size: 28000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44189	sp_difference: 0.12684
+pn_size: 4000	kc_size: 28000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46153	sp_difference: 0.14648
+pn_size: 4000	kc_size: 28000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43791	sp_difference: 0.12286
+pn_size: 4000	kc_size: 28000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42533	sp_difference: 0.11027
+pn_size: 4000	kc_size: 28000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41395	sp_difference: 0.09889
+pn_size: 4000	kc_size: 28000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39519	sp_difference: 0.08014
+pn_size: 4000	kc_size: 32000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48225	sp_difference: 0.16719
+pn_size: 4000	kc_size: 32000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4984	sp_difference: 0.18335
+pn_size: 4000	kc_size: 32000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48005	sp_difference: 0.165
+pn_size: 4000	kc_size: 32000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47246	sp_difference: 0.15741
+pn_size: 4000	kc_size: 32000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48733	sp_difference: 0.17227
+pn_size: 4000	kc_size: 32000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.473	sp_difference: 0.15794
+pn_size: 4000	kc_size: 32000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46643	sp_difference: 0.15138
+pn_size: 4000	kc_size: 32000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46067	sp_difference: 0.14562
+pn_size: 4000	kc_size: 32000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45931	sp_difference: 0.14426
+pn_size: 4000	kc_size: 32000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45817	sp_difference: 0.14312
+pn_size: 4000	kc_size: 32000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45668	sp_difference: 0.14162
+pn_size: 4000	kc_size: 32000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44741	sp_difference: 0.13235
+pn_size: 4000	kc_size: 32000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45193	sp_difference: 0.13688
+pn_size: 4000	kc_size: 32000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44566	sp_difference: 0.1306
+pn_size: 4000	kc_size: 32000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44534	sp_difference: 0.13028
+pn_size: 4000	kc_size: 32000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4147	sp_difference: 0.09964
+pn_size: 4000	kc_size: 32000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40231	sp_difference: 0.08725
+pn_size: 4000	kc_size: 36000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48805	sp_difference: 0.173
+pn_size: 4000	kc_size: 36000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48038	sp_difference: 0.16533
+pn_size: 4000	kc_size: 36000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47906	sp_difference: 0.164
+pn_size: 4000	kc_size: 36000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48641	sp_difference: 0.17135
+pn_size: 4000	kc_size: 36000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46808	sp_difference: 0.15302
+pn_size: 4000	kc_size: 36000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46761	sp_difference: 0.15255
+pn_size: 4000	kc_size: 36000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47485	sp_difference: 0.1598
+pn_size: 4000	kc_size: 36000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4786	sp_difference: 0.16355
+pn_size: 4000	kc_size: 36000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46864	sp_difference: 0.15358
+pn_size: 4000	kc_size: 36000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46822	sp_difference: 0.15317
+pn_size: 4000	kc_size: 36000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46663	sp_difference: 0.15157
+pn_size: 4000	kc_size: 36000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45678	sp_difference: 0.14173
+pn_size: 4000	kc_size: 36000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43909	sp_difference: 0.12404
+pn_size: 4000	kc_size: 36000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44287	sp_difference: 0.12781
+pn_size: 4000	kc_size: 36000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40533	sp_difference: 0.09027
+pn_size: 4000	kc_size: 36000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.3994	sp_difference: 0.08434
+pn_size: 4000	kc_size: 36000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40368	sp_difference: 0.08862
+pn_size: 4000	kc_size: 40000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48713	sp_difference: 0.17208
+pn_size: 4000	kc_size: 40000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.50135	sp_difference: 0.1863
+pn_size: 4000	kc_size: 40000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47473	sp_difference: 0.15967
+pn_size: 4000	kc_size: 40000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46882	sp_difference: 0.15376
+pn_size: 4000	kc_size: 40000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46642	sp_difference: 0.15136
+pn_size: 4000	kc_size: 40000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46221	sp_difference: 0.14715
+pn_size: 4000	kc_size: 40000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46656	sp_difference: 0.1515
+pn_size: 4000	kc_size: 40000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46863	sp_difference: 0.15358
+pn_size: 4000	kc_size: 40000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46107	sp_difference: 0.14602
+pn_size: 4000	kc_size: 40000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46158	sp_difference: 0.14652
+pn_size: 4000	kc_size: 40000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45949	sp_difference: 0.14443
+pn_size: 4000	kc_size: 40000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45766	sp_difference: 0.14261
+pn_size: 4000	kc_size: 40000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44939	sp_difference: 0.13434
+pn_size: 4000	kc_size: 40000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43771	sp_difference: 0.12265
+pn_size: 4000	kc_size: 40000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41121	sp_difference: 0.09615
+pn_size: 4000	kc_size: 40000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41516	sp_difference: 0.1001
+pn_size: 4000	kc_size: 40000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39343	sp_difference: 0.07837
+pn_size: 4000	kc_size: 44000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49145	sp_difference: 0.17639
+pn_size: 4000	kc_size: 44000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49433	sp_difference: 0.17928
+pn_size: 4000	kc_size: 44000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48724	sp_difference: 0.17218
+pn_size: 4000	kc_size: 44000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47735	sp_difference: 0.1623
+pn_size: 4000	kc_size: 44000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47261	sp_difference: 0.15756
+pn_size: 4000	kc_size: 44000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46977	sp_difference: 0.15472
+pn_size: 4000	kc_size: 44000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4781	sp_difference: 0.16304
+pn_size: 4000	kc_size: 44000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47781	sp_difference: 0.16276
+pn_size: 4000	kc_size: 44000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45945	sp_difference: 0.14439
+pn_size: 4000	kc_size: 44000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46028	sp_difference: 0.14523
+pn_size: 4000	kc_size: 44000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44749	sp_difference: 0.13244
+pn_size: 4000	kc_size: 44000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44994	sp_difference: 0.13488
+pn_size: 4000	kc_size: 44000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43404	sp_difference: 0.11898
+pn_size: 4000	kc_size: 44000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42966	sp_difference: 0.1146
+pn_size: 4000	kc_size: 44000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41539	sp_difference: 0.10034
+pn_size: 4000	kc_size: 44000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39912	sp_difference: 0.08407
+pn_size: 4000	kc_size: 44000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39737	sp_difference: 0.08231
+pn_size: 4000	kc_size: 48000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49337	sp_difference: 0.17831
+pn_size: 4000	kc_size: 48000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48915	sp_difference: 0.1741
+pn_size: 4000	kc_size: 48000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48536	sp_difference: 0.1703
+pn_size: 4000	kc_size: 48000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4767	sp_difference: 0.16164
+pn_size: 4000	kc_size: 48000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46766	sp_difference: 0.1526
+pn_size: 4000	kc_size: 48000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46786	sp_difference: 0.15281
+pn_size: 4000	kc_size: 48000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48483	sp_difference: 0.16978
+pn_size: 4000	kc_size: 48000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45902	sp_difference: 0.14397
+pn_size: 4000	kc_size: 48000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46474	sp_difference: 0.14968
+pn_size: 4000	kc_size: 48000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45885	sp_difference: 0.14379
+pn_size: 4000	kc_size: 48000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45057	sp_difference: 0.13552
+pn_size: 4000	kc_size: 48000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45103	sp_difference: 0.13598
+pn_size: 4000	kc_size: 48000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43867	sp_difference: 0.12362
+pn_size: 4000	kc_size: 48000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42841	sp_difference: 0.11336
+pn_size: 4000	kc_size: 48000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42747	sp_difference: 0.11242
+pn_size: 4000	kc_size: 48000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42169	sp_difference: 0.10663
+pn_size: 4000	kc_size: 48000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40163	sp_difference: 0.08657
+pn_size: 4000	kc_size: 52000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47649	sp_difference: 0.16143
+pn_size: 4000	kc_size: 52000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49864	sp_difference: 0.18359
+pn_size: 4000	kc_size: 52000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4858	sp_difference: 0.17075
+pn_size: 4000	kc_size: 52000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47107	sp_difference: 0.15601
+pn_size: 4000	kc_size: 52000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47319	sp_difference: 0.15814
+pn_size: 4000	kc_size: 52000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46065	sp_difference: 0.14559
+pn_size: 4000	kc_size: 52000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46595	sp_difference: 0.15089
+pn_size: 4000	kc_size: 52000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46133	sp_difference: 0.14627
+pn_size: 4000	kc_size: 52000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.469	sp_difference: 0.15394
+pn_size: 4000	kc_size: 52000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46173	sp_difference: 0.14667
+pn_size: 4000	kc_size: 52000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46131	sp_difference: 0.14626
+pn_size: 4000	kc_size: 52000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44122	sp_difference: 0.12617
+pn_size: 4000	kc_size: 52000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44853	sp_difference: 0.13347
+pn_size: 4000	kc_size: 52000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42761	sp_difference: 0.11256
+pn_size: 4000	kc_size: 52000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41284	sp_difference: 0.09778
+pn_size: 4000	kc_size: 52000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41561	sp_difference: 0.10055
+pn_size: 4000	kc_size: 52000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40166	sp_difference: 0.08661
+pn_size: 4000	kc_size: 56000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49687	sp_difference: 0.18182
+pn_size: 4000	kc_size: 56000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4855	sp_difference: 0.17044
+pn_size: 4000	kc_size: 56000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47144	sp_difference: 0.15639
+pn_size: 4000	kc_size: 56000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48033	sp_difference: 0.16528
+pn_size: 4000	kc_size: 56000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46944	sp_difference: 0.15439
+pn_size: 4000	kc_size: 56000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47158	sp_difference: 0.15652
+pn_size: 4000	kc_size: 56000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46404	sp_difference: 0.14899
+pn_size: 4000	kc_size: 56000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47621	sp_difference: 0.16115
+pn_size: 4000	kc_size: 56000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46266	sp_difference: 0.14761
+pn_size: 4000	kc_size: 56000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47224	sp_difference: 0.15718
+pn_size: 4000	kc_size: 56000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45643	sp_difference: 0.14137
+pn_size: 4000	kc_size: 56000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44988	sp_difference: 0.13482
+pn_size: 4000	kc_size: 56000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44467	sp_difference: 0.12961
+pn_size: 4000	kc_size: 56000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43306	sp_difference: 0.11801
+pn_size: 4000	kc_size: 56000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4223	sp_difference: 0.10724
+pn_size: 4000	kc_size: 56000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4044	sp_difference: 0.08934
+pn_size: 4000	kc_size: 56000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40672	sp_difference: 0.09167
+pn_size: 4000	kc_size: 60000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48806	sp_difference: 0.173
+pn_size: 4000	kc_size: 60000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.50495	sp_difference: 0.18989
+pn_size: 4000	kc_size: 60000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48124	sp_difference: 0.16618
+pn_size: 4000	kc_size: 60000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47012	sp_difference: 0.15506
+pn_size: 4000	kc_size: 60000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46533	sp_difference: 0.15028
+pn_size: 4000	kc_size: 60000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4665	sp_difference: 0.15144
+pn_size: 4000	kc_size: 60000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47846	sp_difference: 0.16341
+pn_size: 4000	kc_size: 60000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46855	sp_difference: 0.1535
+pn_size: 4000	kc_size: 60000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47138	sp_difference: 0.15632
+pn_size: 4000	kc_size: 60000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45768	sp_difference: 0.14263
+pn_size: 4000	kc_size: 60000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46103	sp_difference: 0.14598
+pn_size: 4000	kc_size: 60000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45362	sp_difference: 0.13856
+pn_size: 4000	kc_size: 60000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44446	sp_difference: 0.1294
+pn_size: 4000	kc_size: 60000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43724	sp_difference: 0.12219
+pn_size: 4000	kc_size: 60000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42453	sp_difference: 0.10948
+pn_size: 4000	kc_size: 60000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41668	sp_difference: 0.10162
+pn_size: 4000	kc_size: 60000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4042	sp_difference: 0.08915
+pn_size: 4000	kc_size: 64000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49289	sp_difference: 0.17784
+pn_size: 4000	kc_size: 64000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49844	sp_difference: 0.18338
+pn_size: 4000	kc_size: 64000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48349	sp_difference: 0.16843
+pn_size: 4000	kc_size: 64000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46531	sp_difference: 0.15026
+pn_size: 4000	kc_size: 64000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4721	sp_difference: 0.15704
+pn_size: 4000	kc_size: 64000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4699	sp_difference: 0.15485
+pn_size: 4000	kc_size: 64000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47286	sp_difference: 0.15781
+pn_size: 4000	kc_size: 64000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47066	sp_difference: 0.15561
+pn_size: 4000	kc_size: 64000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46604	sp_difference: 0.15099
+pn_size: 4000	kc_size: 64000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46222	sp_difference: 0.14717
+pn_size: 4000	kc_size: 64000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44704	sp_difference: 0.13198
+pn_size: 4000	kc_size: 64000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4483	sp_difference: 0.13325
+pn_size: 4000	kc_size: 64000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44825	sp_difference: 0.1332
+pn_size: 4000	kc_size: 64000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43525	sp_difference: 0.1202
+pn_size: 4000	kc_size: 64000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41975	sp_difference: 0.10469
+pn_size: 4000	kc_size: 64000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41193	sp_difference: 0.09688
+pn_size: 4000	kc_size: 64000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39669	sp_difference: 0.08164
+pn_size: 4000	kc_size: 68000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48349	sp_difference: 0.16844
+pn_size: 4000	kc_size: 68000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49028	sp_difference: 0.17523
+pn_size: 4000	kc_size: 68000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48787	sp_difference: 0.17282
+pn_size: 4000	kc_size: 68000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47038	sp_difference: 0.15532
+pn_size: 4000	kc_size: 68000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47089	sp_difference: 0.15584
+pn_size: 4000	kc_size: 68000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47057	sp_difference: 0.15552
+pn_size: 4000	kc_size: 68000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4735	sp_difference: 0.15844
+pn_size: 4000	kc_size: 68000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46852	sp_difference: 0.15346
+pn_size: 4000	kc_size: 68000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47169	sp_difference: 0.15663
+pn_size: 4000	kc_size: 68000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45961	sp_difference: 0.14456
+pn_size: 4000	kc_size: 68000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46344	sp_difference: 0.14839
+pn_size: 4000	kc_size: 68000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46194	sp_difference: 0.14689
+pn_size: 4000	kc_size: 68000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43706	sp_difference: 0.12201
+pn_size: 4000	kc_size: 68000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43584	sp_difference: 0.12079
+pn_size: 4000	kc_size: 68000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42181	sp_difference: 0.10675
+pn_size: 4000	kc_size: 68000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40982	sp_difference: 0.09477
+pn_size: 4000	kc_size: 68000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39917	sp_difference: 0.08411
+pn_size: 4000	kc_size: 72000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49877	sp_difference: 0.18372
+pn_size: 4000	kc_size: 72000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48922	sp_difference: 0.17416
+pn_size: 4000	kc_size: 72000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4777	sp_difference: 0.16264
+pn_size: 4000	kc_size: 72000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47355	sp_difference: 0.1585
+pn_size: 4000	kc_size: 72000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47164	sp_difference: 0.15658
+pn_size: 4000	kc_size: 72000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46681	sp_difference: 0.15176
+pn_size: 4000	kc_size: 72000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46955	sp_difference: 0.15449
+pn_size: 4000	kc_size: 72000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47255	sp_difference: 0.1575
+pn_size: 4000	kc_size: 72000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46104	sp_difference: 0.14598
+pn_size: 4000	kc_size: 72000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47584	sp_difference: 0.16079
+pn_size: 4000	kc_size: 72000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45459	sp_difference: 0.13953
+pn_size: 4000	kc_size: 72000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44963	sp_difference: 0.13457
+pn_size: 4000	kc_size: 72000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.44121	sp_difference: 0.12616
+pn_size: 4000	kc_size: 72000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41937	sp_difference: 0.10432
+pn_size: 4000	kc_size: 72000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43007	sp_difference: 0.11502
+pn_size: 4000	kc_size: 72000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41743	sp_difference: 0.10238
+pn_size: 4000	kc_size: 72000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.40024	sp_difference: 0.08519
+pn_size: 4000	kc_size: 76000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48794	sp_difference: 0.17289
+pn_size: 4000	kc_size: 76000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48499	sp_difference: 0.16994
+pn_size: 4000	kc_size: 76000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4787	sp_difference: 0.16364
+pn_size: 4000	kc_size: 76000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.48168	sp_difference: 0.16662
+pn_size: 4000	kc_size: 76000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46582	sp_difference: 0.15077
+pn_size: 4000	kc_size: 76000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46969	sp_difference: 0.15463
+pn_size: 4000	kc_size: 76000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45983	sp_difference: 0.14478
+pn_size: 4000	kc_size: 76000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46677	sp_difference: 0.15171
+pn_size: 4000	kc_size: 76000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46855	sp_difference: 0.1535
+pn_size: 4000	kc_size: 76000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46559	sp_difference: 0.15054
+pn_size: 4000	kc_size: 76000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45636	sp_difference: 0.14131
+pn_size: 4000	kc_size: 76000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45281	sp_difference: 0.13776
+pn_size: 4000	kc_size: 76000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.4408	sp_difference: 0.12574
+pn_size: 4000	kc_size: 76000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43655	sp_difference: 0.12149
+pn_size: 4000	kc_size: 76000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42844	sp_difference: 0.11339
+pn_size: 4000	kc_size: 76000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41096	sp_difference: 0.09591
+pn_size: 4000	kc_size: 76000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39421	sp_difference: 0.07916
+pn_size: 4000	kc_size: 80000	proj_size: 4	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.49405	sp_difference: 0.179
+pn_size: 4000	kc_size: 80000	proj_size: 5	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47572	sp_difference: 0.16067
+pn_size: 4000	kc_size: 80000	proj_size: 6	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47784	sp_difference: 0.16278
+pn_size: 4000	kc_size: 80000	proj_size: 7	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47273	sp_difference: 0.15768
+pn_size: 4000	kc_size: 80000	proj_size: 8	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46274	sp_difference: 0.14768
+pn_size: 4000	kc_size: 80000	proj_size: 9	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47225	sp_difference: 0.15719
+pn_size: 4000	kc_size: 80000	proj_size: 10	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.47606	sp_difference: 0.161
+pn_size: 4000	kc_size: 80000	proj_size: 11	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46907	sp_difference: 0.15402
+pn_size: 4000	kc_size: 80000	proj_size: 12	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46816	sp_difference: 0.15311
+pn_size: 4000	kc_size: 80000	proj_size: 13	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46548	sp_difference: 0.15043
+pn_size: 4000	kc_size: 80000	proj_size: 14	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.46456	sp_difference: 0.1495
+pn_size: 4000	kc_size: 80000	proj_size: 15	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45091	sp_difference: 0.13586
+pn_size: 4000	kc_size: 80000	proj_size: 16	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.45145	sp_difference: 0.13639
+pn_size: 4000	kc_size: 80000	proj_size: 17	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.43377	sp_difference: 0.11872
+pn_size: 4000	kc_size: 80000	proj_size: 18	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.42937	sp_difference: 0.11432
+pn_size: 4000	kc_size: 80000	proj_size: 19	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.41488	sp_difference: 0.09983
+pn_size: 4000	kc_size: 80000	proj_size: 20	hash-perc: 5
+evaluated items: 1254	sp_before: 0.31505	sp_after: 0.39222	sp_difference: 0.07717
