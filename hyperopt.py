@@ -41,7 +41,7 @@ i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts o
 
 pn_size = len(in_space.popitem()[1]) # length of word vector (= input dimension)
 kc_factor_min = 2 # number of Kenyon cells
-kc_factor_max = 10
+kc_factor_max = 20
 projections_min = 4 # number of connections to any given KC
 projections_max = 20
 hash_perc_min = 2 # percent of winners for the final hash
