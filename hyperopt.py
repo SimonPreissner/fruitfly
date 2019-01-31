@@ -115,7 +115,7 @@ for flat in flattening:
 
                 # make and apply fruitfly
                 fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
-                print("New fruitfly -- configuration: ", fruitfly.show_off())
+                print("New fruitfly -- configuration: ", fruitfly.show_off(), "flattening:\t", flat)
                 out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
                 # evaluate
