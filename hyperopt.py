@@ -42,13 +42,13 @@ i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts o
 # corpus: UKWAC 100million
 
 pn_size = len(in_space.popitem()[1]) # length of word vector (= input dimension)
-kc_factor_min = 2 # number of Kenyon cells (in steps of 4) = 5params
-kc_factor_max = 20
-projections_min = 4 # number of connections to any given KC (in steps of 4) = 5params
-projections_max = 20
-hash_perc_min = 2 # percent of winners for the final hash (e.g. 2-10 in steps of 2) = 5params
-hash_perc_max = 10
-flattening = ["log", "log2", "log10"] # "log" -> implement multiple logs (ln, log2, log10) = 3params
+kc_factor_min = 1 # number of Kenyon cells (in steps of 4) = 5params
+kc_factor_max = 8
+projections_min = 6 # number of connections to any given KC (in steps of 4) = 5params
+projections_max = 6
+hash_perc_min = 5 # percent of winners for the final hash (e.g. 2-10 in steps of 2) = 5params
+hash_perc_max = 5
+flattening = ["log"]#, "log2", "log10"] # "log" -> implement multiple logs (ln, log2, log10) = 3params
 all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
@@ -89,7 +89,7 @@ def log_results(results, flattening, ff_config, result_space=None, pair_cos=True
                         "\nsp_after\t" + str(spa)+\
                         "\nsp_diff\t" + str(diff)+"\n"
 
-    with open("log/results/"+logfile, "w") as f:
+    with open("log/results/"+logfile, "a") as f:
         f.write(specs_statement+"\n")
         f.write(results_statement+"\n")
 
@@ -109,12 +109,12 @@ def log_results(results, flattening, ff_config, result_space=None, pair_cos=True
 """ gridsearch """
 run = 0
 for flat in flattening:
-    for kc_factor in range(kc_factor_min, kc_factor_max+1, 4):
-        for projections in range(projections_min, projections_max+1, 4):
-            for hash_size in range(hash_perc_min, hash_perc_max+1, 2):
+    for kc_factor in range(kc_factor_min, kc_factor_max+1):
+        for projections in range(projections_min, projections_max+1):
+            for hash_size in range(hash_perc_min, hash_perc_max+1):
 
                 # make and apply fruitfly
-                fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
+                fruitfly = Fruitfly.from_scratch(pn_size, int(round(0.25*kc_factor*pn_size)), projections, hash_size) # sets up a neural net
                 print("New fruitfly -- configuration: ", fruitfly.show_off(), "flattening:\t", flat)
                 out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
@@ -122,7 +122,7 @@ for flat in flattening:
                 internal_log[run] = evaluate(in_space, out_space, MEN_annot)
 
                 # log externally and internally
-                log_results(internal_log[run], flat, fruitfly.get_specs(), out_space)
+                log_results(internal_log[run], flat, fruitfly.get_specs(), out_space, logfile=log_dest)
                 sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
                 all_ff_specs[run] = fruitfly.get_specs()
                 all_ff_specs[run]["flattening"] = flat

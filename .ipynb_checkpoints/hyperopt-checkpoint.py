@@ -32,7 +32,7 @@ else:
 if len(sys.argv) > 2: 
     log_dest = sys.argv[2]
 else: 
-    log_dest = performance_log.txt
+    log_dest = None
 
 in_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
@@ -42,13 +42,13 @@ i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts o
 # corpus: UKWAC 100million
 
 pn_size = len(in_space.popitem()[1]) # length of word vector (= input dimension)
-kc_factor_min = 2 # number of Kenyon cells (e.g. 4-20 in steps of 4) = 5params
-kc_factor_max = 20
-projections_min = 4 # number of connections to any given KC (e.g. 4-20 in steps of 4) =5params
-projections_max = 20
+kc_factor_min = 1 # number of Kenyon cells (in steps of 4) = 5params
+kc_factor_max = 8
+projections_min = 6 # number of connections to any given KC (in steps of 4) = 5params
+projections_max = 6
 hash_perc_min = 5 # percent of winners for the final hash (e.g. 2-10 in steps of 2) = 5params
 hash_perc_max = 5
-flattening = None # "log" -> implement multiple logs (ln, log2, log10) = 3params
+flattening = ["log"]#, "log2", "log10"] # "log" -> implement multiple logs (ln, log2, log10) = 3params
 all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
@@ -56,43 +56,77 @@ sp_diffs = {}
 
 
 
-def evaluate(orig_space, result_space, goldstd, logfile="performance_log.txt", verbose=False):
+def evaluate(orig_space, result_space, goldstd):
     sp_before, count_before = MEN.compute_men_spearman(orig_space, goldstd)
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
     sp_diff = sp_after-sp_before
 
-    results_statement = "evaluated items: " + str(count_after)+\
-                        "\tsp_before: " + str(round(sp_before,5))+\
-                        "\tsp_after: " + str(round(sp_after,5))+\
-                        "\tsp_difference: " + str(round(sp_diff,5))
+    results = {"testset":count_after, "sp_before":sp_before, "sp_after":sp_after, "sp_diff":sp_diff}
+    return results
 
-    # TODO extract this so that it only opens once
+
+def log_results(results, flattening, ff_config, result_space=None, pair_cos=True, logfile=None, verbose=True):
+    pns = ff_config["pn_size"]
+    kcs = ff_config["kc_size"]
+    proj= ff_config["proj_size"]
+    hp  = ff_config["hash_percent"]
+    if (logfile is None): # provide a filename containing all parameters
+        logfile = str(int(kcs/pns))+"-"+str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
+
+    items = results["testset"]
+    spb = round(results["sp_before"], 5)
+    spa = round(results["sp_after"], 5)
+    diff = round(results["sp_diff"], 5)
+    
+    specs_statement = "PN_size\t" + str(pns)+\
+                      "\nKC_fator\t" + str(kcs/pns)+\
+                      "\nprojections\t"+ str(proj)+\
+                      "\nhash_dims\t"+ str((hp*kcs)/100)+\
+                      "\nflattening\t"+ flattening
+
+    results_statement = "evaluated\t" + str(items)+\
+                        "\nsp_before\t" + str(spb)+\
+                        "\nsp_after\t" + str(spa)+\
+                        "\nsp_diff\t" + str(diff)+"\n"
+
     with open("log/results/"+logfile, "a") as f:
-        f.write(fruitfly.show_off()+"\n")
+        f.write(specs_statement+"\n")
         f.write(results_statement+"\n")
-    f.close()
+
+        if (not (result_space is None) and (pair_cos is True)): 
+            pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, MEN_annot)
+            for i in range(len(pairs)):
+                f.write(str(pairs[i][0])+"\t"+str(pairs[i][1])+"\t"+\
+                        str(men_sim[i])+"\t"+str(fly_sim[i])+"\t"+"\n")
     if(verbose):
-        print(fruitfly.show_off())
+        print(specs_statement)
         print(results_statement, "\n")
 
-    return {"testset":count_after, "sp_before":sp_before, "sp_after":sp_after, "sp_diff":sp_diff}
+
 
 
 
 """ gridsearch """
 run = 0
-for kc_factor in range(kc_factor_min, kc_factor_max+1):
-    for projections in range(projections_min, projections_max+1):
-        for hash_size in range(hash_perc_min, hash_perc_max+1):
+for flat in flattening:
+    for kc_factor in range(kc_factor_min, kc_factor_max+1):
+        for projections in range(projections_min, projections_max+1):
+            for hash_size in range(hash_perc_min, hash_perc_max+1):
 
-            fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
-            print("New fruitfly -- configuration: ", fruitfly.show_off())
-            out_space = fruitfly.fly(in_space, flattening) # this is where the magic happens 
-            
-            all_ff_specs[run] = fruitfly.get_specs() # record all training runs
-            internal_log[run] = evaluate(in_space, out_space, MEN_annot, log_dest, verbose=True)
-            sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
-            run += 1
+                # make and apply fruitfly
+                fruitfly = Fruitfly.from_scratch(pn_size, int(round(0.25*kc_factor*pn_size)), projections, hash_size) # sets up a neural net
+                print("New fruitfly -- configuration: ", fruitfly.show_off(), "flattening:\t", flat)
+                out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
+                
+                # evaluate
+                internal_log[run] = evaluate(in_space, out_space, MEN_annot)
+
+                # log externally and internally
+                log_results(internal_log[run], flat, fruitfly.get_specs(), out_space, logfile=log_dest)
+                sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
+                all_ff_specs[run] = fruitfly.get_specs()
+                all_ff_specs[run]["flattening"] = flat
+                run += 1
 
 print ("Finished grid search. Number of runs:",run)
 
@@ -100,7 +134,7 @@ print ("Finished grid search. Number of runs:",run)
 
 """ Find the best 10% of runs """
 best_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True)[:round(0.1*len(sp_diffs))+1]
-print("configurations of the best runs:")
+print("configurations of the best 10 percent of runs:")
 for run in best_runs:
     print("improvement:",sp_diffs[run],"with configuration:",all_ff_specs[run])
 
