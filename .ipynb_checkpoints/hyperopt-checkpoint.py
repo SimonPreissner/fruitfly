@@ -41,7 +41,7 @@ i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts o
 # params: corpus flattening kc_factor projections hash_percent
 # corpus: UKWAC 100million
 
-pn_size = len(in_space.popitem()[1]) # length of word vector (= input dimension)
+pn_size = len(i_to_cols) # length of word vector (= input dimension)
 kc_factor_min = 1 # number of Kenyon cells (in steps of 4) = 5params
 kc_factor_max = 8
 projections_min = 6 # number of connections to any given KC (in steps of 4) = 5params
@@ -49,6 +49,7 @@ projections_max = 6
 hash_perc_min = 5 # percent of winners for the final hash (e.g. 2-10 in steps of 2) = 5params
 hash_perc_max = 5
 flattening = ["log"]#, "log2", "log10"] # "log" -> implement multiple logs (ln, log2, log10) = 3params
+
 all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
@@ -83,7 +84,6 @@ def log_results(results, flattening, ff_config, result_space=None, pair_cos=True
                       "\nprojections\t"+ str(proj)+\
                       "\nhash_dims\t"+ str((hp*kcs)/100)+\
                       "\nflattening\t"+ flattening
-
     results_statement = "evaluated\t" + str(items)+\
                         "\nsp_before\t" + str(spb)+\
                         "\nsp_after\t" + str(spa)+\
@@ -108,6 +108,7 @@ def log_results(results, flattening, ff_config, result_space=None, pair_cos=True
 
 """ gridsearch """
 run = 0
+\#TODO sort the parameters by relevance
 for flat in flattening:
     for kc_factor in range(kc_factor_min, kc_factor_max+1):
         for projections in range(projections_min, projections_max+1):
@@ -137,6 +138,7 @@ best_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True)[:round(0.1*len(sp_d
 print("configurations of the best 10 percent of runs:")
 for run in best_runs:
     print("improvement:",sp_diffs[run],"with configuration:",all_ff_specs[run])
+\#TODO log the overall grid search results to one file
 
 
 

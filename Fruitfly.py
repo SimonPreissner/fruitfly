@@ -158,7 +158,7 @@ class Fruitfly:
 			kc_activations[cell] = 1 # assign 1 to the winners
 		return kc_activations
 
-	def fly(self, unhashed_space, flattening):
+	def fly(self, unhashed_space, flattening=None):
 		"""
 		Hash each element of the input space. Apply flattening before input, 
 		afterwards project, hash, and return the complete hashed space.
