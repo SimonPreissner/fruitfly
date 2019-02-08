@@ -9,7 +9,6 @@ def readDM(dm_file): # read word vectors
     version = ""
     with open(dm_file) as f:
         dmlines=f.readlines()
-    f.close()
 
     #Make dictionary with key=word, value=vector
     for l in dmlines:
@@ -24,26 +23,26 @@ def readCols(cols_file):
     i_to_cols = {}
     cols_to_i = {}
     c = 0
-    f = open(cols_file,'r')
-    for l in f:
-        l = l.rstrip('\n')
-        i_to_cols[c] = l
-        cols_to_i[l] = c
-        c+=1
+    with open(cols_file,'r') as f:
+        for l in f:
+            l = l.rstrip('\n')
+            i_to_cols[c] = l
+            cols_to_i[l] = c
+            c+=1
     return i_to_cols, cols_to_i # dimension_number : word and word : dimension_number
 
 def parse_pod(pod):
     pod_dict = {}
-    f = open(pod)
-    for l in f:
-        if l[0] != '#':
-            try:
-                fields = l.rstrip('\n').split(',')
-                url = fields[1]
-                vector = np.array([float(i) for i in fields[4].split()])
-                pod_dict[url] = vector
-            except:
-                pass
+    with open(pod) as f:
+        for l in f:
+            if l[0] != '#':
+                try:
+                    fields = l.rstrip('\n').split(',')
+                    url = fields[1]
+                    vector = np.array([float(i) for i in fields[4].split()])
+                    pod_dict[url] = vector
+                except:
+                    pass
     return pod_dict
 
 

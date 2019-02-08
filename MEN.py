@@ -14,12 +14,12 @@ def spearman(x,y):
 def readMEN(annotation_file):
   pairs=[]
   humans=[]
-  f=open(annotation_file,'r')
-  for l in f:
-    l=l.rstrip('\n')
-    items=l.split()
-    pairs.append((items[0],items[1]))
-    humans.append(float(items[2]))
+  with open(annotation_file,'r') as f:
+    for l in f:
+      l=l.rstrip('\n')
+      items=l.split()
+      pairs.append((items[0],items[1]))
+      humans.append(float(items[2]))
   f.close()
   return pairs, humans
 

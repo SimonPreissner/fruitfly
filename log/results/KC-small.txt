@@ -1,0 +1,79 @@
+PN_size	4000
+KC_fator	0.25
+projections	6
+hash_dims	50.0
+flattening	log
+evaluated	1254
+sp_before	0.36165
+sp_after	0.45141
+sp_diff	0.08976
+
+PN_size	4000
+KC_fator	0.5
+projections	6
+hash_dims	100.0
+flattening	log
+evaluated	1254
+sp_before	0.39951
+sp_after	0.42498
+sp_diff	0.02547
+
+PN_size	4000
+KC_fator	0.75
+projections	6
+hash_dims	150.0
+flattening	log
+evaluated	1254
+sp_before	0.42879
+sp_after	0.43321
+sp_diff	0.00442
+
+PN_size	4000
+KC_fator	1.0
+projections	6
+hash_dims	200.0
+flattening	log
+evaluated	1254
+sp_before	0.45103
+sp_after	0.52128
+sp_diff	0.07025
+
+PN_size	4000
+KC_fator	1.25
+projections	6
+hash_dims	250.0
+flattening	log
+evaluated	1254
+sp_before	0.46669
+sp_after	0.48164
+sp_diff	0.01495
+
+PN_size	4000
+KC_fator	1.5
+projections	6
+hash_dims	300.0
+flattening	log
+evaluated	1254
+sp_before	0.47881
+sp_after	0.46826
+sp_diff	-0.01056
+
+PN_size	4000
+KC_fator	1.75
+projections	6
+hash_dims	350.0
+flattening	log
+evaluated	1254
+sp_before	0.48783
+sp_after	0.46881
+sp_diff	-0.01902
+
+PN_size	4000
+KC_fator	2.0
+projections	6
+hash_dims	400.0
+flattening	log
+evaluated	1254
+sp_before	0.49436
+sp_after	0.47089
+sp_diff	-0.02348

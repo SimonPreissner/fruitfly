@@ -36,14 +36,13 @@ else:
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
 
-pn_size = len(unhashed_space.popitem()[1]) # length of word vector (= input dimension)
+pn_size = len(cols_to_i) # length of word vector (= input dimension)
 kc_size = int(sys.argv[2])
 proj_size = int(sys.argv[3]) # number of connections to any given KC
 hash_percent = int(sys.argv[4])
 #print("SIZES PN LAYER:",pn_size,"KC LAYER:",kc_size)
 #print("SIZE OF PROJECTIONS:",proj_size)
 #print("SIZE OF FINAL HASH:",hash_percent,"%")
-
 
 
 
@@ -82,3 +81,4 @@ print("difference:",round(spa-spb, 4))
 
 
 #print("finished 10 runs. Average performance:",round(differences/10, 4)) #CLEANUP
+
