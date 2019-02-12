@@ -28,15 +28,20 @@ elif sys.argv[1] == "wiki":
     data = "data/wiki_all.dm"
     column_labels = "data/wiki_all.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
-else:
+elif sys.argv[1] == "rawiki":
     data = "data/wiki_abs-freq.dm"
     column_labels = "data/wiki_abs-freq.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
+elif sys.argv[1] == "w2v":
+    data = "/mnt/8tera/corpora/ukwac/ukwac_100m/ukwac_100m_w2v.txt"
+    column_labels= "/mnt/8tera/corpora/ukwac/ukwac_100m/ukwac_100m.w2v.vocab"
+    MEN_annot = "data/MEN_dataset_natural_form_full"
+
 
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
 
-
+"""
 
 pn_size = len(cols_to_i) # length of word vector (= input dimension)
 kc_size = int(sys.argv[2])
@@ -72,10 +77,16 @@ print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)"
 print("difference:",round(spa-spb, 4))
 #differences += spa-spb #CLEANUP
 
+"""
 
-"""# EVALUATION OF THE UNHASHED SPACE
+
+
+
+
+#differences = 0 #CLEANUP
+
 for i in range(10): #CLEANUP
     print ("run number",i+1) #CLEANUP
     spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
     print("Run number",i+1,"; performance:",round(spb, 4), "(calculated over",count,"items.)")
-"""
+
