@@ -36,6 +36,8 @@ else:
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
 
+"""
+
 pn_size = len(cols_to_i) # length of word vector (= input dimension)
 kc_size = int(sys.argv[2])
 proj_size = int(sys.argv[3]) # number of connections to any given KC
@@ -44,17 +46,8 @@ hash_percent = int(sys.argv[4])
 #print("SIZE OF PROJECTIONS:",proj_size)
 #print("SIZE OF FINAL HASH:",hash_percent,"%")
 
-
-
-
 #=============== INITIATING AND OPERATING FRUITFLY
 
-
-
-#differences = 0 #CLEANUP
-
-#for i in range(10): #CLEANUP
-#print ("run number",i+1) #CLEANUP
 
 fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
 #fruitfly = Fruitfly.from_config("ff-params_flattening_show-down.txt") # default parameters: filename="ff_config.txt"
@@ -65,11 +58,11 @@ if len(sys.argv) == 6 and sys.argv[5] == "-v":
         fruitfly.show_projections(w, space_hashed[w], i_to_cols)
 
 
-
 #=============== EVALUATION SECTION
 
 #print(utils.neighbours(unhashed_space,sys.argv[1],10))
 #print(utils.neighbours(space_hashed,sys.argv[1],10))
+
 spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
 print("Spearman before flying:",round(spb, 4), "(calculated over",count,"items.)")
 
@@ -79,6 +72,16 @@ print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)"
 print("difference:",round(spa-spb, 4))
 #differences += spa-spb #CLEANUP
 
+"""
 
-#print("finished 10 runs. Average performance:",round(differences/10, 4)) #CLEANUP
+
+
+
+
+#differences = 0 #CLEANUP
+
+for i in range(10): #CLEANUP
+    print ("run number",i+1) #CLEANUP
+    spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
+    print("Run number",i+1,"; performance:",round(spb, 4), "(calculated over",count,"items.)")
 
