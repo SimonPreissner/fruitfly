@@ -12,14 +12,14 @@ This script reads command line options and feeds data to a Fruitfly object.
 
 
 #=============== PARAMETER INPUT
-"""
+
 if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki"):
     print("\nUSAGE: python3 projection.py bnc|wiki|rawiki [num-kc] [size-proj] [percent-hash]\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
     - percent-hash: how much of the Kenyon layer to keep in the final hash.\n")
     sys.exit() 
-"""
+
 if sys.argv[1] == "bnc":
     data = "data/BNC-MEN.dm"
     column_labels = "data/BNC-MEN.cols"
@@ -36,7 +36,7 @@ else:
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
 
-"""
+
 
 pn_size = len(cols_to_i) # length of word vector (= input dimension)
 kc_size = int(sys.argv[2])
@@ -72,16 +72,10 @@ print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)"
 print("difference:",round(spa-spb, 4))
 #differences += spa-spb #CLEANUP
 
-"""
 
-
-
-
-
-#differences = 0 #CLEANUP
-
+"""# EVALUATION OF THE UNHASHED SPACE
 for i in range(10): #CLEANUP
     print ("run number",i+1) #CLEANUP
     spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
     print("Run number",i+1,"; performance:",round(spb, 4), "(calculated over",count,"items.)")
-
+"""
