@@ -12,14 +12,14 @@ This script reads command line options and feeds data to a Fruitfly object.
 
 
 #=============== PARAMETER INPUT
-
+"""
 if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki"):
     print("\nUSAGE: python3 projection.py bnc|wiki|rawiki [num-kc] [size-proj] [percent-hash]\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
     - percent-hash: how much of the Kenyon layer to keep in the final hash.\n")
     sys.exit() 
-
+"""
 if sys.argv[1] == "bnc":
     data = "data/BNC-MEN.dm"
     column_labels = "data/BNC-MEN.cols"
