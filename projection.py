@@ -17,7 +17,9 @@ if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki", "w2v"):
     print("\nUSAGE: python3 projection.py bnc|wiki|rawiki|w2v [num-kc] [size-proj] [percent-hash]\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
-    - percent-hash: how much of the Kenyon layer to keep in the final hash.\n")
+    - percent-hash: how much of the Kenyon layer to keep in the final hash.\n\
+    - show most important connections per word with '-v'\n\
+    - evaluate a space without by using 'eval-only'\n")
     sys.exit() 
 
 if sys.argv[1] == "bnc":
@@ -33,15 +35,12 @@ elif sys.argv[1] == "rawiki":
     column_labels = "data/wiki_abs-freq.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 elif sys.argv[1] == "w2v":
-    data = "/mnt/8tera/corpora/ukwac/ukwac_100m/ukwac_100m_w2v.txt"
-    column_labels= "/mnt/8tera/corpora/ukwac/ukwac_100m/ukwac_100m.w2v.vocab"
+    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
+    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
     MEN_annot = "data/MEN_dataset_natural_form_full"
-
 
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
-
-
 
 pn_size = len(cols_to_i) # length of word vector (= input dimension)
 kc_size = int(sys.argv[2])
@@ -51,8 +50,16 @@ hash_percent = int(sys.argv[4])
 #print("SIZE OF PROJECTIONS:",proj_size)
 #print("SIZE OF FINAL HASH:",hash_percent,"%")
 
-#=============== INITIATING AND OPERATING FRUITFLY
 
+#=============== FOR PURE EVALUATION OF UNHASHED SPACES
+
+if("eval-only" in sys.argv):
+    spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
+    print("Performance:",round(spb, 4), "(calculated over",count,"items.)")
+    sys.exit()
+
+
+#=============== INITIATING AND OPERATING FRUITFLY
 
 fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
 #fruitfly = Fruitfly.from_config("ff-params_flattening_show-down.txt") # default parameters: filename="ff_config.txt"
@@ -76,13 +83,3 @@ print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)"
 
 print("difference:",round(spa-spb, 4))
 #differences += spa-spb #CLEANUP
-
-
-
-"""
-for i in range(10): #CLEANUP
-    print ("run number",i+1) #CLEANUP
-    spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
-    print("Run number",i+1,"; performance:",round(spb, 4), "(calculated over",count,"items.)")
-
-"""
