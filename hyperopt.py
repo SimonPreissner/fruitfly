@@ -11,7 +11,7 @@ to a kind of early-stopping grid search.
 """
 
 
-if len(sys.argv) < 1 or sys.argv[1] not in ("bnc","wiki","rawiki"):
+if len(sys.argv) < 1 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v"):
     print("Check your parameters! Parameter sequence: hyperopt.py [corpus] [log_destination]")
     sys.exit() 
 
@@ -26,6 +26,10 @@ elif sys.argv[1] == "wiki":
 else:
     data = "data/wiki_abs-freq.dm"
     column_labels = "data/wiki_abs-freq.cols"
+    MEN_annot = "data/MEN_dataset_natural_form_full"
+elif sys.argv[1] == "w2v":
+    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
+    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 
 
