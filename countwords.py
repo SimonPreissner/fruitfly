@@ -4,7 +4,7 @@ import Fruitfly
 import MEN
 import re
 import numpy as np
-from nltk.tokenize import pos_tagexpTokenizer
+from nltk.tokenize import regexpTokenizer
 
 """
 This script compiles data from text into cooccurrence matrices.
@@ -55,7 +55,7 @@ def read_corpus(infile):
 		for text in f:
 			text = text.lower() # lowercase everything
 			if(tokenization_is_required):
-				tokenizer = pos_tagexpTokenizer(r'\w+')
+				tokenizer = regexpTokenizer(r'\w+')
 				text = " ".join(tokenizer.tokenize(text)) # format the tokenized words into a space-separated string
 			tokens = text.rstrip().split()
 			for t in tokens:
