@@ -4,7 +4,7 @@ import Fruitfly
 import MEN
 import re
 import numpy as np
-from nltk.tokenize import RegexpTokenizer
+from nltk.tokenize import pos_tagexpTokenizer
 
 """
 This script compiles data from text into cooccurrence matrices.
@@ -12,9 +12,9 @@ This script compiles data from text into cooccurrence matrices.
 
 
 if len(sys.argv) < 3:
-    print("USAGE: python3 countwords.py [infile] [outfile] -t -v -dim [k] -check [file] -window [n]\n\
+    print("USAGE: python3 countwords.py [infile] [outfiles] -t -v -dim [k] -check [file] -window [n]\n\
     	  [infile]: raw input of text\n\
-    	  [outfile]: output file of vectors (preferably a .dm file)\n\
+    	  [outfile]: output file of vectors (produces a .dm and a .cols file)\n\
     	  -t: optionally run an nltk tokenizer\n\
     	  -v: optionally run with command line output\n\
     	  -dim: optionally limit dimensions to the [k] most frequent words\n\
@@ -26,7 +26,8 @@ if len(sys.argv) < 3:
 #========== PARAMETER INPUT
 
 infile = sys.argv[1] # e.g. "data/potato.txt"
-outfile = sys.argv[2] # e.g. "data/potato.dm"
+outfile = sys.argv[2]+".dm" # e.g. "data/potato"
+outcols = sys.argv[2]+".cols"
 tokenization_is_required = ("-t" in sys.argv)
 verbose_wanted = ("-v" in sys.argv)
 
@@ -54,7 +55,7 @@ def read_corpus(infile):
 		for text in f:
 			text = text.lower() # lowercase everything
 			if(tokenization_is_required):
-				tokenizer = RegexpTokenizer(r'\w+')
+				tokenizer = pos_tagexpTokenizer(r'\w+')
 				text = " ".join(tokenizer.tokenize(text)) # format the tokenized words into a space-separated string
 			tokens = text.rstrip().split()
 			for t in tokens:
@@ -84,12 +85,12 @@ def check_overlap(wordlist, checklist):
 
 	all_in = True
 	unshared_words = []
-	reg = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
+	pos_tag = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
 	            
 	with open(checklist, "r") as f:
 	    for word in f:
 	        word = word.rstrip()
-	        word = re.sub(reg, "",word)
+	        word = re.sub(pos_tag, "",word)
 	        if (word not in words):
 	            unshared_words.append(word)
 	            all_in = False
@@ -128,10 +129,15 @@ all_in, unshared_words = check_overlap(words, required_voc)
 
 
 # for now, the matrix extension is done beforehand
+if verbose_wanted is True:
+	print("creating empty matrix...")
 for w in words:
 	if w in freq:
 		cooc = extend_matrix_if_necessary(cooc, words_to_i, w)
 
+
+if verbose_wanted is True:
+	print("counting cooccurrences...")
 # all the "in freq" checking is in order to only count the most frequent words
 for i in range(window): # for the first couple of words
 	if words[i] in freq:
@@ -169,12 +175,12 @@ if verbose_wanted is True:
 #========== OUTPUT
 
 #outfile=rawtext[:-3]+"dm" # change the (3-letter) file ending
-with open(outfile, "w") as f:
+with open(outfile, "w") as dm_file, open(outcols, "w") as cols_file:
 	if verbose_wanted is True:
-		print("writing vectors to",outfile,"...")
+		print("writing vectors to",outfile,"and dictionary to",outcols,"...")
 	for word,i in words_to_i.items():
-		f.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
-f.close()
+		cols_file.write(word+"\n")
+		dm_file.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
 
 
 
