@@ -12,15 +12,15 @@ This script compiles data from text into cooccurrence matrices.
 
 
 if len(sys.argv) < 3:
-    print("USAGE: python3 countwords.py [infile] [outfiles] -t -v -dim [k] -check [file] -window [n]\n\
-    	  [infile]: raw input of text\n\
-    	  [outfile]: output file of vectors (produces a .dm and a .cols file)\n\
-    	  -t: optionally run an nltk tokenizer\n\
-    	  -v: optionally run with command line output\n\
-    	  -dim: optionally limit dimensions to the [k] most frequent words\n\
-    	  -check: see whether all words of [file] are in the corpus\n\
-    	  -window: select the scope for cooccurrence counting ([n] words to each side); default is 5")
-    sys.exit() 
+	print("USAGE: python3 countwords.py [infile] [outfiles] -t -v -dim [k] -check [file] -window [n]\n\
+		  [infile]: raw input of text\n\
+		  [outfile]: output files of vectors WITHOUT file extension (produces a .dm and a .cols file)\n\
+		  -t: optionally run an nltk tokenizer\n\
+		  -v: optionally run with command line output\n\
+		  -dim: optionally limit dimensions to the [k] most frequent words\n\
+		  -check: see whether all words of [file] are in the corpus\n\
+		  -window: select the scope for cooccurrence counting ([n] words to each side); default is 5")
+	sys.exit() 
 
 
 #========== PARAMETER INPUT
@@ -61,6 +61,8 @@ def read_corpus(infile):
 			for t in tokens:
 				if (re.fullmatch(nonword, t) is None): # get rid of tokens that are punctuation etc.
 					words.append(t) # if there are multiple lines, extend() takes care of it
+					if len(words)%10000 == 0:
+						print("words read:",len(words))
 	return(words)
 
 def freq_dist(wordlist, size_limit=None):
@@ -86,14 +88,14 @@ def check_overlap(wordlist, checklist):
 	all_in = True
 	unshared_words = []
 	pos_tag = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
-	            
+				
 	with open(checklist, "r") as f:
-	    for word in f:
-	        word = word.rstrip()
-	        word = re.sub(pos_tag, "",word)
-	        if (word not in words):
-	            unshared_words.append(word)
-	            all_in = False
+		for word in f:
+			word = word.rstrip()
+			word = re.sub(pos_tag, "",word)
+			if (word not in words):
+				unshared_words.append(word)
+				all_in = False
 	if verbose_wanted is True:
 		if all_in is True:
 			print("all required words are in the corpus")
@@ -148,6 +150,8 @@ for i in range(window): # for the first couple of words
 		cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1 # don't count cooccurrence with yourself!
 
 for i in range(window, len(words)-window): # for most of the words
+    if verbose_wanted is True and i%1000000 == 0:
+        print("words already processed:",i)
 	if words[i] in freq:
 		#cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
 		for c in range(i-window, i+window+1): 
@@ -178,9 +182,15 @@ if verbose_wanted is True:
 with open(outfile, "w") as dm_file, open(outcols, "w") as cols_file:
 	if verbose_wanted is True:
 		print("writing vectors to",outfile,"and dictionary to",outcols,"...")
+	counter = 0
 	for word,i in words_to_i.items():
 		cols_file.write(word+"\n")
-		dm_file.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
+		vectorstring = " ".join([str(v) for v in cooc[i]])
+		dm_file.write(word+" "+vectorstring+"\n")
+		#dm_file.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
+		if verbose_wanted is True and counter%100==0:
+			print(counter,"word vectors written...")
+		counter += 1
 
 
 

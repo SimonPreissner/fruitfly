@@ -150,6 +150,8 @@ for i in range(window): # for the first couple of words
 		cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1 # don't count cooccurrence with yourself!
 
 for i in range(window, len(words)-window): # for most of the words
+    if verbose_wanted is True and i%1000000 == 0:
+        print("words already processed:",i)
 	if words[i] in freq:
 		#cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
 		for c in range(i-window, i+window+1): 
