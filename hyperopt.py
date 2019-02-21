@@ -189,11 +189,11 @@ print ("Finished grid search. Number of runs:",run)
 
 """ Find the best 10% of runs """
 best_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True)[:round(0.1*len(sp_diffs))+1]
-print("configurations of the best 10 percent of runs:")
 with open(log_dest+"/summary.txt", "w") as f:
     for run in best_runs:
         f.write(str(sp_diffs[run])+"\tconfig: "+str(all_ff_specs[run]))
         if verbose is True:
+            print("configurations of the best 10 percent of runs:")
             print("improvement:",sp_diffs[run],"with configuration:",all_ff_specs[run])
 
 
