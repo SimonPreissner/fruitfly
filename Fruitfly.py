@@ -111,15 +111,16 @@ class Fruitfly:
 		make extremely frequent words (especially stopwords) less important 
 		before they hit the projection algorithm
 		"""
+		flat_vector = np.zeros(len(frequency_vector))
 		if (method == "log"):
 			for i, freq in enumerate(frequency_vector):
-				frequency_vector[i] = np.log(1.0+freq) # add 1 to make sure that no value is below 1
+				flat_vector[i] = np.log(1.0+freq) # add 1 to make sure that no value is below 1
 		elif (method == "log2"):
 			for i, freq in enumerate(frequency_vector):
-				frequency_vector[i] = np.log2(1.0+freq) # add 1 to make sure that no value is below 1
+				flat_vector[i] = np.log2(1.0+freq) # add 1 to make sure that no value is below 1
 		elif (method == "log10"):
 			for i, freq in enumerate(frequency_vector):
-				frequency_vector[i] = np.log10(1.0+freq) # add 1 to make sure that no value is below 1
+				flat_vector[i] = np.log10(1.0+freq) # add 1 to make sure that no value is below 1
 
 			"""
 			elif method == "sigmoid":
@@ -137,7 +138,7 @@ class Fruitfly:
 		else: 
 			print("No valid flattening method specified. Continuing without flattening.")
 			pass
-		return frequency_vector
+		return flat_vector
 
 	def projection(self):
 		""" for each KC, sum up the values of the PNs that have a connection to this KC """

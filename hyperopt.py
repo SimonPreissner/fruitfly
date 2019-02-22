@@ -11,19 +11,17 @@ It is basically brute-force grid search, but could be modified
 to a kind of early-stopping grid search.
 """
 
-
-if len(sys.argv) < 1 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","5k"):
+if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","5k"]:
     print("Check your parameters! Parameter sequence: \n\
-        hyperopt.py [corpus] -logging [log_folder] -kc [min max steps] \n\
-                    -proj [min max steps] -hash [min max steps] \n\
-                    [flattenings] -v\n\
-        *corpus: one of [bnc wiki rawiki w2v 5k]\n\
-        *logging: each run creates a separate log file (default: data/log/results/hyperopt_default)\n\
-        *kc: factor of expansion from pn layer to KC layer (default: 4, 20, 4)\n\
-        *proj: number of connections from PN layer to KC layer (default: 4, 20, 4)\n\
-        *hash: percentage of KC nodes to be selected as 'winners' (default: 2, 10, 2)\n\
-        *flattenings: one or more of [log log2 log10] (default: log)\n\
-        *-v: run in verbose mode")
+        hyperopt.py \n\
+        [corpus]              one of [bnc wiki rawiki w2v 5k]\n\
+        -logto [directory]    one file in [directory] per run\n\
+        [flattenings]         one or more of [log log2 log10] (default: log)\n\
+                              (default: log/hyperopt/default_log)\n\
+        -kc [min max steps]   expansion factor (default: 4, 20, 4)\n\
+        -proj [min max steps] number of projections (default: 4, 20, 4)\n\
+        -hash [min max steps] percentage of 'winner' KCs (default: 2, 10, 2)\n\
+        -v                    run in verbose mode")
     sys.exit() 
 
 
@@ -36,7 +34,7 @@ elif sys.argv[1] == "wiki":
     data = "data/wiki_all.dm"
     column_labels = "data/wiki_all.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
-else:
+elif sys.argv[1] == "rawiki":
     data = "data/wiki_abs-freq.dm"
     column_labels = "data/wiki_abs-freq.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
@@ -49,10 +47,10 @@ elif sys.argv[1] == "5k":
     column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 
-if "-log" in sys.argv: 
-    log_dest = sys.argv[sys.argv.index("-log")+1]
+if "-logto" in sys.argv: 
+    log_dest = sys.argv[sys.argv.index("-logto")+1]
 else: 
-    log_dest = "./data/log/results/hyperopt_default"
+    log_dest = "./log/hyperopt/default_log"
 if not os.path.isdir(log_dest):
    os.makedirs(log_dest)
 
@@ -110,6 +108,8 @@ sp_diffs = {}
 #========== FUNCTIONS
 
 def evaluate(orig_space, result_space, goldstd):
+    sp_before = 0
+    sp_after = 0
     sp_before, count_before = MEN.compute_men_spearman(orig_space, goldstd)
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
     sp_diff = sp_after-sp_before
@@ -124,7 +124,8 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     proj= ff_config["proj_size"]
     hp  = ff_config["hash_percent"]
     
-    logfilepath = log_dest+"/"+str(int(kcs/pns))+"-"+str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
+    logfilepath = log_dest+"/"+sys.argv[1]+"-"+str(int(kcs/pns))+"-"\
+                  +str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
 
 
     items = results["testset"]
@@ -133,7 +134,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     diff = round(results["sp_diff"], 5)
     
     specs_statement = "PN_size\t" + str(pns)+\
-                      "\nKC_fator\t" + str(kcs/pns)+\
+                      "\nKC_factor\t" + str(kcs/pns)+\
                       "\nprojections\t"+ str(proj)+\
                       "\nhash_dims\t"+ str((hp*kcs)/100)+\
                       "\nflattening\t"+ flattening
@@ -142,7 +143,8 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
                         "\nsp_after\t" + str(spa)+\
                         "\nsp_diff\t" + str(diff)+"\n"
 
-    with open(logfilepath, "a") as f:
+    with open(logfilepath, "w") as f:
+        f.write("Evaluated corpus:\t"+data+"\n")
         f.write(specs_statement+"\n")
         f.write(results_statement+"\n")
 
@@ -160,7 +162,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
 
 
 #========== GRID SEARCH
-#TODO sort the parameters by relevance
+#TODO maybe: sort the parameters by relevance
 run = 0
 for flat in flattening:
     for kc_factor in range(kc_factor_min, kc_factor_max+1, kc_steps):
@@ -183,18 +185,20 @@ for flat in flattening:
                 all_ff_specs[run]["flattening"] = flat
                 run += 1
 
-print ("Finished grid search. Number of runs:",run)
+if verbose is True:
+    print ("Finished grid search. Number of runs:",run)
 
 
 
-""" Find the best 10% of runs """
-best_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True)[:round(0.1*len(sp_diffs))+1]
+#========== LOG FINAL RESULTS
 with open(log_dest+"/summary.txt", "w") as f:
-    for run in best_runs:
-        f.write(str(sp_diffs[run])+"\tconfig: "+str(all_ff_specs[run]))
+    ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
+    f.write("sorted list of runs on "+data+" ("+len(ranked_runs)+" runs):")
+    for run in ranked_runs:
+        f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
         if verbose is True:
             print("configurations of the best 10 percent of runs:")
-            print("improvement:",sp_diffs[run],"with configuration:",all_ff_specs[run])
+            print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
 
 
 """
