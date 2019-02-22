@@ -11,10 +11,10 @@ It is basically brute-force grid search, but could be modified
 to a kind of early-stopping grid search.
 """
 
-if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","5k"]:
+if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","5k","10k"]:
     print("Check your parameters! Parameter sequence: \n\
         hyperopt.py \n\
-        [corpus]              one of these: [bnc wiki rawiki w2v 5k]\n\
+        [corpus]              one of these: [bnc wiki rawiki w2v 5k 10k]\n\
         -logto [directory]    one file in [directory] per run\n\
                                  default: log/hyperopt/default_log\n\
         [flattenings]         any combination of [log log2 log10]\n\
@@ -50,6 +50,10 @@ def get_text_resources_from_argv():
     elif sys.argv[1] == "5k":
         data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.dm"
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.cols"
+        MEN_annot = "data/MEN_dataset_natural_form_full"
+    elif sys.argv[1] == "10k":
+        data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k.dm"
+        column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k.cols"
         MEN_annot = "data/MEN_dataset_natural_form_full"
     else: 
         print("Error reading files. Is the key word correct?")
