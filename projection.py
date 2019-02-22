@@ -13,7 +13,7 @@ This script reads command line options and feeds data to a Fruitfly object.
 
 #=============== PARAMETER INPUT
 
-if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki", "w2v"):
+if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","5k"):
     print("\nUSAGE: python3 projection.py bnc|wiki|rawiki|w2v [num-kc] [size-proj] [percent-hash]\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
@@ -37,6 +37,10 @@ elif sys.argv[1] == "rawiki":
 elif sys.argv[1] == "w2v":
     data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
     column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
+    MEN_annot = "data/MEN_dataset_natural_form_full"
+elif sys.argv[1] == "5k":
+    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.dm"
+    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
