@@ -138,9 +138,9 @@ log_dest = get_logging_from_argv()
 
 flattening = get_flattening_from_argv()
 
-kc_factor_min, kc_factor_max, kc_steps = get_ranges_from_argv("-kc")
+kc_factor_min,   kc_factor_max,   kc_steps   = get_ranges_from_argv("-kc")
 projections_min, projections_max, proj_steps = get_ranges_from_argv("-proj")
-hash_perc_min, hash_perc_max, hash_steps = get_ranges_from_argv("-hash", minimum=2, maximum=10, steps=2)
+hash_perc_min,   hash_perc_max,   hash_steps = get_ranges_from_argv("-hash", minimum=2, maximum=10, steps=2)
 
 in_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
