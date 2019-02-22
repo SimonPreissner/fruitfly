@@ -127,7 +127,7 @@ words_to_i = {} # vocabulary and word positions
 
 words = read_corpus(infile)
 freq = freq_dist(words, size_limit=max_dims)
-all_in, unshared_words = check_overlap(words, required_voc)
+all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
 # for now, the matrix extension is done beforehand
