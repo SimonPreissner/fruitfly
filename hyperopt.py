@@ -14,13 +14,17 @@ to a kind of early-stopping grid search.
 if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","5k"]:
     print("Check your parameters! Parameter sequence: \n\
         hyperopt.py \n\
-        [corpus]              one of [bnc wiki rawiki w2v 5k]\n\
+        [corpus]              one of these: [bnc wiki rawiki w2v 5k]\n\
         -logto [directory]    one file in [directory] per run\n\
-        [flattenings]         one or more of [log log2 log10] (default: log)\n\
-                              (default: log/hyperopt/default_log)\n\
-        -kc [min max steps]   expansion factor (default: 4, 20, 4)\n\
-        -proj [min max steps] number of projections (default: 4, 20, 4)\n\
-        -hash [min max steps] percentage of 'winner' KCs (default: 2, 10, 2)\n\
+                                 default: log/hyperopt/default_log\n\
+        [flattenings]         any combination of [log log2 log10]\n\
+                                 default: log\n\
+        -kc [min max steps]   expansion factor\n\
+                                 e.g. [4 20 4]; default: [5 5 1]\n\
+        -proj [min max steps] number of projections\n\
+                                 e.g. [4 20 4]; default: [5 5 1]\n\
+        -hash [min max steps] percentage of 'winner' KCs\n\
+                                 e.g. [4 20 4]; default: [5 5 1]\n\
         -v                    run in verbose mode")
     sys.exit() 
 
@@ -52,7 +56,7 @@ def get_text_resources_from_argv():
         sys.exit()
     return data, column_labels, MEN_annot
 
-def get_ranges_from_argv(param, minimum=4, maximum=20, steps=4):
+def get_ranges_from_argv(param, minimum=5, maximum=5, steps=1):
     if param in sys.argv:
         minimum = int(sys.argv[sys.argv.index(param)+1]) 
         maximum = int(sys.argv[sys.argv.index(param)+2]) 
@@ -68,7 +72,7 @@ def get_flattening_from_argv():
     if "log10" in sys.argv:
         flattening.append("log10")
     if not flattening:
-        flattening = ["log", "log2", "log10"] # flattening happens before the PN layer (ln, log2, log10) = 3params
+        flattening = ["log"] # flattening happens before the PN layer (ln, log2, log10) = 3params
     return flattening
 
 def get_logging_from_argv():
@@ -106,7 +110,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     spa = round(results["sp_after"], 5)
     diff = round(results["sp_diff"], 5)
     
-    specs_statement = "PN_size\t" + str(pns)+\
+    specs_statement = "PN_size \t" + str(pns)+\
                       "\nKC_factor\t" + str(kcs/pns)+\
                       "\nprojections\t"+ str(proj)+\
                       "\nhash_dims\t"+ str((hp*kcs)/100)+\
@@ -114,7 +118,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     results_statement = "evaluated\t" + str(items)+\
                         "\nsp_before\t" + str(spb)+\
                         "\nsp_after\t" + str(spa)+\
-                        "\nsp_diff\t" + str(diff)+"\n"
+                        "\nsp_diff \t" + str(diff)+"\n"
 
     with open(logfilepath, "w") as f:
         f.write("Evaluated corpus:\t"+data+"\n")
@@ -138,9 +142,9 @@ log_dest = get_logging_from_argv()
 
 flattening = get_flattening_from_argv()
 
-kc_factor_min,   kc_factor_max,   kc_steps   = get_ranges_from_argv("-kc")
-projections_min, projections_max, proj_steps = get_ranges_from_argv("-proj")
-hash_perc_min,   hash_perc_max,   hash_steps = get_ranges_from_argv("-hash", minimum=2, maximum=10, steps=2)
+kc_factor_min,   kc_factor_max,   kc_steps   = get_ranges_from_argv("-kc") #min=4,max=20,steps=4
+projections_min, projections_max, proj_steps = get_ranges_from_argv("-proj") #min=4,max=20,steps=4
+hash_perc_min,   hash_perc_max,   hash_steps = get_ranges_from_argv("-hash") #min=2,max=10,steps=2
 
 in_space = utils.readDM(data) # returns dict of word : word_vector
 i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
@@ -185,15 +189,23 @@ if verbose is True:
 #========== LOG FINAL RESULTS
 with open(log_dest+"/summary.txt", "w") as f:
     ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
-    f.write("sorted list of runs on "+data+" ("+len(ranked_runs)+" runs):")
+    summary_header = "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
+                     "KC factor (min, max, steps): "+str(kc_factor_min)+" "+str(kc_factor_max)+" "+str(kc_steps)+"\n"+\
+                     "projections (min, max, steps): "+str(projections_min)+" "+str(projections_max)+" "+str(proj_steps)+"\n"+\
+                     "hash percent (min, max, steps): "+str(hash_perc_min)+" "+str(hash_perc_max)+" "+str(hash_steps)+"\n"+\
+                     "flattening functions: "+", ".join(flattening)+"\n"\
+                     "number of runs: "+str(len(ranked_runs))+"\n\n"
+    f.write(summary_header)
     for run in ranked_runs:
         f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
-        if verbose is True:
-            print("configurations of the best 10 percent of runs:")
+
+    if verbose is True:
+        print("Best runs by performance:")
+        for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
             print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
 
-
 """
+
 """
 
 
