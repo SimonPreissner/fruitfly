@@ -65,7 +65,7 @@ def read_corpus(infile):
                         print("words read:",len(words))
     return(words)
 
-def freq_dist(wordlist, size_limit=None):
+def freq_dist(wordlist, size_limit=None, required_words=None):
     freq = {}
     for w in wordlist:
         if w in freq:
@@ -73,35 +73,64 @@ def freq_dist(wordlist, size_limit=None):
         else:
             freq[w] = 1
 
+    frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
+
+    if required_words is not None:
+        checklist = get_checklist(required_words)
+        checked = [w for w in checklist if w in freq] # overlap of the vocabulary with required words
+        rest_words = [w for w in frequency_sorted if w not in checked] # words that are not required; sorted by frequency
+        returnlist = checked+rest_words
+        """
+        if verbose_wanted is True:
+            print("required words that are in the corpus:", checked)
+            print("first rest words:", rest_words[:30])
+            print("first returned words and their frequencies:")
+            for w in returnlist[:50]:
+                print(returnlist.index(w),"\t",freq[w],"\t",w)
+        """
+    else: 
+        returnlist = frequency_sorted
+
     if(size_limit is not None and size_limit <= len(freq)):
-        frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
-        return {k:freq[k] for k in frequency_sorted[:size_limit]}
+        return {k:freq[k] for k in returnlist[:size_limit]}
     else:
         return freq
 
-def check_overlap(wordlist, checklist):
-    if(checklist is None): # if no checking is specified, go on without checking
-        if verbose_wanted is True:
-            print("check_overlap(): nothing to check.")
-        return(True, [])
+def read_checklist(checklist_filepath):
+    if checklist_filepath is None:
+        return []
 
-    all_in = True
-    unshared_words = []
+    checklist = []
     pos_tag = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
-                
-    with open(checklist, "r") as f:
+
+    with open(checklist_filepath, "r") as f:
         for word in f:
             word = word.rstrip()
             word = re.sub(pos_tag, "",word)
-            if (word not in words):
-                unshared_words.append(word)
-                all_in = False
+            checklist.append(word)
+    return checklist # add [:10] for test purposes ONLY!
+
+def check_overlap(wordlist, checklist_filepath):
+    checklist = read_checklist(checklist_filepath)
+    if checklist is False: # if no checking is specified, go on without checking
+        if verbose_wanted is True:
+            print("check_overlap(): nothing to check.")
+        return True, []
+
+    all_in = True
+    unshared_words = []
+                
+    for word in checklist:
+        if (word not in wordlist):
+            unshared_words.append(word)
+            all_in = False
+
     if verbose_wanted is True:
         if all_in is True:
             print("all required words are in the corpus")
         else:
             print("Some of the",len(unshared_words),"words that are not in the corpus:\n",\
-                  unshared_words[:min(round(len(unshared_words)/10), 100)])
+                  unshared_words[:min(int(np.ceil(len(unshared_words)/10)), 100)])
 
     return all_in, unshared_words
 
@@ -126,7 +155,7 @@ cooc = np.array([[]]) # cooccurrence count (only numbers)
 words_to_i = {} # vocabulary and word positions 
 
 words = read_corpus(infile)
-freq = freq_dist(words, size_limit=max_dims)
+freq = freq_dist(words, size_limit=max_dims, required_words=required_voc)
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
@@ -183,7 +212,7 @@ with open(outfile, "w") as dm_file, open(outcols, "w") as cols_file:
     if verbose_wanted is True:
         print("writing vectors to",outfile,"and dictionary to",outcols,"...")
     counter = 0
-    for word,i in words_to_i.items():
+    for word,i in sorted(words_to_i.items(), key=lambda x: x[1]):
         cols_file.write(word+"\n")
         vectorstring = " ".join([str(v) for v in cooc[i]])
         dm_file.write(word+" "+vectorstring+"\n")
