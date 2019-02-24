@@ -76,7 +76,7 @@ def freq_dist(wordlist, size_limit=None, required_words=None):
     frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
 
     if required_words is not None:
-        checklist = get_checklist(required_words)
+        checklist = read_checklist(required_words)
         checked = [w for w in checklist if w in freq] # overlap of the vocabulary with required words
         rest_words = [w for w in frequency_sorted if w not in checked] # words that are not required; sorted by frequency
         returnlist = checked+rest_words
