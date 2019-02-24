@@ -147,6 +147,7 @@ def extend_matrix_if_necessary(cooc, words_to_i, word):
         return cooc, words_to_i
 
 
+
 cooc = np.array([[]]) # cooccurrence count (only numbers)
 words_to_i = {} # vocabulary and word positions 
 
