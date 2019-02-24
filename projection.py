@@ -13,7 +13,7 @@ This script reads command line options and feeds data to a Fruitfly object.
 
 #=============== PARAMETER INPUT
 
-if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","5k", "10k"):
+if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","5k","10k"):
     print("\nUSAGE: python3 projection.py bnc|wiki|rawiki|w2v|5k|10k [num-kc] [size-proj] [percent-hash]\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\

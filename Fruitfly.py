@@ -71,7 +71,8 @@ class Fruitfly:
 
 	def log_params(self, filename="ff_config.txt", timestamp=True):
 		""" writes parameters and projection connections to a specified file"""
-		if(timestamp): filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
+		if timestamp is True: 
+			filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
 		connections = ""
 		for kc,pns in self.proj_functions.items():
 			connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
@@ -137,7 +138,7 @@ class Fruitfly:
 			"""
 		else: 
 			print("No valid flattening method specified. Continuing without flattening.")
-			pass
+			return frequency_vector
 		return flat_vector
 
 	def projection(self):
@@ -147,7 +148,6 @@ class Fruitfly:
 			activated_pns = self.proj_functions[cell] # array of the connected cells
 			for pn in activated_pns:
 				kc_layer[cell]+=self.pn_layer[pn] # sum the activation values of the pn nodes in the kc
-				#kc_layer[cell]+=np.log(1+3000*pn_layer[pn]) # direct flattening with intuitively chosen factor
 		return kc_layer
 
 	def hash_kenyon(self):
@@ -165,13 +165,28 @@ class Fruitfly:
 		afterwards project, hash, and return the complete hashed space.
 		"""
 		space_hashed = {} # a dict of word : binary_vector (= after "flying")
+		#flatten_time = 0
+		#projection_time = 0
+		#hash_time = 0
+		#loopstart = time.time()
 		for w in unhashed_space: # iterate through dictionary 
-			#print("starting flattening")
+			#runstart = time.time()
 			self.pn_layer = self.flatten(unhashed_space[w], flattening)# flatten before hitting the PNs
-			#print("starting projection")
+			#tf = time.time()
+			#flatten_time += tf-runstart
+
 			self.kc_layer = self.projection()
-			#print("starting hashing")
+			#tp = time.time()
+			#projection_time += tp-tf
+
 			space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'
+			#th = time.time()
+			#hash_time += th-tp
+
+		#loopend = time.time()
+		#print("Time share for flattening:", round(flatten_time/(loopend-loopstart),5), "(",round(flatten_time,5),"seconds)")
+		#print("Time share for projection:", round(projection_time/(loopend-loopstart),5), "(",round(projection_time,5),"seconds)")
+		#print("Time share for hashing:   ", round(hash_time/(loopend-loopstart),5), "(",round(hash_time,5),"seconds)")
 		return space_hashed
 
 

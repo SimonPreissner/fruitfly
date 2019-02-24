@@ -136,7 +136,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
                         str(men_sim[i])+"\t"+str(fly_sim[i])+"\t"+"\n")
     if verbose is True:
         print(specs_statement)
-        print(results_statement, "\n")
+        print(results_statement)
 
 
 #========== PARAMETER INPUT
@@ -171,8 +171,9 @@ for flat in flattening:
 
                 # make and apply fruitfly
                 fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
+                run += 1
                 if verbose is True:
-                    print("New fruitfly -- configuration: ", fruitfly.show_off(), "flattening:\t", flat)
+                    print("Run number",run,"; config:", fruitfly.show_off(), "flattening:\t", flat)
                 out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
                 # evaluate
@@ -183,7 +184,6 @@ for flat in flattening:
                 sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
                 all_ff_specs[run] = fruitfly.get_specs()
                 all_ff_specs[run]["flattening"] = flat
-                run += 1
 
 if verbose is True:
     print ("Finished grid search. Number of runs:",run)
