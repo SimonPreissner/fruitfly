@@ -105,6 +105,12 @@ def read_checklist(checklist_filepath):
     pos_tag = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
 
     with open(checklist_filepath, "r") as f:
+        if checklist_filepath == "data/MEN_dataset_natural_form_full":
+            if verbose_wanted is True:
+                print ("checking overlap with the gold standard:",checklist_filepath,"...")
+            for line in f:
+                words = line.rstrip().split()[:2]
+                checklist.extend(words)
         for word in f:
             word = word.rstrip()
             word = re.sub(pos_tag, "",word)
