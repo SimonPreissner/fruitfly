@@ -77,12 +77,13 @@ def freq_dist(wordlist, size_limit=None, required_words=None):
 
     if required_words is not None:
         checklist = read_checklist(required_words)
-        checked = [w for w in checklist if w in freq] # overlap of the vocabulary with required words
-        rest_words = [w for w in frequency_sorted if w not in checked] # words that are not required; sorted by frequency
-        returnlist = checked+rest_words
+        overlap = list(set(checklist).intersection(set(frequency_sorted)))
+        #overlap = [w for w in frequency_sorted if w in checklist] # overlap of the vocabulary with required words
+        rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
+        returnlist = overlap+rest_words 
         """
         if verbose_wanted is True:
-            print("required words that are in the corpus:", checked)
+            print("required words that are in the corpus:", overlap)
             print("first rest words:", rest_words[:30])
             print("first returned words and their frequencies:")
             for w in returnlist[:50]:
@@ -117,22 +118,17 @@ def check_overlap(wordlist, checklist_filepath):
             print("check_overlap(): nothing to check.")
         return True, []
 
-    all_in = True
-    unshared_words = []
-                
-    for word in checklist:
-        if (word not in wordlist):
-            unshared_words.append(word)
-            all_in = False
+    unshared_words = list(set(checklist).difference(set(wordlist)))
 
     if verbose_wanted is True:
-        if all_in is True:
-            print("all required words are in the corpus")
+        if unshared_words is True:
+            print("Complete overlap with",checklist_filepath)
         else:
-            print("Some of the",len(unshared_words),"words that are not in the corpus:\n",\
-                  unshared_words[:min(int(np.ceil(len(unshared_words)/10)), 100)])
+            print("Checked for overlap with",checklist_filepath,\
+                  "- some of the",len(unshared_words),"words missing in the corpus:\n",\
+                  unshared_words[:min(int(np.ceil(len(unshared_words)/10)), 25)])
 
-    return all_in, unshared_words
+    return (unshared_words is True), unshared_words
 
 
 
@@ -146,9 +142,9 @@ def extend_matrix_if_necessary(cooc, words_to_i, word):
         temp[0:cooc.shape[0], 0:cooc.shape[1]] = cooc # paste current matrix into the new one
         cooc = temp
         #fruitfly.extend_pn() \#TODO add input node to the pn_layer
-        return cooc
+        return cooc, words_to_i
     else:
-        return cooc
+        return cooc, words_to_i
 
 
 cooc = np.array([[]]) # cooccurrence count (only numbers)
@@ -156,16 +152,18 @@ words_to_i = {} # vocabulary and word positions
 
 words = read_corpus(infile)
 freq = freq_dist(words, size_limit=max_dims, required_words=required_voc)
+if verbose_wanted is True:
+    print("finished creating frequency distribution with",len(freq),"entries.")
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
 # for now, the matrix extension is done beforehand
 if verbose_wanted is True:
     print("creating empty matrix...")
-#for w in words:
-#    if w in freq:
-#        cooc = extend_matrix_if_necessary(cooc, words_to_i, w)
-cooc = np.zeros(len(freq), len(freq))
+for w in set(words):
+    if w in freq: # This limits the matrix to 
+        cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
+
 
 if verbose_wanted is True:
     print("counting cooccurrences...")
