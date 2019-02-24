@@ -162,10 +162,10 @@ all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 # for now, the matrix extension is done beforehand
 if verbose_wanted is True:
     print("creating empty matrix...")
-for w in words:
-    if w in freq:
-        cooc = extend_matrix_if_necessary(cooc, words_to_i, w)
-
+#for w in words:
+#    if w in freq:
+#        cooc = extend_matrix_if_necessary(cooc, words_to_i, w)
+cooc = np.zeros(len(freq), len(freq))
 
 if verbose_wanted is True:
     print("counting cooccurrences...")
