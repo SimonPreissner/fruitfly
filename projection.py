@@ -39,16 +39,22 @@ elif sys.argv[1] == "w2v":
     column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 elif sys.argv[1] == "1k":
-    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.dm"
-    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.cols"
+    #data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.dm"
+    #column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.cols"
+    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.dm"
+    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 elif sys.argv[1] == "5k":
-    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.dm"
-    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.cols"
+    #data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.dm"
+    #column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.cols"
+    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.dm"
+    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 elif sys.argv[1] == "10k":
-    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.dm"
-    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.cols"
+    #data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.dm"
+    #column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.cols"
+    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.dm"
+    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
     MEN_annot = "data/MEN_dataset_natural_form_full"
 
 unhashed_space = utils.readDM(data) # returns dict of word : word_vector
