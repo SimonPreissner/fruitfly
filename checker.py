@@ -1,7 +1,8 @@
 import re
 
 """
-This script was used to check whether every word from the 
+This script was used to check whether every word from the gold standard
+is in 
 """
 
 
@@ -41,4 +42,7 @@ if unshared_words is True:
 else:
     print(unshared_words)
     print("These",len(unshared_words),"MEN words are not in the dataset.")
+
+print("types in the corpus:   ", len(set(wordlist_WAC)))
+print("types in the checklist:", len(set(checklist)))
             
