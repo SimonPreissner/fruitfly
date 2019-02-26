@@ -1,8 +1,9 @@
 import re
+import numpy as np
 
 """
 This script was used to check whether every word from the gold standard
-is in 
+is in the ukwac_100m corpus.
 """
 
 
@@ -35,13 +36,13 @@ with open(menfile, "r") as f:
             word = re.sub(reg, "",word)
             checklist.appent(word)
 
-unshared_words = list(set(wordlist_WAC).intersection(set(checklist)))
+unshared_words = list(set(checklist).difference(set(wordlist_WAC)))
 
 if unshared_words is True:
-    print("all MEN words are in the data set.")
+    print("all required words are in the corpus.")
 else:
-    print(unshared_words)
-    print("These",len(unshared_words),"MEN words are not in the dataset.")
+    print(unshared_words[:min(int(np.ceil(len(unshared_words)/10)), 25)])
+    print("These are some of the",len(unshared_words),"words are not in the corpus.")
 
 print("types in the corpus:   ", len(set(wordlist_WAC)))
 print("types in the checklist:", len(set(checklist)))
