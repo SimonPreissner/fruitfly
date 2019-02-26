@@ -112,26 +112,28 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     
     logfilepath = log_dest+"/"+sys.argv[1]+"-"+str(int(kcs/pns))+"-"\
                   +str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
+    summarydump = logdest+"/dump.txt"
 
     items = results["testset"]
     spb = round(results["sp_before"], 5)
     spa = round(results["sp_after"], 5)
     diff = round(results["sp_diff"], 5)
     
-    specs_statement = "PN_size \t" + str(pns)+\
-                      "\nKC_factor\t" + str(kcs/pns)+\
-                      "\nprojections\t"+ str(proj)+\
-                      "\nhash_dims\t"+ str((hp*kcs)/100)+\
-                      "\nflattening\t"+ flattening
+    specs_statement =   "PN_size \t" + str(pns)+\
+                        "\nKC_factor\t" + str(kcs/pns)+\
+                        "\nprojections\t"+ str(proj)+\
+                        "\nhash_dims\t"+ str((hp*kcs)/100)+\
+                        "\nflattening\t"+ flattening
     results_statement = "evaluated\t" + str(items)+\
                         "\nsp_before\t" + str(spb)+\
                         "\nsp_after\t" + str(spa)+\
                         "\nsp_diff \t" + str(diff)+"\n"
 
-    with open(logfilepath, "w") as f:
+    with open(logfilepath, "w") as f, open(summarydump, "a") as d:
         f.write("Evaluated corpus:\t"+data+"\n")
-        f.write(specs_statement+"\n")
-        f.write(results_statement+"\n")
+        f.write(specs_statement+"\n"+results_statement+"\n")
+        
+        d.write(specs_statement+"\n"+results_statement+"\n")
 
         if (not (result_space is None) and (pair_cos is True)): 
             pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, MEN_annot)
