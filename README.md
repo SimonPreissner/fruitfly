@@ -45,6 +45,7 @@ The Fruitfly class implements the Fruitfly algorithm and utilities for logging a
 `Fruitfly.fly()` implements the actual application of the algorithm (hashing a distributional space).  
 `Fruitfly.extend()` implements the incremental feature of this project's variant of the Fruitfly algorithm.  
 
+# TODO CONTINUE HERE
 
 ### Tuning parameters
 
