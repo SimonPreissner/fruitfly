@@ -1,32 +1,42 @@
 import re
 
-wacfile = "/mnt/8tera/corpora/ukwac/ukwac_100m.txt"
-#wacfile = "data/ukwac_100m_demo.txt"
-menfile = "data/BNC-MEN.cols"
+"""
+This script was used to check whether every word from the 
+"""
 
-all_in = True
+
+wacfile = "../ukwac_100m/ukwac_100m_oneline.txt"
+#wacfile = "data/ukwac_100m_oneline_demo.txt"
+menfile = "data/MEN_dataset_natural_form_full"
+#menfile = "data/BNC-MEN.cols"
 
 wordlist_WAC = []
+checklist = []
 unshared_words = []
 
 reg = re.compile("_.+?")
 
 
 with open(wacfile, "r") as f:
-    for word in f:
-        word = word.rstrip() 
-        wordlist_WAC.append(word)
+    for line in f:
+        line = line.rstrip() 
+        wordlist_WAC.extend(line.split())
         print("items already read:",len(wordlist_WAC))
             
 with open(menfile, "r") as f:
-    for word in f:
-        word = word.rstrip()
-        word = re.sub(reg, "",word)
-        if (word not in wordlist_WAC):
-            unshared_words.append(word)
-            all_in = False
+    if menfile == "data/MEN_dataset_natural_form_full": 
+        for line in f:
+            words = line.rstrip().split()[:2]
+            checklist.extend(words)
+    else:
+        for word in f:
+            word = word.rstrip()
+            word = re.sub(reg, "",word)
+            checklist.appent(word)
 
-if(all_in):
+unshared_words = list(set(wordlist_WAC).intersection(set(checklist)))
+
+if unshared_words is True:
     print("all MEN words are in the data set.")
 else:
     print(unshared_words)
