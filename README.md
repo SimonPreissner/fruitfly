@@ -23,17 +23,17 @@ Finally, it contains a file *generic_pod.csv*, which is a compilation of around 
 ##### projection.py
 To create a Fruitfly, let it run over a space, and evaluate it, use projection.py
 For detailed usage description, run it without parameters:
-    
-    `python3 projection.py`
-    
+```
+python3 projection.py
+```
 A standard run migh look like this (test on he BNC corpus with 8000 Kenyon cells (=KCs), 6 projections leading to each KC, and 5% hashing): 
-    
-    `python3 projection.py bnc 8000 6 5`
-     
+```
+python3 projection.py bnc 8000 6 5
+```
 Or for the Wikipedia space (4000 KCs, 4 projections, 10% hashing):
-
-    `python3 projection.py wiki 4000 4 10`
-
+```
+python3 projection.py wiki 4000 4 10
+```
 The program returns the Spearman correlation with the MEN similarity data, as calculated a) from the raw frequency space; and b) after running the fly's random projections, as well as the difference between the two.
 
 ##### Fruitfly.py
