@@ -20,9 +20,9 @@ if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k
         [flattenings]         any combination of [log log2 log10]\n\
                                  default: log\n\
         -kc [min max steps]   expansion factor\n\
-                                 e.g. [4 20 4]; default: [5 5 1]\n\
+                                 e.g. [2 10 2]; default: [5 5 1]\n\
         -proj [min max steps] number of projections\n\
-                                 e.g. [4 20 4]; default: [5 5 1]\n\
+                                 e.g. [2 10 2]; default: [5 5 1]\n\
         -hash [min max steps] percentage of 'winner' KCs\n\
                                  e.g. [4 20 4]; default: [5 5 1]\n\
         -v                    run in verbose mode")
@@ -132,7 +132,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     with open(logfilepath, "w") as f, open(summarydump, "a") as d:
         f.write("Evaluated corpus:\t"+data+"\n")
         f.write(specs_statement+"\n"+results_statement+"\n")
-        
+
         d.write(specs_statement+"\n"+results_statement+"\n")
 
         if (not (result_space is None) and (pair_cos is True)): 

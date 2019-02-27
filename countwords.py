@@ -12,14 +12,14 @@ This script compiles data from text into cooccurrence matrices.
 
 
 if len(sys.argv) < 3:
-    print("USAGE: python3 countwords.py [infile] [outfiles] -t -v -dim [k] -check [file] -window [n]\n\
+    print("USAGE: python3 countwords.py [infile] [outfiles] -t -dim [k] -window [n] -check [file] -v\n\
           [infile]: raw input of text\n\
           [outfile]: output files of vectors WITHOUT file extension (produces a .dm and a .cols file)\n\
-          -t: optionally run an nltk tokenizer\n\
-          -v: optionally run with command line output\n\
+          -t: optionally run an nltk tokenizer on the input file\n\
           -dim: optionally limit dimensions to the [k] most frequent words\n\
+          -window: select the scope for cooccurrence counting ([n] words to each side); default is 5\
           -check: see whether all words of [file] are in the corpus\n\
-          -window: select the scope for cooccurrence counting ([n] words to each side); default is 5")
+          -v: optionally run with command line output\n")
     sys.exit() 
 
 
