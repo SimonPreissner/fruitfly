@@ -233,3 +233,6 @@ with open(outfile, "w") as dm_file, open(outcols, "w") as cols_file:
 print("so far, everything works")
 sys.exit()
 """
+
+
+#TODO update the README when the incremental part is implemented

@@ -19,7 +19,7 @@ if len(sys.argv) < 5 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","1k","5k
     - size-proj: how many projection neurons are used for each projection\n\
     - percent-hash: how much of the Kenyon layer to keep in the final hash.\n\
     - show most important connections per word with '-v'\n\
-    - evaluate a space without by using 'eval-only'\n")
+    - evaluate a space without hashing it by using 'eval-only'\n")
     sys.exit() 
 
 if sys.argv[1] == "bnc":

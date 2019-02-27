@@ -2,7 +2,7 @@ import numpy as np
 
 """
 This script was used to check whether every word from the gold standard
-is in the ukwac_100m corpus.
+is in the ukwac_100m corpus. The check was successful.
 """
 
 

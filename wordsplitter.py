@@ -1,5 +1,10 @@
 import re
 
+"""
+This script was used to compile the ukwac_100m corpus that was used to 
+compile spaces of various dimensionalities.
+"""
+
 infile =      "/mnt/8tera/corpora/ukwac/ukwac_preproc_tokenised.txt"
 outfile =     "/mnt/8tera/corpora/ukwac/ukwac_100m.txt"
 onelinefile = "/mnt/8tera/corpora/ukwac/ukwac_100m_oneline.txt"
@@ -8,7 +13,7 @@ output_as_a_single_line = True
 limit = 100000000 # 100 million
 
 wordlist = []
-reg = re.compile("_.+?\s")
+reg = re.compile("_.+?\s") # to get rid of POS-tags
 
 
 with open(infile, "r") as f:
