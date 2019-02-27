@@ -80,8 +80,13 @@ Be careful with large numbers for the ranges of -kc and -proj! These parameters 
 Part of the project is to be able to integrate new data into an already-processed corpus. For now, `countwords.py` takes a text coprus and compiles a co-occurrence matrix of words. Run it without parameters for details.  
 The most important parameters are 
 - `-dim`, which limits the dimensionality of the resulting space
-- `-check`, which checks the word overlap of a specified file with the resulting space
 - `-window`, which specifies the range (before and after a word) that is used for co-occurrence counting 
+- `-check`, which checks the word overlap of a specified file with the resulting space
+
+For example, `ukwac_1k_GS-checked.dm` (and `.cols`) was compiled from `ukwac_100m.txt` (which is not available in this repository) with the following command:
+```
+python3 countwords.py ukwac_100m.txt ukwac_1k_GS-checked -dim 1000 -window 5 -check data/MEN_dataset_natural_form_full
+```
 
 Countwords.py is intended to implement incremental development of a Fruitfly object; that is, whenever a new word is observed, the Fruitfly object's parts (PN layer, KC layer, and projection connections) adapt to that new word.
 
