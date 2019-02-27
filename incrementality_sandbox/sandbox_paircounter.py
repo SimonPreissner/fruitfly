@@ -3,7 +3,7 @@ This script was used to select 20 MEN-data set pairs as test set for
 a sandbox (to explore incrementality)
 """
 
-menfile = "data/MEN_dataset_natural_form_full"
+menfile = "../data/MEN_dataset_natural_form_full"
 
 wordlist = []
 pairs = []
