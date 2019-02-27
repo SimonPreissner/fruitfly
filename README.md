@@ -89,9 +89,3 @@ python3 countwords.py ukwac_100m.txt ukwac_1k_GS-checked -dim 1000 -window 5 -ch
 ```
 
 Countwords.py is intended to implement incremental development of a Fruitfly object; that is, whenever a new word is observed, the Fruitfly object's parts (PN layer, KC layer, and projection connections) adapt to that new word.
-
-
-### Turning the fly into a search engine
-You can test the capability of the the fly's algorithm to return web pages that are similar to a given one (and crucially, dimensionality-reduced), by typing:
-
-    python3 searchfly.py data/generic_pod.csv 2000 6 5 https://en.wikipedia.org/wiki/Yahoo!
