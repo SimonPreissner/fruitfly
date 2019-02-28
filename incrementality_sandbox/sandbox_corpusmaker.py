@@ -50,24 +50,23 @@ def write_to(filepath, corpus, multiline=False):
 original_corpus = "../../ukwac_100m/ukwac_100m_oneline.txt"
 #original_corpus = "../data/pride.txt" # for test purposes
 checklist_filepath = "data/sandbox_MEN_pairs"
+
 outfile = "data/sandbox_corpus.txt"
+multi_line_corpus_wanted = False
+#outfile = "data/sandbox_corpus_multiline.txt"
+#multi_line_corpus_wanted = True
 
 
 window = 10 # size of context to one side 
-multi_line_corpus_wanted = False
 
 source_words = read_corpus(original_corpus)
-source_words_size = len(source_words)
 checkset = make_checkset(checklist_filepath)
 
 corpus = []
 print("searching for occurences in the source corpus ...")
-for i in range(window, source_words_size-window): # avoid index problems
+for i in range(window, len(source_words)-window): # avoid index problems
     if source_words[i] in checkset:
         corpus.append(source_words[i-window:i+window]) # list of lists
-    if i%(source_words_size/500) == 0:
-        print(round(float(i*500)/source_words_size, 2),"percent done")
-
 
 write_to(outfile, corpus, multi_line_corpus_wanted)
 
