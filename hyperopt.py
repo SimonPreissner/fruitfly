@@ -14,7 +14,7 @@ to a kind of early-stopping grid search.
 if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k","10k"]:
     print("Check your parameters! Parameter sequence: \n\
         hyperopt.py \n\
-        [corpus]              one of these: [bnc wiki rawiki w2v 1k 5k 10k]\n\
+        [space]               one of these: [bnc wiki rawiki w2v 1k 5k 10k]\n\
         -logto [directory]    one file in [directory] per run\n\
                                  default: log/hyperopt/default_log\n\
         [flattenings]         any combination of [log log2 log10]\n\
@@ -25,6 +25,7 @@ if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k
                                  e.g. [2 10 2]; default: [5 5 1]\n\
         -hash [min max steps] percentage of 'winner' KCs\n\
                                  e.g. [4 20 4]; default: [5 5 1]\n\
+        -no-summary           omit creation of a summary of all runs\n\
         -v                    run in verbose mode")
     sys.exit() 
 
@@ -162,6 +163,7 @@ pn_size = len(i_to_cols) # length of word vector (= input dimension)
 
 # for reporting purposes
 verbose = "-v" in sys.argv
+no_overall_summary_wanted = "-no-summary" in sys.argv
 all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
@@ -197,22 +199,24 @@ if verbose is True:
 
 
 #========== LOG FINAL RESULTS
-with open(log_dest+"/summary.txt", "w") as f:
-    ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
-    summary_header = "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
-                     "KC factor (min, max, steps): "+str(kc_factor_min)+" "+str(kc_factor_max)+" "+str(kc_steps)+"\n"+\
-                     "projections (min, max, steps): "+str(projections_min)+" "+str(projections_max)+" "+str(proj_steps)+"\n"+\
-                     "hash percent (min, max, steps): "+str(hash_perc_min)+" "+str(hash_perc_max)+" "+str(hash_steps)+"\n"+\
-                     "flattening functions: "+", ".join(flattening)+"\n"\
-                     "number of runs: "+str(len(ranked_runs))+"\n\n"
-    f.write(summary_header)
-    for run in ranked_runs:
-        f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
 
-    if verbose is True:
-        print("Best runs by performance:")
-        for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
-            print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
+if no_overall_summary_wanted is False:
+    with open(log_dest+"/summary.txt", "w") as f:
+        ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
+        summary_header = "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
+                         "KC factor (min, max, steps): "+str(kc_factor_min)+" "+str(kc_factor_max)+" "+str(kc_steps)+"\n"+\
+                         "projections (min, max, steps): "+str(projections_min)+" "+str(projections_max)+" "+str(proj_steps)+"\n"+\
+                         "hash percent (min, max, steps): "+str(hash_perc_min)+" "+str(hash_perc_max)+" "+str(hash_steps)+"\n"+\
+                         "flattening functions: "+", ".join(flattening)+"\n"\
+                         "number of runs: "+str(len(ranked_runs))+"\n\n"
+        f.write(summary_header)
+        for run in ranked_runs:
+            f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
+
+        if verbose is True:
+            print("Best runs by performance:")
+            for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
+                print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
 
 """
 

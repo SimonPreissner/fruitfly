@@ -49,21 +49,24 @@ else:
 #========== FILE READING
 
 def read_corpus(infile):
-    words = []
+    lines = [] # list of lists of words
     nonword = re.compile("\W+") # to delete punctuation entries
+    wc = 0 # wordcount
     with open(infile) as f:
-        for text in f:
-            text = text.lower() # lowercase everything
-            if(tokenization_is_required):
+        for line in f:
+            line = line.rstrip().lower()
+            if tokenization_is_required:
                 tokenizer = RegexpTokenizer(r'\w+')
-                text = " ".join(tokenizer.tokenize(text)) # format the tokenized words into a space-separated string
-            tokens = text.rstrip().split()
+                tokens = tokenizer.tokenize(line)
+            else:
+                tokens = line.split()
             for t in tokens:
-                if (re.fullmatch(nonword, t) is None): # get rid of tokens that are punctuation etc.
-                    words.append(t) # if there are multiple lines, extend() takes care of it
-                    if len(words)%1000000 == 0:
-                        print("words read:",len(words))
-    return(words)
+                if (re.fullmatch(nonword, t) is None): # ignore punctuation
+                    lines.append(t) # adds the list as a unit to 'lines'
+                wc+=1
+                if verbose_wanted and wc%1000000 == 0:
+                    print("words read:",wc/1000000,"million")
+    return(lines)
 
 def freq_dist(wordlist, size_limit=None, required_words=None):
     freq = {}
@@ -82,7 +85,7 @@ def freq_dist(wordlist, size_limit=None, required_words=None):
         rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
         returnlist = overlap+rest_words 
         """
-        if verbose_wanted is True:
+        if verbose_wanted:
             print("required words that are in the corpus:", overlap)
             print("first rest words:", rest_words[:30])
             print("first returned words and their frequencies:")
@@ -137,10 +140,7 @@ def check_overlap(wordlist, checklist_filepath):
 
     return (unshared_words is True), unshared_words
 
-
-
-
-#========== COOCCURRENCE COUNTING
+#========== CO-OCCURRENCE COUNTING
 
 def extend_matrix_if_necessary(cooc, words_to_i, word):
     if word not in words_to_i:
@@ -153,56 +153,70 @@ def extend_matrix_if_necessary(cooc, words_to_i, word):
     else:
         return cooc, words_to_i
 
+def count_start_of_text(words): # for the first couple of words
+    for i in range(window): 
+        if words[i] in freq:
+            #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
+            for c in range(i+window+1): # iterate over the context
+                if words[c] in freq:
+                    cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 # increment cooccurrence
+            cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
+def count_middle_of_text(words): # for most of the words
+    for i in range(window, len(words)-window): 
+        if words[i] in freq:
+            #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
+            for c in range(i-window, i+window+1): 
+                if words[c] in freq:
+                    cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
+            cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
+
+def count_end_of_text(words): # for the last couple of words
+    for i in range(len(words)-window, len(words)): 
+        if words[i] in freq:
+            #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
+            for c in range(i-window, len(words)):
+                if words[c] in freq:
+                    cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
+            cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
+
+
+
+#========== EXECUTIVE CODE
 
 cooc = np.array([[]]) # cooccurrence count (only numbers)
 words_to_i = {} # vocabulary and word positions 
 
-words = read_corpus(infile)
+lines = read_corpus(infile)
+words = [w for l in lines for w in l] # flattens to a simple word list
 freq = freq_dist(words, size_limit=max_dims, required_words=required_voc)
-if verbose_wanted is True:
-    print("finished creating frequency distribution with",len(freq),"entries.")
+if verbose_wanted:
+    print("Finished frequency distribution; vocabulary size: ",len(freq))
+    print("Number of tokens for cooccurrence count:",len(words))
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
 # for now, the matrix extension is done beforehand
-if verbose_wanted is True:
+if verbose_wanted:
     print("creating empty matrix...")
 for w in set(words):
-    if w in freq: # This limits the matrix to 
+    if w in freq: # This limits the matrix to the required size
         cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
 
 
-if verbose_wanted is True:
+if verbose_wanted:
     print("counting cooccurrences...")
 # all the "in freq" checking is in order to only count the most frequent words
-for i in range(window): # for the first couple of words
-    if words[i] in freq:
-        #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
-        for c in range(i+window+1):
-            if words[c] in freq:
-                cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 # increment cooccurrence
-        cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1 # don't count cooccurrence with yourself!
-
-for i in range(window, len(words)-window): # for most of the words
-    if verbose_wanted is True and i%1000000 == 0:
+for line in lines:
+    \#This might lead to problems; cooc and words_to_i might have to be returned
+    count_start_of_text(line)
+    count_middle_of_text(line)
+    count_end_of_text(line)
+    if verbose_wanted and i%1000000 == 0:
         print("words already processed:",i)
-    if words[i] in freq:
-        #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
-        for c in range(i-window, i+window+1): 
-            if words[c] in freq:
-                cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
-        cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
-for i in range(len(words)-window, len(words)): # for the last couple of words
-    if words[i] in freq:
-        #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
-        for c in range(i-window, len(words)):
-            if words[c] in freq:
-                cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
-        cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
-if verbose_wanted is True:
+if verbose_wanted:
     print("finished counting cooccurrences; matrix shape:",cooc.shape)
     print("vocabulary size:",len(words_to_i))
     print("first words in the vocabulary:",\
