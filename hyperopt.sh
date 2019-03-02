@@ -22,7 +22,7 @@ for F in ${FLAT[@]};
     	    	do
     	    	# performs a grid search with only one value for each parameter
     	    	# example log destination: ../gridsearch_5k 
-    	    	python3 hyperopt.py ${SPACE} -logto ${LOGTO} ${F} -kc ${K} ${K} 1 -proj ${P} ${P} 1 -hash ${H} ${H} 1 -no-summary -v &
+    	    	python3.5 hyperopt.py ${SPACE} "-logto" ${LOGTO} ${F} "-kc" ${K} ${K} 1 "-proj" ${P} ${P} 1 "-hash" ${H} ${H} 1 "-no-summary" "-v" &
     	    	done
     	    done
     	done

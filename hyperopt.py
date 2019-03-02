@@ -1,6 +1,7 @@
 import os
 import sys
 import utils
+import fcntl # for file locking of the output
 import numpy as np
 import MEN
 from Fruitfly import Fruitfly # in order to workaround the classmethod issues
@@ -88,9 +89,9 @@ def get_logging_from_argv():
     if "-logto" in sys.argv: 
         log_dest = sys.argv[sys.argv.index("-logto")+1]
     else: 
-        log_dest = "./log/hyperopt/default_log"
+        log_dest = "../hyperopt_default_log"
     if not os.path.isdir(log_dest):
-        os.makedirs(log_dest)
+        os.makedirs(log_dest, exist_ok=True)
     return log_dest
 
 
@@ -113,7 +114,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     
     logfilepath = log_dest+"/"+sys.argv[1]+"-"+str(int(kcs/pns))+"-"\
                   +str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
-    summarydump = logdest+"/dump.txt"
+    summarydump = log_dest+"/dump.txt"
 
     items = results["testset"]
     spb = round(results["sp_before"], 5)
@@ -131,10 +132,11 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
                         "\nsp_diff \t" + str(diff)+"\n"
 
     with open(logfilepath, "w") as f, open(summarydump, "a") as d:
+        fcntl.flock(d, fcntl.LOCK_EX)
         f.write("Evaluated corpus:\t"+data+"\n")
         f.write(specs_statement+"\n"+results_statement+"\n")
-
         d.write(specs_statement+"\n"+results_statement+"\n")
+        fcntl.flock(d, fcntl.LOCK_UN)
 
         if (not (result_space is None) and (pair_cos is True)): 
             pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, MEN_annot)
@@ -168,7 +170,10 @@ all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
 
+print(verbose, log_dest)
+sys.exit()
 
+"""
 #========== GRID SEARCH
 #TODO maybe: sort the parameters by relevance
 run = 0
@@ -218,7 +223,7 @@ if no_overall_summary_wanted is False:
             for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
                 print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
 
-"""
+
 
 """
 
