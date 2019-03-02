@@ -7,7 +7,7 @@ from sklearn.decomposition import PCA
 def readDM(dm_file): # read word vectors
     dm_dict = {}
     version = ""
-    with open(dm_file) as f:
+    with open(dm_file, "r") as f:
         dmlines=f.readlines()
 
     #Make dictionary with key=word, value=vector
@@ -33,7 +33,7 @@ def readCols(cols_file):
 
 def parse_pod(pod):
     pod_dict = {}
-    with open(pod) as f:
+    with open(pod, "r") as f:
         for l in f:
             if l[0] != '#':
                 try:
