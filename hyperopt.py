@@ -132,7 +132,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
                         "\nsp_diff \t" + str(diff)+"\n"
 
     with open(logfilepath, "w") as f, open(summarydump, "a") as d:
-        fcntl.flock(d, fcntl.LOCK_EX)
+        fcntl.flock(d, fcntl.LOCK_EX) # for multiprocessing
         f.write("Evaluated corpus:\t"+data+"\n")
         f.write(specs_statement+"\n"+results_statement+"\n")
         d.write(specs_statement+"\n"+results_statement+"\n")
@@ -173,8 +173,9 @@ sp_diffs = {}
 print(verbose, log_dest)
 sys.exit()
 
-"""
+
 #========== GRID SEARCH
+
 #TODO maybe: sort the parameters by relevance
 run = 0
 for flat in flattening:
@@ -223,7 +224,7 @@ if no_overall_summary_wanted is False:
             for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
                 print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
 
-
+"""
 
 """
 

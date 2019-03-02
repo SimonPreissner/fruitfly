@@ -12,6 +12,7 @@ KC=(1 4)
 PROJ=(2 4 6 8 10)
 HASH=(4 8 12 16 20)
 
+RUN=0
 for F in ${FLAT[@]};
     do
     for K in ${KC[@]};
@@ -22,11 +23,13 @@ for F in ${FLAT[@]};
     	    	do
     	    	# performs a grid search with only one value for each parameter
     	    	# example log destination: ../gridsearch_5k 
-    	    	python3.5 hyperopt.py ${SPACE} "-logto" ${LOGTO} ${F} "-kc" ${K} ${K} 1 "-proj" ${P} ${P} 1 "-hash" ${H} ${H} 1 "-no-summary" "-v" &
+    	    	RUN=$((RUN + 1))
+    	    	echo \[bash script message\] starting run number ${RUN}
+    	    	python3 hyperopt.py ${SPACE} "-logto" ${LOGTO} ${F} "-kc" ${K} ${K} 1 "-proj" ${P} ${P} 1 "-hash" ${H} ${H} 1 "-no-summary" "-v" &
     	    	done
     	    done
     	done
 	wait
     done
 
-echo done
+echo \[bash script message\] done. Number of runs: ${RUN}
