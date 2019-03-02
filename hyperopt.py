@@ -170,8 +170,6 @@ all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
 
-print(verbose, log_dest)
-sys.exit()
 
 
 #========== GRID SEARCH
