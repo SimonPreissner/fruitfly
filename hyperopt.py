@@ -101,7 +101,6 @@ def evaluate(orig_space, result_space, goldstd):
     sp_after = 0
     sp_before, count_before = MEN.compute_men_spearman(orig_space, goldstd)
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
-    print("count_before:",count_before,"\tcount_after",count_after) #CLEANUP
     sp_diff = sp_after-sp_before
 
     results = {"testset":count_after, "sp_before":sp_before, "sp_after":sp_after, "sp_diff":sp_diff}
@@ -118,6 +117,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     summarydump = log_dest+"/dump.txt"
 
     items = results["testset"]
+    print("DEBUG 2 -- in method log_results(); items:", items) #CLEANUP
     spb = round(results["sp_before"], 5)
     spa = round(results["sp_after"], 5)
     diff = round(results["sp_diff"], 5)
@@ -193,6 +193,7 @@ for flat in flattening:
                 internal_log[run] = evaluate(in_space, out_space, goldstandard)
 
                 # log externally and internally
+                print("DEBUG 1 -- internal_log[run]:",internal_log[run]) #CLEANUP
                 log_results(internal_log[run], flat, fruitfly.get_specs(), log_dest, out_space)
                 sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
                 all_ff_specs[run] = fruitfly.get_specs()
