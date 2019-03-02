@@ -101,6 +101,7 @@ def evaluate(orig_space, result_space, goldstd):
     sp_after = 0
     sp_before, count_before = MEN.compute_men_spearman(orig_space, goldstd)
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
+    print("count_before:",count_before,"\tcount_after",count_after) #CLEANUP
     sp_diff = sp_after-sp_before
 
     results = {"testset":count_after, "sp_before":sp_before, "sp_after":sp_after, "sp_diff":sp_diff}

@@ -187,7 +187,6 @@ class Fruitfly:
         #print("Time share for flattening:", round(flatten_time/(loopend-loopstart),5), "(",round(flatten_time,5),"seconds)")
         #print("Time share for projection:", round(projection_time/(loopend-loopstart),5), "(",round(projection_time,5),"seconds)")
         #print("Time share for hashing:   ", round(hash_time/(loopend-loopstart),5), "(",round(hash_time,5),"seconds)")
-        print("Done flying with",len(space_hashed),"vectors")
         return space_hashed
 
 
