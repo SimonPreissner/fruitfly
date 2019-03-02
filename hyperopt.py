@@ -139,7 +139,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
         fcntl.flock(d, fcntl.LOCK_UN)
 
         if (not (result_space is None) and (pair_cos is True)): 
-            pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, MEN_annot)
+            pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, goldstandard)
             for i in range(len(pairs)):
                 f.write(str(pairs[i][0])+"\t"+str(pairs[i][1])+"\t"+\
                         str(men_sim[i])+"\t"+str(fly_sim[i])+"\t"+"\n")
@@ -150,7 +150,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
 
 #========== PARAMETER INPUT
 
-data, column_labels, MEN_annot = get_text_resources_from_argv()
+data, column_labels, goldstandard = get_text_resources_from_argv()
 log_dest = get_logging_from_argv()
 
 flattening = get_flattening_from_argv()
@@ -189,7 +189,7 @@ for flat in flattening:
                 out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
                 # evaluate
-                internal_log[run] = evaluate(in_space, out_space, MEN_annot)
+                internal_log[run] = evaluate(in_space, out_space, goldstandard)
 
                 # log externally and internally
                 log_results(internal_log[run], flat, fruitfly.get_specs(), log_dest, out_space)
