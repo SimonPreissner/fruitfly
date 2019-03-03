@@ -8,8 +8,8 @@ echo "Usage: sh hyperopt.sh [dist_space_file] [logto_folder]";
 
 
 FLAT=(log log2 log10)
-KC=(1 4)
-PROJ=(2 4 6 8 10)
+KC=(1 2 4)
+PROJ=(6 8 10 12 14 16)
 HASH=(4 8 12 16 20)
 
 RUN=0
@@ -28,8 +28,8 @@ for F in ${FLAT[@]};
     	    	python3 hyperopt.py ${SPACE} "-logto" ${LOGTO} ${F} "-kc" ${K} ${K} 1 "-proj" ${P} ${P} 1 "-hash" ${H} ${H} 1 "-no-summary" "-v" &
     	    	done
     	    done
-    	done
-	wait
+	    wait
+        done
     done
 
 echo \[bash script message\] done. Number of runs: ${RUN}
