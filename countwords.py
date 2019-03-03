@@ -12,14 +12,15 @@ This script compiles data from text into cooccurrence matrices.
 
 
 if len(sys.argv) < 3:
-    print("USAGE: python3 countwords.py [infile] [outfiles] -t -dim [k] -window [n] -check [file] -v\n\
-          [infile]: raw input of text\n\
-          [outfile]: output files of vectors WITHOUT file extension (produces a .dm and a .cols file)\n\
-          -t: optionally run an nltk tokenizer on the input file\n\
-          -dim: optionally limit dimensions to the [k] most frequent words\n\
-          -window: select the scope for cooccurrence counting ([n] words to each side); default is 5\
-          -check: see whether all words of [file] are in the corpus\n\
-          -v: optionally run with command line output\n")
+    print("USAGE: python3 countwords.py [infile] [outfiles] -t -dim [k] "+\
+        "-window [n] -check [file] -v\n\
+    [infile]:  raw input of text\n\
+    [outfile]: without file extension (produces 2 files: .dm .cols)\n\
+    -t:        run an nltk tokenizer on the input file (default: False)\n\
+    -dim:      limit dimensions to [k] most frequent words (default: None)\n\
+    -window:   count [n] words to each side (default: 5)\n\
+    -check:    check overlap of words in [file] with [infile]\n\
+    -v:        run with command line output (default: False)\n")
     sys.exit() 
 
 
@@ -51,9 +52,11 @@ else:
 def read_corpus(infile):
     lines = [] # list of lists of words
     nonword = re.compile("\W+") # to delete punctuation entries
+    lc = 0 # for files with more than one line
     wc = 0 # wordcount
     with open(infile) as f:
         for line in f:
+            lc += 1
             line = line.rstrip().lower()
             if tokenization_is_required:
                 tokenizer = RegexpTokenizer(r'\w+')
@@ -64,9 +67,13 @@ def read_corpus(infile):
                 if (re.fullmatch(nonword, t) is None): # ignore punctuation
                     lines.append(t) # adds the list as a unit to 'lines'
                 wc+=1
-                if verbose_wanted and wc%1000000 == 0:
-                    print("words read:",wc/1000000,"million")
-    return(lines)
+                if verbose_wanted and wc%100000 == 0:
+                    print("\twords read:",wc/1000000,"million")
+
+    if lc > 1:
+        return [w for l in lines for w in l] # flattens to a simple word list
+    else: 
+        return(lines)
 
 def freq_dist(wordlist, size_limit=None, required_words=None):
     freq = {}
@@ -105,78 +112,87 @@ def read_checklist(checklist_filepath):
         return []
 
     checklist = []
-    pos_tag = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
 
     with open(checklist_filepath, "r") as f:
         #TODO generalize this so that it takes any text file
-        if checklist_filepath == "data/MEN_dataset_natural_form_full": 
-            if verbose_wanted is True:
-                print ("checking overlap with the gold standard:",checklist_filepath,"...")
+        paired_lists = ["data/MEN_dataset_natural_form_full",
+                        "incrementality_sandbox/data/sandbox_MEN_pairs"]
+        if checklist_filepath in paired_lists: 
             for line in f:
                 words = line.rstrip().split()[:2]
                 checklist.extend(words)
-        for word in f:
-            word = word.rstrip()
-            word = re.sub(pos_tag, "",word)
-            checklist.append(word)
-    return checklist # add [:10] for test purposes ONLY!
+        else:
+            for word in f:
+                word = word.rstrip()
+                checklist.append(word)
+        
+    pos_tag = re.compile("_.+?") #if it's POS-tagged, this will get rid of that
+    return [re.sub(pos_tag, "", w) for w in checklist] # add [:10] for test purposes ONLY!
 
 def check_overlap(wordlist, checklist_filepath):
     checklist = read_checklist(checklist_filepath)
     if checklist is False: # if no checking is specified, go on without checking
-        if verbose_wanted is True:
-            print("check_overlap(): nothing to check.")
+        if verbose_wanted: 
+            print("\tcheck_overlap(): nothing to check.")
         return True, []
 
     unshared_words = list(set(checklist).difference(set(wordlist)))
 
-    if verbose_wanted is True:
-        if unshared_words is True:
-            print("Complete overlap with",checklist_filepath)
+    if verbose_wanted:
+        if len(unshared_words) == 0:
+            print("\tComplete overlap with",checklist_filepath)
         else:
-            print("Checked for overlap with",checklist_filepath,\
-                  "- some of the",len(unshared_words),"words missing in the corpus:\n",\
-                  unshared_words[:min(int(np.ceil(len(unshared_words)/10)), 25)])
+            print("\ŧChecked for overlap with",checklist_filepath,\
+                  "\n\twords missing in the corpus:",len(unshared_words),\
+                  "\n\texamples:",unshared_words[:10])
 
     return (unshared_words is True), unshared_words
 
 #========== CO-OCCURRENCE COUNTING
 
-def extend_matrix_if_necessary(cooc, words_to_i, word):
-    if word not in words_to_i:
-        words_to_i[word] = len(words_to_i) # extend the vocabulary
+def extend_matrix_if_necessary(w):
+    global cooc, words_to_i
+    if w not in words_to_i:
+        words_to_i[w] = len(words_to_i) # extend the vocabulary
         temp = np.zeros((len(words_to_i), len(words_to_i))) # make bigger matrix
         temp[0:cooc.shape[0], 0:cooc.shape[1]] = cooc # paste current matrix into the new one
         cooc = temp
-        #fruitfly.extend_pn() \#TODO add input node to the pn_layer
-        return cooc, words_to_i
-    else:
-        return cooc, words_to_i
 
-def count_start_of_text(words): # for the first couple of words
+        #fruitfly.extend_pn() \#TODO add input node to the pn_layer
+
+
+def count_start_of_text(): # for the first couple of words
+    global cooc, words_to_i, words
     for i in range(window): 
         if words[i] in freq:
-            #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
             for c in range(i+window+1): # iterate over the context
                 if words[c] in freq:
+                    extend_matrix_if_necessary(words[i])
+                    extend_matrix_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 # increment cooccurrence
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
-def count_middle_of_text(words): # for most of the words
+def count_middle_of_text(): # for most of the words
+    global cooc, words_to_i, words
     for i in range(window, len(words)-window): 
         if words[i] in freq:
-            #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
             for c in range(i-window, i+window+1): 
                 if words[c] in freq:
+                    extend_matrix_if_necessary(words[i])
+                    extend_matrix_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
+        if verbose_wanted and i%100000==0:
+            print("\twords iterated:",i/1000000,"million")
 
-def count_end_of_text(words): # for the last couple of words
+def count_end_of_text(): # for the last couple of words
+    global cooc, words_to_i, words    
     for i in range(len(words)-window, len(words)): 
         if words[i] in freq:
-            #cooc = extend_matrix_if_necessary(cooc, words_to_i, words[i])
             for c in range(i-window, len(words)):
                 if words[c] in freq:
+                    extend_matrix_if_necessary(words[i])
+                    extend_matrix_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
@@ -186,41 +202,39 @@ def count_end_of_text(words): # for the last couple of words
 
 cooc = np.array([[]]) # cooccurrence count (only numbers)
 words_to_i = {} # vocabulary and word positions 
+words = [] # words in the corpus, to be counted
 
-lines = read_corpus(infile)
-words = [w for l in lines for w in l] # flattens to a simple word list
+if verbose_wanted: print("\nreading corpus...")
+words = read_corpus(infile)
+
+if verbose_wanted: print("\ncreating frequency distribution...")
 freq = freq_dist(words, size_limit=max_dims, required_words=required_voc)
-if verbose_wanted:
-    print("Finished frequency distribution; vocabulary size: ",len(freq))
-    print("Number of tokens for cooccurrence count:",len(words))
+if verbose_wanted: print("\tVocabulary size:",len(freq))
+if verbose_wanted: print("\tTokens for cooccurrence count:",len(words))
+
+if verbose_wanted: print("\nchecking overlap...")
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
 # for now, the matrix extension is done beforehand
-if verbose_wanted:
-    print("creating empty matrix...")
-for w in set(words):
-    if w in freq: # This limits the matrix to the required size
-        cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
+#if verbose_wanted: print("creating empty matrix...")
+#wordset = set(words)
+#for w in freq.keys(): # This limits the matrix to the required size
+#        cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
+
+if verbose_wanted: print("\ncounting cooccurrences...")
+count_start_of_text()
+count_middle_of_text()
+count_end_of_text()
+
+#print("Final matrix:\n",cooc)#CLEANUP
 
 
 if verbose_wanted:
-    print("counting cooccurrences...")
-# all the "in freq" checking is in order to only count the most frequent words
-for line in lines:
-    \#This might lead to problems; cooc and words_to_i might have to be returned
-    count_start_of_text(line)
-    count_middle_of_text(line)
-    count_end_of_text(line)
-    if verbose_wanted and i%1000000 == 0:
-        print("words already processed:",i)
-
-
-if verbose_wanted:
-    print("finished counting cooccurrences; matrix shape:",cooc.shape)
-    print("vocabulary size:",len(words_to_i))
-    print("first words in the vocabulary:",\
-           [str(words_to_i[key])+":"+key for key in sorted(words_to_i, key=words_to_i.get)][:25])
+    print("\nfinished counting; matrix shape:",cooc.shape)
+    print("\tvocabulary size:",len(words_to_i))
+    print("first words in the vocabulary:\n\t",\
+           [str(words_to_i[key])+":"+key for key in sorted(words_to_i, key=words_to_i.get)][:10])
 
 
 
@@ -229,17 +243,18 @@ if verbose_wanted:
 
 #outfile=rawtext[:-3]+"dm" # change the (3-letter) file ending
 with open(outfile, "w") as dm_file, open(outcols, "w") as cols_file:
-    if verbose_wanted is True:
-        print("writing vectors to",outfile,"and dictionary to",outcols,"...")
+    if verbose_wanted:
+        print("\nwriting vectors to",outfile,\
+            "\n\tand dictionary to",outcols,"...")
     counter = 0
     for word,i in sorted(words_to_i.items(), key=lambda x: x[1]):
         cols_file.write(word+"\n")
         vectorstring = " ".join([str(v) for v in cooc[i]])
         dm_file.write(word+" "+vectorstring+"\n")
-        #dm_file.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
-        if verbose_wanted is True and counter%100==0:
-            print(counter,"word vectors written...")
         counter += 1
+        #dm_file.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
+        if verbose_wanted and counter%100==0:
+            print("\t word vectors written:",counter)
 
 
 
