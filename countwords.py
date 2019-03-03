@@ -11,40 +11,51 @@ This script compiles data from text into cooccurrence matrices.
 """
 
 
-if len(sys.argv) < 3:
-    print("USAGE: python3 countwords.py [infile] [outfiles] -t -dim [k] "+\
-        "-window [n] -check [file] -v\n\
-    [infile]:  raw input of text\n\
-    [outfile]: without file extension (produces 2 files: .dm .cols)\n\
-    -t:        run an nltk tokenizer on the input file (default: False)\n\
-    -dim:      limit dimensions to [k] most frequent words (default: None)\n\
-    -window:   count [n] words to each side (default: 5)\n\
-    -check:    check overlap of words in [file] with [infile]\n\
-    -v:        run with command line output (default: False)\n")
+if len(sys.argv) < 5 or "-in" not in sys.argv or "-out" not in sys.argv:
+    print("USAGE: python3 countwords.py -i -in [infile] -t "\
+        "-out [outfile] -fly [fly_config] -dim [k] -window [n] "\
+        "-check [file] -v\n\
+    -i:      load and further develop existing space ( =[outfile] )\n\
+    -in:     raw input of text from [infile]\n\
+    -t:      run an nltk tokenizer on the input file (default: False)\n\
+    -out:    [outfile] without file extension (results in 2 files: .dm .cols)\n\
+    -fly:    develop the FFA in [fly_config] alongside the space\n\
+    -dim:    limit dimensions to [k] most frequent words (default: None)\n\
+    -window: count [n] words to each side (default: 5)\n\
+    -check:  check overlap of words in [file] with [infile]\n\
+    -v:      run with command line output (default: False)\n")
     sys.exit() 
 
 
 #========== PARAMETER INPUT
 
-infile = sys.argv[1] # e.g. "data/potato.txt"
-outfile = sys.argv[2]+".dm" # e.g. "data/potato"
-outcols = sys.argv[2]+".cols"
-tokenization_is_required = ("-t" in sys.argv)
-verbose_wanted = ("-v" in sys.argv)
+increment_mode = "-i" in sys.argv
+infile = sys.argv[sys.argv.index("-in")+1] # e.g. "data/potato.txt"
+tokenization_is_required = "-t" in sys.argv
+outfile = sys.argv[sys.argv.index("-out")+1]+".dm" # e.g. "data/potato"
+outcols = sys.argv[sys.argv.index("-out")+1]+".cols"
 
-if ("-dim" in sys.argv):
+if "-fly" in sys.argv:
+    fly_file = sys.argv[sys.argv.index("-fly")+1]
+else:
+    fly_file = None
+
+if "-dim" in sys.argv:
     max_dims = int(sys.argv[sys.argv.index("-dim")+1]) # take the number after '-dim' as value
 else:
     max_dims = None
 
-if ("-check" in sys.argv):
-    required_voc = sys.argv[sys.argv.index("-check")+1] # 
-else:
-    required_voc = None
-if ("-window" in sys.argv):
-    window = int(sys.argv[sys.argv.index("-window")+1]) # take the number after '-dim' as value
+if "-window" in sys.argv:
+    window = int(sys.argv[sys.argv.index("-window")+1]) 
 else:
     window = 5
+
+if "-check" in sys.argv:
+    required_voc = sys.argv[sys.argv.index("-check")+1]  
+else:
+    required_voc = None
+
+verbose_wanted = "-v" in sys.argv
 
 
 #========== FILE READING
@@ -158,7 +169,7 @@ def extend_matrix_if_necessary(w):
         temp[0:cooc.shape[0], 0:cooc.shape[1]] = cooc # paste current matrix into the new one
         cooc = temp
 
-        #fruitfly.extend_pn() \#TODO add input node to the pn_layer
+        fruitfly.extend_pn() \#TODO add input node to the pn_layer
 
 
 def count_start_of_text(): # for the first couple of words
@@ -200,9 +211,19 @@ def count_end_of_text(): # for the last couple of words
 
 #========== EXECUTIVE CODE
 
-cooc = np.array([[]]) # cooccurrence count (only numbers)
-words_to_i = {} # vocabulary and word positions 
-words = [] # words in the corpus, to be counted
+if increment_mode:
+    if verbose_wanted: print("\nloading existing space...")
+    unhashed_space = utils.readDM(outfile) # returns dict of word : vector
+    cooc = np.stack([v for k,v in unhashed_space.items()])
+    i_to_words, words_to_i = utils.readCols(outcols)
+    if fly_file is not None:
+        if verbose_wanted: print("\nloading fruitfly...")
+        fruitfly = Fruitfly.from_config(fly_file) \#TODO test from_config()
+else: 
+    cooc = np.array([[]]) # cooccurrence count (only numbers)
+    words_to_i = {} # vocabulary and word positions 
+    fruitfly = None
+
 
 if verbose_wanted: print("\nreading corpus...")
 words = read_corpus(infile)
@@ -216,6 +237,7 @@ if verbose_wanted: print("\nchecking overlap...")
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
+#CLEANUP
 # for now, the matrix extension is done beforehand
 #if verbose_wanted: print("creating empty matrix...")
 #wordset = set(words)
@@ -227,7 +249,6 @@ count_start_of_text()
 count_middle_of_text()
 count_end_of_text()
 
-#print("Final matrix:\n",cooc)#CLEANUP
 
 
 if verbose_wanted:
@@ -239,6 +260,7 @@ if verbose_wanted:
 
 
 
+sys.exit() \#BREAKPOINT
 #========== OUTPUT
 
 #outfile=rawtext[:-3]+"dm" # change the (3-letter) file ending
