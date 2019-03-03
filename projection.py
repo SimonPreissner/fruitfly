@@ -13,10 +13,10 @@ This script reads command line options and feeds data to a Fruitfly object.
 
 #=============== PARAMETER INPUT
 
-if len(sys.argv) < 6 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","1k","5k","10k"):
+if len(sys.argv) < 6 or sys.argv[1] not in ("bnc","wiki","rawiki","w2v","1k","5k","10k", "sand"):
     print("\nUSAGE: python3 projection.py [space] [goldstd] [num-kc] [size-proj] [percent-hash]\n\
-    - space: bnc|wiki|rawiki|w2v|1k|5k|10k\n\
-    - goldstd: men|lemma|sand\n\
+    - space: bnc | wiki | rawiki | w2v | 1k | 5k | 10k | sand\n\
+    - goldstd: men | lemma | sand\n\
     - num-kc: the number of Kenyon cells\n\
     - size-proj: how many projection neurons are used for each projection\n\
     - percent-hash: how much of the Kenyon layer to keep in the final hash.\n\
@@ -34,8 +34,10 @@ elif sys.argv[1] == "rawiki":
     data = "data/wiki_abs-freq.dm"
     column_labels = "data/wiki_abs-freq.cols"
 elif sys.argv[1] == "w2v":
-    data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
-    column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
+    #data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
+    #column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
+    data = "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_w2v_400.txt"
+    column_labels= "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_w2v_400.vocab"
 elif sys.argv[1] == "1k":
     #data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.dm"
     #column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.cols"
@@ -51,6 +53,11 @@ elif sys.argv[1] == "10k":
     #column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.cols"
     data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.dm"
     column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
+elif sys.argv[1] == "sand":
+    data = "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_1000_dim.dm"
+    column_labels= "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_1000_dim.cols"
+    #data = "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_5000_dim.dm"
+    #column_labels= "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_5000_dim.cols"
 else: 
     print("No data assignable; check the [space] parameter!")
     sys.exit()
