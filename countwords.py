@@ -61,7 +61,7 @@ def read_corpus(infile):
     lc = 0 # for files with more than one line
     #wc = 0 # wordcount
     with open(infile) as f:
-        for line in tqdm(f):
+        for i, line in enumerate(tqdm(f)):
             lc += 1
             line = line.rstrip().lower()
             if tokenization_is_required:
