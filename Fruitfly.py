@@ -103,7 +103,7 @@ class Fruitfly:
     def extend(self):
         self.pn_size+=1
         self.pn_layer = np.append(self.pn_layer, [0])
-#\#TODO establish new connections, either by adding them or by "re-wiring"
+    #\#TODO establish new connections, either by adding them or by "re-wiring"
 
 
 
