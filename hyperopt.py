@@ -1,16 +1,44 @@
-import os
-import sys
-import utils
-import fcntl # for file locking of the output
-import numpy as np
-import MEN
-from Fruitfly import Fruitfly # in order to workaround the classmethod issues
+"""Countwords: Create or extend a co-occurrence matrix (and optionally a corresponding fruitfly).
+
+Usage:
+  hyperopt.py [--help] 
+  hyperopt.py <space> <testset> 
+  hyperopt.py <space> <testset> [--logto <log_dir>] [-v] [--no-summary]
+
+Options:
+  -h --help             show this screen
+  -v --verbose          comment program status with command-line output
+  --logto=<log_dir>     creates one file per run in the specified folder
+  --no-summary          omit the creation of a final summary file 
+  --flat=<flattenings>  flattening function(s), one of [log log2 log10], dash-separated [default: log]
+  --k1=<kc_min>          KC expansion factor, min< [default: 5]
+  --k2=<kc_max>                               maximum [default: 5]
+  --k3=<kc_step>                            step size [default: 1]
+  --p1=<proj_min>        projection numbers per KC, minimum [default: 5]
+  --p2=<proj_max>                                   maximum [default: 5]
+  --p3=<proj_step>                                step size [default: 1]
+  --r1=<hash_min>        percentages for hashing, minimum [default: 5]
+  --r2=<hash_max>                                 maximum [default: 5]
+  --r3=<hash_step>                              step size [default: 1]
+  
+from docopt import docopt
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__)
+    print(arguments)
+    sys.exit() # BREAKPOINT
+"""
+#  hyperopt.py <space> <testset> [--flat <flat_range>...] [-k <kc_range>...] [-p <proj_range>...] [-r <hash_range>...]  
+#TODO solve the problem of how to input multiple optional parameters ()
+
+
 
 """
 this script is for hyperparameter optimizaton. 
 It is basically brute-force grid search, but could be modified
 to a kind of early-stopping grid search.
 """
+import sys
 
 if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k","10k"]:
     print("Check your parameters! Parameter sequence: \n\
@@ -29,6 +57,16 @@ if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k
         -no-summary           omit creation of a summary of all runs\n\
         -v                    run in verbose mode")
     sys.exit() 
+
+import os
+import utils
+import fcntl # for file locking of the output
+import numpy as np
+import MEN
+from tqdm import tqdm
+from Fruitfly import Fruitfly # in order to workaround the classmethod issues
+
+
 
 
 #========== FUNCTIONS

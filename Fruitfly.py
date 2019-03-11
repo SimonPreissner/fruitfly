@@ -2,6 +2,7 @@ import sys
 import time # for logging
 import utils
 import MEN
+from tqdm import tqdm
 import numpy as np
 
 class Fruitfly:
@@ -47,11 +48,11 @@ class Fruitfly:
     def create_projections(self):
         #print("Creating",KC_size,"random projections...")
         proj_functions = {}
+        print("\nCreating new projections...")
         for cell in range(self.kc_size):
             activated_pns = np.random.randint(self.pn_size, size=self.proj_size)
             proj_functions[cell] = activated_pns
         return proj_functions
-
 
 
     def show_off(self):
@@ -74,7 +75,8 @@ class Fruitfly:
         if timestamp is True: 
             filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
         connections = ""
-        for kc,pns in self.proj_functions.items():
+        print("\nLogging fruitfly config...")
+        for kc,pns in tqdm(self.proj_functions.items()):
             connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
         with open("log/configs/"+filename, "w") as logfile:
             logfile.write(str(self.pn_size)+"\n"+\
@@ -169,7 +171,8 @@ class Fruitfly:
         #projection_time = 0
         #hash_time = 0
         #loopstart = time.time()
-        for w in unhashed_space: # iterate through dictionary 
+        print("\nStarting flying...")
+        for w in tqdm(unhashed_space): # iterate through vector space 
             #runstart = time.time()
             self.pn_layer = self.flatten(unhashed_space[w], flattening)# flatten before hitting the PNs
             #tf = time.time()

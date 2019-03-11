@@ -45,23 +45,22 @@ outfile = arguments["<out_file>"]+".dm" # e.g. "data/potato"
 outcols = arguments["<out_file>"]+".cols"
 
 fly_file = arguments["-f"]
-max_dims = arguments["-d"]
-window = arguments["-w"]
+try: max_dims=int(arguments["-d"]) 
+except TypeError: max_dims=None
+window = int(arguments["-w"])
 required_voc = arguments["-x"]
 
 verbose_wanted = arguments["--verbose"]
 
-
-#TODO add exception/error handling for file path input (like in projection.py)
 #========== FILE READING
 
 def read_corpus(infile):
     lines = [] # list of lists of words
     nonword = re.compile("\W+") # to delete punctuation entries
     lc = 0 # for files with more than one line
-    #wc = 0 # wordcount
+    wc = 0 # wordcount
     with open(infile) as f:
-        for i, line in enumerate(tqdm(f)):
+        for line in f:
             lc += 1
             line = line.rstrip().lower()
             if tokenization_is_required:
@@ -72,9 +71,9 @@ def read_corpus(infile):
             for t in tokens:
                 if (re.fullmatch(nonword, t) is None): # ignore punctuation
                     lines.append(t) # adds the list as a unit to 'lines'
-                #wc+=1
-                #if verbose_wanted and wc%100000 == 0:
-                #    print("\twords read:",wc/1000000,"million")
+                wc+=1
+                if verbose_wanted and wc%100000 == 0:
+                    print("\twords read:",wc/1000000,"million",end="\r")
 
     if lc > 1:
         return [w for l in lines for w in l] # flattens to a simple word list
@@ -83,7 +82,7 @@ def read_corpus(infile):
 
 def freq_dist(wordlist, size_limit=None, required_words=None):
     freq = {}
-    for w in wordlist:
+    for w in tqdm(wordlist):
         if w in freq:
             freq[w] += 1
         else:
@@ -137,7 +136,7 @@ def read_checklist(checklist_filepath):
 
 def check_overlap(wordlist, checklist_filepath):
     checklist = read_checklist(checklist_filepath)
-    if checklist is False: # if no checking is specified, go on without checking
+    if len(checklist) == 0: # if no checking is specified, go on without checking
         if verbose_wanted: 
             print("\tcheck_overlap(): nothing to check.")
         return True, []
@@ -164,7 +163,7 @@ def extend_matrix_if_necessary(w):
         temp[0:cooc.shape[0], 0:cooc.shape[1]] = cooc # paste current matrix into the new one
         cooc = temp
 
-        fruitfly.extend_pn() #TODO add input node to the pn_layer
+        #fruitfly.extend_pn() #TODO add input node to the pn_layer
 
 
 def count_start_of_text(): # for the first couple of words
@@ -180,7 +179,7 @@ def count_start_of_text(): # for the first couple of words
 
 def count_middle_of_text(): # for most of the words
     global cooc, words_to_i, words
-    for i in range(window, len(words)-window): 
+    for i in tqdm(range(window, len(words)-window)): 
         if words[i] in freq:
             for c in range(i-window, i+window+1): 
                 if words[c] in freq:
@@ -188,8 +187,6 @@ def count_middle_of_text(): # for most of the words
                     extend_matrix_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
-        if verbose_wanted and i%100000==0:
-            print("\twords iterated:",i/1000000,"million")
 
 def count_end_of_text(): # for the last couple of words
     global cooc, words_to_i, words    
@@ -230,7 +227,6 @@ if verbose_wanted: print("\tTokens for cooccurrence count:",len(words))
 if verbose_wanted: print("\nchecking overlap...")
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
-sys.exit() #BREAKPOINT
 
 
 #CLEANUP
@@ -245,15 +241,11 @@ count_start_of_text()
 count_middle_of_text()
 count_end_of_text()
 
-
-
 if verbose_wanted:
     print("\nfinished counting; matrix shape:",cooc.shape)
-    print("\tvocabulary size:",len(words_to_i))
+    print("vocabulary size:",len(words_to_i))
     print("first words in the vocabulary:\n\t",\
            [str(words_to_i[key])+":"+key for key in sorted(words_to_i, key=words_to_i.get)][:10])
-
-
 
 
 #========== OUTPUT
@@ -264,21 +256,13 @@ with open(outfile, "w") as dm_file, open(outcols, "w") as cols_file:
         print("\nwriting vectors to",outfile,\
             "\n\tand dictionary to",outcols,"...")
     counter = 0
-    for word,i in sorted(words_to_i.items(), key=lambda x: x[1]):
+    for word,i in tqdm(sorted(words_to_i.items(), key=lambda x: x[1])):
         cols_file.write(word+"\n")
         vectorstring = " ".join([str(v) for v in cooc[i]])
         dm_file.write(word+" "+vectorstring+"\n")
         counter += 1
-        #dm_file.write(word+" "+np.array_str(cooc[i], max_line_width=100000000)[1:-1]+"\n")
-        if verbose_wanted and counter%100==0:
-            print("\t word vectors written:",counter)
 
-
-
-"""
-print("so far, everything works")
-sys.exit()
-"""
+print("done.")
 
 
 #TODO update the README when the incremental part is implemented

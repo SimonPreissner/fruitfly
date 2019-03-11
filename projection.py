@@ -1,7 +1,7 @@
 """Projection: Apply the Fruitfly Algorithm to a Distributional Space.
 
 Usage:
-  projcetion.py <space> <testset> [-f <flattening>] [-k <kc_size>] [-p <proj_size>] [-h <hash_percent>] [-v]
+  projcetion.py <space> <testset> [-f <flattening>] [-k <kc_size>] [-p <proj_size>] [-r <hash_percent>] [-v]
   projcetion.py --eval-only <space> <testset> 
   projection.py --help
 
@@ -10,7 +10,7 @@ Options:
   -f=<flattening>    Flattening function [default: log]
   -k=<kc_size>       Number of Kenyon cells [default: 4000]
   -p=<proj_size>     Number of projections to each KC [default: 6]
-  -h=<hash_percent>  Percentage of KCs for hashing [default: 5]
+  -r=<hash_percent>  Percentage of KCs for hashing/reduction [default: 5]
   -v --verbose       Output most important dimensions per word.
   -e --eval-only     Only evaluate; no fruitfly involved.
 
@@ -50,7 +50,7 @@ flattening = arguments["-f"]
 pn_size = len(cols_to_i) # length of word vector (= input dimension)
 kc_size = int(arguments["-k"])
 proj_size = int(arguments["-p"])
-hash_percent = int(arguments["-h"])
+hash_percent = int(arguments["-r"])
 
 verbose = arguments["--verbose"]
 
