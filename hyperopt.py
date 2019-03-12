@@ -100,8 +100,11 @@ def get_text_resources_from_argv():
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
         MEN_annot = "data/MEN_dataset_natural_form_full"
     else: 
-        print("Error reading files. Is the key word correct?")
-        sys.exit()
+        data = sys.argv[1]+".dm"
+        column_labels = sys.argv[1]+".cols"
+        print("Could not identify a keyword for the vector space file.\n\
+            Proceeding with  ",data,"\nand  ",column_labels"  as resources.")
+        #sys.exit() #used to terminate if the keyword was incorrect.
     return data, column_labels, MEN_annot
 
 def get_ranges_from_argv(param, minimum=5, maximum=5, steps=1):
