@@ -41,6 +41,7 @@ from nltk.tokenize import RegexpTokenizer
 
 increment_mode = arguments["--increment"]
 tokenization_is_required = arguments["--tokenize"]
+linewise_corpus = arguments["--linewise"]
 infile = arguments["<text_source>"] # e.g. "data/potato.txt"
 outfile = arguments["<out_file>"]+".dm" # e.g. "data/potato"
 outcols = arguments["<out_file>"]+".cols"
@@ -69,25 +70,35 @@ def read_corpus(infile):
                 tokens = tokenizer.tokenize(line)
             else:
                 tokens = line.split()
+            linewords = []
             for t in tokens:
                 if (re.fullmatch(nonword, t) is None): # ignore punctuation
-                    lines.append(t) # adds the list as a unit to 'lines'
+                    linewords.append(t) # adds the list as a unit to 'lines'
                 wc+=1
                 if verbose_wanted and wc%100000 == 0:
                     print("\twords read:",wc/1000000,"million",end="\r")
+            lines.append(linewords)
 
-    if lc > 1 and arguments["--linewise"] is False:
+    if lc > 1 and linewise_corpus is False:
         return [w for l in lines for w in l] # flattens to a simple word list
     else: 
         return(lines)
 
 def freq_dist(wordlist, size_limit=None, required_words=None):
     freq = {}
-    for w in tqdm(wordlist):
-        if w in freq:
-            freq[w] += 1
-        else:
-            freq[w] = 1
+    if linewise_corpus:
+        for line in tqdm(wordlist):
+            for w in line:
+                if w in freq:
+                    freq[w] += 1
+                else:
+                    freq[w] = 1
+    else:
+        for w in tqdm(wordlist):
+            if w in freq:
+                freq[w] += 1
+            else:
+                freq[w] = 1
 
     frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
 
@@ -166,9 +177,8 @@ def extend_matrix_if_necessary(w):
 
         #fruitfly.extend_pn() #TODO add input node to the pn_layer
 
-
-def count_start_of_text(): # for the first couple of words
-    global cooc, words_to_i, words
+def count_start_of_text(words): # for the first couple of words
+    global cooc, words_to_i
     for i in range(window): 
         if words[i] in freq:
             for c in range(i+window+1): # iterate over the context
@@ -178,8 +188,8 @@ def count_start_of_text(): # for the first couple of words
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 # increment cooccurrence
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
-def count_middle_of_text(): # for most of the words
-    global cooc, words_to_i, words
+def count_middle_of_text(words): # for most of the words
+    global cooc, words_to_i
     for i in tqdm(range(window, len(words)-window)): 
         if words[i] in freq:
             for c in range(i-window, i+window+1): 
@@ -189,8 +199,8 @@ def count_middle_of_text(): # for most of the words
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
-def count_end_of_text(): # for the last couple of words
-    global cooc, words_to_i, words    
+def count_end_of_text(words): # for the last couple of words
+    global cooc, words_to_i    
     for i in range(len(words)-window, len(words)): 
         if words[i] in freq:
             for c in range(i-window, len(words)):
@@ -223,7 +233,7 @@ words = read_corpus(infile)
 if verbose_wanted: print("\ncreating frequency distribution...")
 freq = freq_dist(words, size_limit=max_dims, required_words=required_voc)
 if verbose_wanted: print("\tVocabulary size:",len(freq))
-if verbose_wanted: print("\tTokens for cooccurrence count:",len(words))
+if verbose_wanted: print("\tTokens (/lines) for cooccurrence count:",len(words))
 
 if verbose_wanted: print("\nchecking overlap...")
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
@@ -238,11 +248,16 @@ all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 #        cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
 
 if verbose_wanted: print("\ncounting cooccurrences...")
-if type(words[0]) is list:
-    for line in words: #TODO implement both line-wise counting and oneline counting!
-count_start_of_text()
-count_middle_of_text()
-count_end_of_text()
+if linewise_corpus:
+    for line in words:
+        if len(line) >= 2*window: # to avoid index errors
+            count_start_of_text(line)
+            count_middle_of_text(line)
+            count_end_of_text(line)
+else:
+    count_start_of_text(words)
+    count_middle_of_text(words)
+    count_end_of_text(words)
 
 if verbose_wanted:
     print("\nfinished counting; matrix shape:",cooc.shape)
