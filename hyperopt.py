@@ -44,6 +44,7 @@ if len(sys.argv) < 2: #or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","
     print("Check your parameters! Parameter sequence: \n\
         hyperopt.py \n\
         [space]               e.g. one of these: [bnc wiki rawiki w2v 1k 5k 10k]\n\
+        -testset [filepath]   default: data/MEN_dataset_natural_form_full\n\
         -logto [directory]    one file in [directory] per run\n\
                                  default: log/hyperopt/default_log\n\
         [flattenings]         any combination of [log log2 log10]\n\
@@ -74,38 +75,31 @@ def get_text_resources_from_argv():
     if sys.argv[1] == "bnc":
         data = "data/BNC-MEN.dm"
         column_labels = "data/BNC-MEN.cols"
-        MEN_annot = "data/MEN_dataset_lemma_form_full"
     elif sys.argv[1] == "wiki":
         data = "data/wiki_all.dm"
         column_labels = "data/wiki_all.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "rawiki":
         data = "data/wiki_abs-freq.dm"
         column_labels = "data/wiki_abs-freq.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "w2v":
         data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "1k":
         data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.dm"
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "5k":
         data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.dm"
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "10k":
         data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.dm"
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     else: 
         data = sys.argv[1]+".dm"
         column_labels = sys.argv[1]+".cols"
         print("Could not identify a keyword for the vector space file.\n\
             Proceeding with  ",data,"\nand  ",column_labels,"  as resources.")
         #sys.exit() #used to terminate if the keyword was incorrect.
-    return data, column_labels, MEN_annot
+    return data, column_labels
 
 def get_ranges_from_argv(param, minimum=5, maximum=5, steps=1):
     if param in sys.argv:
@@ -125,6 +119,13 @@ def get_flattening_from_argv():
     if not flattening:
         flattening = ["log"] # flattening happens before the PN layer (ln, log2, log10) = 3params
     return flattening
+
+def get_testset_from_argv():
+    if "-testset" in sys.argv: 
+        testfile = sys.argv[sys.argv.index("-testset")+1]
+    else: 
+        testfile = "data/MEN_dataset_natural_form_full"
+    return testfile
 
 def get_logging_from_argv():
     if "-logto" in sys.argv: 
@@ -191,7 +192,8 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
 
 #========== PARAMETER INPUT
 
-data, column_labels, goldstandard = get_text_resources_from_argv()
+data, column_labels= get_text_resources_from_argv()
+goldstandard = get_testset_from_argv()
 log_dest = get_logging_from_argv()
 
 flattening = get_flattening_from_argv()
