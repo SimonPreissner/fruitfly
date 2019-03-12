@@ -2,13 +2,14 @@
 
 Usage:
   countwords.py [--help] 
-  countwords.py [-i] <text_source> [-t] <out_file> [-f <ff_config>] [-d <dims>] [-w <window>] [-x <checkfile>] [-v]
+  countwords.py [-i] <text_source> [-t] [-l] <out_file> [-f <ff_config>] [-d <dims>] [-w <window>] [-x <checkfile>] [-v]
   countwords.py <text_source> <out_file> [-d <dims>] [-v]
 
 Options:
   -h --help        show this screen
   -i --increment   use out_file as text_source (= extend the space)
   -t --tokenize    run a simple tokenizer over the input text
+  -l --linewise    don't count cooccurrences across lines
   -f=<ff_config>   develop a fruit fly alongside the space
   -d=<dims>        limit space to a number of dimensions
   -w=<window>      number of tokens in the context (to each side) [default: 5]
@@ -75,7 +76,7 @@ def read_corpus(infile):
                 if verbose_wanted and wc%100000 == 0:
                     print("\twords read:",wc/1000000,"million",end="\r")
 
-    if lc > 1:
+    if lc > 1 and arguments["--linewise"] is False:
         return [w for l in lines for w in l] # flattens to a simple word list
     else: 
         return(lines)
@@ -237,6 +238,8 @@ all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 #        cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
 
 if verbose_wanted: print("\ncounting cooccurrences...")
+if type(words[0]) is list:
+    for line in words: #TODO implement both line-wise counting and oneline counting!
 count_start_of_text()
 count_middle_of_text()
 count_end_of_text()
