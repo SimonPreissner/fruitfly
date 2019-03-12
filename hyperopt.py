@@ -40,10 +40,10 @@ to a kind of early-stopping grid search.
 """
 import sys
 
-if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k","10k"]:
+if len(sys.argv) < 2: #or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k","10k"]:
     print("Check your parameters! Parameter sequence: \n\
         hyperopt.py \n\
-        [space]               one of these: [bnc wiki rawiki w2v 1k 5k 10k]\n\
+        [space]               e.g. one of these: [bnc wiki rawiki w2v 1k 5k 10k]\n\
         -logto [directory]    one file in [directory] per run\n\
                                  default: log/hyperopt/default_log\n\
         [flattenings]         any combination of [log log2 log10]\n\
