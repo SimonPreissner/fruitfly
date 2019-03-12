@@ -190,14 +190,24 @@ def count_start_of_text(words): # for the first couple of words
 
 def count_middle_of_text(words): # for most of the words
     global cooc, words_to_i
-    for i in tqdm(range(window, len(words)-window)): 
-        if words[i] in freq:
-            for c in range(i-window, i+window+1): 
-                if words[c] in freq:
-                    extend_matrix_if_necessary(words[i])
-                    extend_matrix_if_necessary(words[c])
-                    cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
-            cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
+    if linewise_corpus: #this is without tqdm, the other loop with.
+        for i in range(window, len(words)-window): 
+            if words[i] in freq:
+                for c in range(i-window, i+window+1): 
+                    if words[c] in freq:
+                        extend_matrix_if_necessary(words[i])
+                        extend_matrix_if_necessary(words[c])
+                        cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
+                cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
+    else:
+        for i in tqdm(range(window, len(words)-window)): 
+            if words[i] in freq:
+                for c in range(i-window, i+window+1): 
+                    if words[c] in freq:
+                        extend_matrix_if_necessary(words[i])
+                        extend_matrix_if_necessary(words[c])
+                        cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
+                cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
 def count_end_of_text(words): # for the last couple of words
     global cooc, words_to_i    
@@ -249,7 +259,7 @@ all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 if verbose_wanted: print("\ncounting cooccurrences...")
 if linewise_corpus:
-    for line in words:
+    for line in tqdm(words):
         if len(line) >= 2*window: # to avoid index errors
             count_start_of_text(line)
             count_middle_of_text(line)
