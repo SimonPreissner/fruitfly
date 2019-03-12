@@ -154,7 +154,7 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     proj= ff_config["proj_size"]
     hp  = ff_config["hash_percent"]
     
-    logfilepath = log_dest+"/"+sys.argv[1]+"-"+str(int(kcs/pns))+"-"\
+    logfilepath = log_dest+"/"+str(int(kcs/pns))+"-"\
                   +str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
     summarydump = log_dest+"/dump.txt"
 
