@@ -99,7 +99,7 @@ if iterations > 1:
     all_spd_norm = [e+best[-1] for e in best]
 
     print("\nFinished all",iterations,"runs. Summary:")
-    print("best and worst runs:",[round(e, 4) for e in best[:3]]+[round(e, 4) for e in best[:-3]])
+    print("best and worst runs:",[round(e, 4) for e in best[:3]].append([round(e, 4) for e in best[:-3]]))
     print("mean Sp. before:    ",round(np.mean(all_spb), 4))
     print("mean Sp. after:     ",round(np.mean(all_spa), 4))
     print("mean Sp. difference:",round(np.mean(all_spd), 4))
