@@ -92,9 +92,9 @@ if iterations > 1:
     print("mean Sp. before:    ",round(np.mean(all_spb), 4))
     print("mean Sp. after:     ",round(np.mean(all_spa), 4))
     print("mean Sp. difference:",round(np.mean(all_spd), 4))
-    print("variance of Sp. before:    ",round(np.var(all_spb),4))
-    print("variance of Sp. after:     ",round(np.var(all_spa),4))
-    print("variance of Sp. difference:",round(np.var(all_spd),4))
+    print("variance of Sp. before:    ",round(np.var(all_spb),8))
+    print("variance of Sp. after:     ",round(np.var(all_spa),8))
+    print("variance of Sp. difference:",round(np.var(all_spd),8))
 
 #========== PARAMETER VALUES
 """
