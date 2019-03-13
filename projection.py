@@ -90,25 +90,19 @@ for i in range(iterations):
     all_spa.append(spa)
     all_spd.append(spa-spb)
 if iterations > 1:
-    best_before = sorted(all_spb, reverse=True)
-    best_after = sorted(all_spa, reverse=True)
     best = sorted(all_spd, reverse=True)
-
-    all_spb_norm = [e+best_before[-1] for e in best_before]
-    all_spa_norm = [e+best_after[-1] for e in best_after]
-    all_spd_norm = [e+best[-1] for e in best]
 
     print("\nFinished all",iterations,"runs. Summary:")
     print("best and worst runs:",[round(e, 4) for e in best[:3]].append([round(e, 4) for e in best[:-3]]))
     print("mean Sp. before:    ",round(np.mean(all_spb), 4))
     print("mean Sp. after:     ",round(np.mean(all_spa), 4))
     print("mean Sp. difference:",round(np.mean(all_spd), 4))
-    print("var of Sp. before:    ",round(np.var(all_spb_norm),8))
-    print("var of Sp. after:     ",round(np.var(all_spa_norm),8))
-    print("var of Sp. difference:",round(np.var(all_spd_norm),8))
-    print("std of Sp. before:     ",round(np.std(all_spb_norm), 8))
-    print("std of Sp. after:      ",round(np.std(all_spa_norm), 8))
-    print("std of Sp. difference: ",round(np.std(all_spd_norm), 8))
+    print("var of Sp. before:    ",round(np.var(all_spb),8))
+    print("var of Sp. after:     ",round(np.var(all_spa),8))
+    print("var of Sp. difference:",round(np.var(all_spd),8))
+    print("std of Sp. before:     ",round(np.std(all_spb), 8))
+    print("std of Sp. after:      ",round(np.std(all_spa), 8))
+    print("std of Sp. difference: ",round(np.std(all_spd), 8))
 
 #========== PARAMETER VALUES
 """
