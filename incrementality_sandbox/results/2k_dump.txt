@@ -1,0 +1,7200 @@
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00647
+sp_diff 	-0.12873
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01286
+sp_diff 	-0.13513
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13903
+sp_diff 	0.01676
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06498
+sp_diff 	-0.05729
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.15295
+sp_diff 	0.03068
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05251
+sp_diff 	-0.06975
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04532
+sp_diff 	-0.07695
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.00718
+sp_diff 	-0.11508
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.09974
+sp_diff 	-0.222
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01173
+sp_diff 	-0.13399
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.16027
+sp_diff 	0.03801
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07326
+sp_diff 	-0.049
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07625
+sp_diff 	-0.04601
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13313
+sp_diff 	0.01087
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03967
+sp_diff 	-0.0826
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02228
+sp_diff 	-0.14455
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.13869
+sp_diff 	-0.26095
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.25038
+sp_diff 	0.12811
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.07148
+sp_diff 	-0.19375
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09304
+sp_diff 	-0.02922
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.15144
+sp_diff 	0.02917
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06165
+sp_diff 	-0.06062
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08699
+sp_diff 	-0.03528
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10721
+sp_diff 	-0.01505
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.15629
+sp_diff 	0.03402
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0952
+sp_diff 	-0.02706
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03512
+sp_diff 	-0.08714
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01399
+sp_diff 	-0.13626
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03705
+sp_diff 	-0.08521
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.12973
+sp_diff 	-0.25199
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.20121
+sp_diff 	-0.32348
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12154
+sp_diff 	-0.00072
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05976
+sp_diff 	-0.06251
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.11006
+sp_diff 	-0.23233
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10809
+sp_diff 	-0.01418
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11711
+sp_diff 	-0.00515
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	240.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06344
+sp_diff 	-0.05882
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	80.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.30367
+sp_diff 	-0.42594
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02568
+sp_diff 	-0.09659
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.23496
+sp_diff 	0.1127
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0083
+sp_diff 	-0.11396
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06838
+sp_diff 	-0.05389
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05625
+sp_diff 	-0.06602
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.16913
+sp_diff 	0.04686
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01548
+sp_diff 	-0.13774
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10465
+sp_diff 	-0.01762
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.11409
+sp_diff 	-0.23636
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02228
+sp_diff 	-0.09998
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.17359
+sp_diff 	0.05132
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.23405
+sp_diff 	0.11179
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02265
+sp_diff 	-0.09961
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.25019
+sp_diff 	0.12792
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03286
+sp_diff 	-0.15512
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03435
+sp_diff 	-0.08791
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0487
+sp_diff 	-0.07357
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.01813
+sp_diff 	-0.10413
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06342
+sp_diff 	-0.05884
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.01132
+sp_diff 	-0.11094
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10763
+sp_diff 	-0.01464
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02946
+sp_diff 	-0.15172
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03551
+sp_diff 	-0.08675
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11094
+sp_diff 	-0.01132
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09112
+sp_diff 	-0.03115
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07852
+sp_diff 	-0.04374
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04312
+sp_diff 	-0.07915
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07337
+sp_diff 	-0.04889
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.19404
+sp_diff 	0.07177
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13709
+sp_diff 	0.01482
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09211
+sp_diff 	-0.03015
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02946
+sp_diff 	-0.09281
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.25887
+sp_diff 	0.1366
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00529
+sp_diff 	-0.12755
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07858
+sp_diff 	-0.04369
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06415
+sp_diff 	-0.05811
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12878
+sp_diff 	0.00651
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13973
+sp_diff 	0.01746
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08919
+sp_diff 	-0.03307
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	160.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0646
+sp_diff 	-0.18687
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04042
+sp_diff 	-0.08184
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02945
+sp_diff 	-0.09282
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11698
+sp_diff 	-0.00528
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.08995
+sp_diff 	-0.21221
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08871
+sp_diff 	-0.03355
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05887
+sp_diff 	-0.0634
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11443
+sp_diff 	-0.00784
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07742
+sp_diff 	-0.04485
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.1729
+sp_diff 	0.05063
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02227
+sp_diff 	-0.14454
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.00906
+sp_diff 	-0.11321
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02642
+sp_diff 	-0.09585
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04755
+sp_diff 	-0.07472
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02491
+sp_diff 	-0.09736
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11816
+sp_diff 	-0.00411
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.21073
+sp_diff 	0.08846
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0483
+sp_diff 	-0.07396
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08151
+sp_diff 	-0.04076
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06576
+sp_diff 	-0.05651
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04683
+sp_diff 	-0.07544
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04683
+sp_diff 	-0.07544
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.14464
+sp_diff 	0.02237
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11674
+sp_diff 	-0.00553
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10193
+sp_diff 	-0.02034
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10532
+sp_diff 	-0.01694
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02683
+sp_diff 	-0.09543
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.08988
+sp_diff 	-0.21214
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04379
+sp_diff 	-0.07847
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03284
+sp_diff 	-0.08942
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03774
+sp_diff 	-0.08453
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13595
+sp_diff 	0.01369
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0219
+sp_diff 	-0.10036
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08906
+sp_diff 	-0.03321
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.23641
+sp_diff 	0.11414
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06946
+sp_diff 	-0.0528
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02794
+sp_diff 	-0.1502
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	320.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.15074
+sp_diff 	0.02847
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03925
+sp_diff 	-0.08302
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07698
+sp_diff 	-0.04528
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07059
+sp_diff 	-0.05167
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02642
+sp_diff 	-0.14868
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08679
+sp_diff 	-0.03547
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04453
+sp_diff 	-0.07774
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09513
+sp_diff 	-0.02713
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08755
+sp_diff 	-0.03472
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09438
+sp_diff 	-0.02789
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.19366
+sp_diff 	0.07139
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09098
+sp_diff 	-0.03129
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05359
+sp_diff 	-0.06868
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08226
+sp_diff 	-0.04
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.00982
+sp_diff 	-0.11245
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.15704
+sp_diff 	0.03478
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13024
+sp_diff 	0.00797
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06118
+sp_diff 	-0.06109
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09057
+sp_diff 	-0.0317
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00831
+sp_diff 	-0.13057
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02454
+sp_diff 	-0.09773
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07893
+sp_diff 	-0.04334
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05736
+sp_diff 	-0.06491
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05023
+sp_diff 	-0.17249
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07698
+sp_diff 	-0.04528
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00151
+sp_diff 	-0.12378
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11774
+sp_diff 	-0.00453
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.19713
+sp_diff 	0.07487
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03321
+sp_diff 	-0.08906
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11472
+sp_diff 	-0.00755
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06491
+sp_diff 	-0.05736
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.16302
+sp_diff 	0.04076
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01019
+sp_diff 	-0.13246
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00528
+sp_diff 	-0.12755
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.19479
+sp_diff 	0.07253
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07321
+sp_diff 	-0.04906
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08079
+sp_diff 	-0.04148
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01359
+sp_diff 	-0.13585
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03172
+sp_diff 	-0.09054
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04228
+sp_diff 	-0.16455
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00453
+sp_diff 	-0.1268
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	480.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02341
+sp_diff 	-0.14567
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	960.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10042
+sp_diff 	-0.02185
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07698
+sp_diff 	-0.04528
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10189
+sp_diff 	-0.02038
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	1440.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08226
+sp_diff 	-0.04
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12679
+sp_diff 	0.00453
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12042
+sp_diff 	-0.00184
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07321
+sp_diff 	-0.04906
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.1283
+sp_diff 	0.00604
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13401
+sp_diff 	0.01175
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04611
+sp_diff 	-0.07616
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05434
+sp_diff 	-0.06793
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.15446
+sp_diff 	0.03219
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09132
+sp_diff 	-0.03094
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13968
+sp_diff 	0.01741
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.1283
+sp_diff 	0.00604
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11396
+sp_diff 	-0.0083
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11849
+sp_diff 	-0.00377
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08377
+sp_diff 	-0.03849
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10948
+sp_diff 	-0.01279
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09283
+sp_diff 	-0.02943
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04981
+sp_diff 	-0.07245
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02416
+sp_diff 	-0.0981
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0219
+sp_diff 	-0.14416
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08607
+sp_diff 	-0.03619
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.18415
+sp_diff 	0.06189
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.01095
+sp_diff 	-0.11132
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08151
+sp_diff 	-0.04076
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12835
+sp_diff 	0.00609
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.00528
+sp_diff 	-0.11698
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10943
+sp_diff 	-0.01283
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13208
+sp_diff 	0.00981
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06276
+sp_diff 	-0.0595
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11854
+sp_diff 	-0.00373
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08604
+sp_diff 	-0.03623
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02416
+sp_diff 	-0.14643
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08981
+sp_diff 	-0.03245
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05132
+sp_diff 	-0.07094
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10189
+sp_diff 	-0.02038
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	640.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06342
+sp_diff 	-0.05884
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09173
+sp_diff 	-0.03053
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	1280.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0883
+sp_diff 	-0.03396
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07399
+sp_diff 	-0.04827
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	1920.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05854
+sp_diff 	-0.06373
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	2560.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04302
+sp_diff 	-0.07925
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0483
+sp_diff 	-0.07396
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0951
+sp_diff 	-0.02717
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.13283
+sp_diff 	0.01057
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04906
+sp_diff 	-0.07321
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08679
+sp_diff 	-0.03547
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12236
+sp_diff 	9e-05
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08157
+sp_diff 	-0.04069
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07472
+sp_diff 	-0.04755
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.02943
+sp_diff 	-0.09283
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0566
+sp_diff 	-0.06566
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11396
+sp_diff 	-0.0083
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04302
+sp_diff 	-0.07925
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.01811
+sp_diff 	-0.10415
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05059
+sp_diff 	-0.07168
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05096
+sp_diff 	-0.0713
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.10888
+sp_diff 	-0.01338
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06946
+sp_diff 	-0.0528
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.01057
+sp_diff 	-0.1117
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.01887
+sp_diff 	-0.1034
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07019
+sp_diff 	-0.05208
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04981
+sp_diff 	-0.07245
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09359
+sp_diff 	-0.02868
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.08985
+sp_diff 	-0.21211
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08799
+sp_diff 	-0.03427
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.0234
+sp_diff 	-0.09887
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.04604
+sp_diff 	-0.07623
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.19335
+sp_diff 	0.07109
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.12604
+sp_diff 	0.00377
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.05962
+sp_diff 	-0.06264
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.06038
+sp_diff 	-0.06189
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07698
+sp_diff 	-0.04528
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.14113
+sp_diff 	0.01887
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01887
+sp_diff 	-0.14113
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07925
+sp_diff 	-0.04302
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.09362
+sp_diff 	-0.02864
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	2400.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.08909
+sp_diff 	-0.03317
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	800.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.03473
+sp_diff 	-0.08753
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	1600.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.1359
+sp_diff 	0.01364
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	3200.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.07931
+sp_diff 	-0.04296
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	4000.0
+flattening	log
+evaluated	20
+sp_before	0.12227
+sp_after	0.11321
+sp_diff 	-0.00906
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.16944
+sp_diff 	0.04718
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.23263
+sp_diff 	0.11036
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04082
+sp_diff 	-0.16308
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.13968
+sp_diff 	0.01741
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0997
+sp_diff 	-0.02257
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02492
+sp_diff 	-0.09735
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05098
+sp_diff 	-0.07128
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06101
+sp_diff 	-0.06126
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05568
+sp_diff 	-0.06658
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.17164
+sp_diff 	-0.29391
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.153
+sp_diff 	0.03074
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07291
+sp_diff 	-0.04935
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05373
+sp_diff 	-0.06854
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.16201
+sp_diff 	0.03974
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02727
+sp_diff 	-0.09499
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01703
+sp_diff 	-0.1393
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07027
+sp_diff 	-0.052
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.20212
+sp_diff 	0.07985
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03701
+sp_diff 	-0.08526
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.14822
+sp_diff 	0.02595
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07218
+sp_diff 	-0.05008
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02077
+sp_diff 	-0.10149
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05825
+sp_diff 	-0.06402
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.14518
+sp_diff 	-0.26744
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07178
+sp_diff 	-0.05049
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05851
+sp_diff 	-0.06375
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.36659
+sp_diff 	0.24433
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.24328
+sp_diff 	0.12102
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02798
+sp_diff 	-0.15024
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03021
+sp_diff 	-0.09205
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.41818
+sp_diff 	0.29592
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.06233
+sp_diff 	-0.1846
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06042
+sp_diff 	-0.06184
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11909
+sp_diff 	-0.00317
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.10717
+sp_diff 	-0.22944
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00378
+sp_diff 	-0.12604
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.14221
+sp_diff 	-0.26447
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	80.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.16566
+sp_diff 	-0.28792
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	240.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04834
+sp_diff 	-0.07393
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04685
+sp_diff 	-0.07542
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07623
+sp_diff 	-0.04604
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0189
+sp_diff 	-0.14116
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0906
+sp_diff 	-0.03166
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.09253
+sp_diff 	-0.21479
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07143
+sp_diff 	-0.05084
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03676
+sp_diff 	-0.08551
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00679
+sp_diff 	-0.12906
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.31597
+sp_diff 	0.19371
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11925
+sp_diff 	-0.00302
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0672
+sp_diff 	-0.18946
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.1683
+sp_diff 	0.04604
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05068
+sp_diff 	-0.17295
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05665
+sp_diff 	-0.17891
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03284
+sp_diff 	-0.15511
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00378
+sp_diff 	-0.11849
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04
+sp_diff 	-0.16227
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.19584
+sp_diff 	-0.31811
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.08985
+sp_diff 	-0.21211
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.1448
+sp_diff 	0.02254
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10008
+sp_diff 	-0.02219
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03774
+sp_diff 	-0.16
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10491
+sp_diff 	-0.01736
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02832
+sp_diff 	-0.09394
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00906
+sp_diff 	-0.11321
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.07896
+sp_diff 	-0.20122
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.1283
+sp_diff 	0.00604
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03925
+sp_diff 	-0.08302
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.18656
+sp_diff 	0.06429
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0034
+sp_diff 	-0.12566
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06491
+sp_diff 	-0.05736
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00113
+sp_diff 	-0.12113
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.13449
+sp_diff 	0.01223
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.14005
+sp_diff 	0.01779
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.16509
+sp_diff 	0.04283
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05066
+sp_diff 	-0.17293
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	160.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06911
+sp_diff 	-0.05316
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01095
+sp_diff 	-0.11131
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06344
+sp_diff 	-0.05882
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01964
+sp_diff 	-0.1419
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08305
+sp_diff 	-0.03921
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0823
+sp_diff 	-0.03997
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03849
+sp_diff 	-0.16076
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01811
+sp_diff 	-0.10415
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01662
+sp_diff 	-0.13889
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10683
+sp_diff 	-0.01543
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03774
+sp_diff 	-0.08453
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0755
+sp_diff 	-0.19777
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.20461
+sp_diff 	0.08234
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11443
+sp_diff 	-0.00784
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02945
+sp_diff 	-0.09282
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01057
+sp_diff 	-0.13283
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11401
+sp_diff 	-0.00826
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04455
+sp_diff 	-0.07772
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.09235
+sp_diff 	-0.21462
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01208
+sp_diff 	-0.11019
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04266
+sp_diff 	-0.16492
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07849
+sp_diff 	-0.04377
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04228
+sp_diff 	-0.07998
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04453
+sp_diff 	-0.07774
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01699
+sp_diff 	-0.10528
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01284
+sp_diff 	-0.10943
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08
+sp_diff 	-0.04226
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.20951
+sp_diff 	0.08725
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04949
+sp_diff 	-0.07277
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09283
+sp_diff 	-0.02943
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00679
+sp_diff 	-0.11547
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02868
+sp_diff 	-0.09359
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10268
+sp_diff 	-0.01958
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03926
+sp_diff 	-0.083
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04755
+sp_diff 	-0.07472
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10834
+sp_diff 	-0.01392
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09149
+sp_diff 	-0.03077
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10264
+sp_diff 	-0.01962
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03171
+sp_diff 	-0.15398
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12
+sp_diff 	-0.00226
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.13817
+sp_diff 	0.0159
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01962
+sp_diff 	-0.14189
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.14874
+sp_diff 	0.02647
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	320.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05514
+sp_diff 	-0.1774
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07742
+sp_diff 	-0.04485
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07547
+sp_diff 	-0.04679
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08459
+sp_diff 	-0.03767
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07698
+sp_diff 	-0.04528
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02684
+sp_diff 	-0.09542
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05434
+sp_diff 	-0.06793
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06038
+sp_diff 	-0.06189
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05359
+sp_diff 	-0.06868
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12005
+sp_diff 	-0.00222
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01362
+sp_diff 	-0.13588
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05434
+sp_diff 	-0.06793
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0974
+sp_diff 	-0.02487
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01133
+sp_diff 	-0.11094
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06078
+sp_diff 	-0.06149
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0566
+sp_diff 	-0.06566
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04302
+sp_diff 	-0.07925
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.07442
+sp_diff 	-0.19669
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07588
+sp_diff 	-0.04639
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00718
+sp_diff 	-0.11509
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03019
+sp_diff 	-0.09208
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05585
+sp_diff 	-0.06642
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.20574
+sp_diff 	0.08347
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.1812
+sp_diff 	0.05894
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09283
+sp_diff 	-0.02943
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05585
+sp_diff 	-0.06642
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11094
+sp_diff 	-0.01132
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07286
+sp_diff 	-0.04941
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04755
+sp_diff 	-0.07472
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06491
+sp_diff 	-0.05736
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08985
+sp_diff 	-0.03242
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08532
+sp_diff 	-0.03695
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0268
+sp_diff 	-0.09546
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.13137
+sp_diff 	0.00911
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03245
+sp_diff 	-0.08981
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08686
+sp_diff 	-0.03541
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05974
+sp_diff 	-0.06253
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	1440.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12906
+sp_diff 	0.00679
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10717
+sp_diff 	-0.01509
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	960.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03928
+sp_diff 	-0.08299
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11023
+sp_diff 	-0.01203
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	480.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.09853
+sp_diff 	-0.22079
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.13724
+sp_diff 	0.01498
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06229
+sp_diff 	-0.05998
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0317
+sp_diff 	-0.09057
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00981
+sp_diff 	-0.11245
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02792
+sp_diff 	-0.09434
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0566
+sp_diff 	-0.06566
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06189
+sp_diff 	-0.06038
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04755
+sp_diff 	-0.07472
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07321
+sp_diff 	-0.04906
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.17063
+sp_diff 	0.04837
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03396
+sp_diff 	-0.15623
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.14793
+sp_diff 	0.02566
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08076
+sp_diff 	-0.04151
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08041
+sp_diff 	-0.04186
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12906
+sp_diff 	0.00679
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05962
+sp_diff 	-0.06264
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.13585
+sp_diff 	0.01359
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07925
+sp_diff 	-0.04302
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05323
+sp_diff 	-0.06904
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.14415
+sp_diff 	0.02189
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06113
+sp_diff 	-0.06113
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00076
+sp_diff 	-0.12151
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08076
+sp_diff 	-0.04151
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05283
+sp_diff 	-0.06943
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12076
+sp_diff 	-0.00151
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02567
+sp_diff 	-0.14794
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08453
+sp_diff 	-0.03774
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01699
+sp_diff 	-0.10528
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09702
+sp_diff 	-0.02525
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08453
+sp_diff 	-0.03774
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0883
+sp_diff 	-0.03396
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.17585
+sp_diff 	0.05359
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12056
+sp_diff 	-0.00171
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08151
+sp_diff 	-0.04076
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01132
+sp_diff 	-0.11094
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06717
+sp_diff 	-0.05509
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	2560.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08076
+sp_diff 	-0.04151
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	640.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08535
+sp_diff 	-0.03692
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	1920.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09585
+sp_diff 	-0.02642
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	1280.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0872
+sp_diff 	-0.03506
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0083
+sp_diff 	-0.11396
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04528
+sp_diff 	-0.07698
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07626
+sp_diff 	-0.04601
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07849
+sp_diff 	-0.04377
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.14491
+sp_diff 	0.02264
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06943
+sp_diff 	-0.05283
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.23443
+sp_diff 	0.11216
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05359
+sp_diff 	-0.06868
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09966
+sp_diff 	-0.0226
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03698
+sp_diff 	-0.08528
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.1117
+sp_diff 	-0.01057
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07698
+sp_diff 	-0.04528
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03926
+sp_diff 	-0.083
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07094
+sp_diff 	-0.05132
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10159
+sp_diff 	-0.02068
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11061
+sp_diff 	-0.01166
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08607
+sp_diff 	-0.03619
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.09283
+sp_diff 	-0.02943
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.10717
+sp_diff 	-0.01509
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02869
+sp_diff 	-0.15096
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05208
+sp_diff 	-0.07019
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08076
+sp_diff 	-0.04151
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11019
+sp_diff 	-0.01208
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11321
+sp_diff 	-0.00906
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06038
+sp_diff 	-0.06189
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06491
+sp_diff 	-0.05736
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.12528
+sp_diff 	0.00302
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.06078
+sp_diff 	-0.06149
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.08679
+sp_diff 	-0.03547
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.07553
+sp_diff 	-0.04674
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00906
+sp_diff 	-0.11321
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0895
+sp_diff 	-0.03276
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.11891
+sp_diff 	-0.00335
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.01962
+sp_diff 	-0.10264
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.04794
+sp_diff 	-0.07432
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	3200.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.00377
+sp_diff 	-0.11849
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	4000.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.03472
+sp_diff 	-0.08755
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	800.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.02717
+sp_diff 	-0.0951
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	2400.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.0951
+sp_diff 	-0.02717
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	1600.0
+flattening	log2
+evaluated	20
+sp_before	0.12227
+sp_after	0.05323
+sp_diff 	-0.06904
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12443
+sp_diff 	0.00217
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14394
+sp_diff 	0.02167
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12132
+sp_diff 	-0.00095
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10658
+sp_diff 	-0.01569
+
+PN_size 	2000
+KC_factor	1.0
+projections	6
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04119
+sp_diff 	-0.16346
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.06835
+sp_diff 	-0.19062
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03258
+sp_diff 	-0.08969
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0034
+sp_diff 	-0.12566
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.19706
+sp_diff 	0.07479
+
+PN_size 	2000
+KC_factor	1.0
+projections	8
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.10779
+sp_diff 	-0.23006
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0
+sp_diff 	-0.12227
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12859
+sp_diff 	0.00633
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.18624
+sp_diff 	0.06398
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0897
+sp_diff 	-0.03256
+
+PN_size 	2000
+KC_factor	1.0
+projections	10
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.17567
+sp_diff 	0.05341
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10737
+sp_diff 	-0.01489
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13789
+sp_diff 	0.01563
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.09235
+sp_diff 	-0.21462
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.16831
+sp_diff 	0.04604
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09747
+sp_diff 	-0.0248
+
+PN_size 	2000
+KC_factor	1.0
+projections	12
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.19721
+sp_diff 	0.07494
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.17773
+sp_diff 	0.05547
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14983
+sp_diff 	0.02756
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01172
+sp_diff 	-0.11054
+
+PN_size 	2000
+KC_factor	1.0
+projections	14
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0861
+sp_diff 	-0.03616
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09668
+sp_diff 	-0.02559
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.119
+sp_diff 	-0.00326
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01057
+sp_diff 	-0.11169
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.017
+sp_diff 	-0.13927
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07311
+sp_diff 	-0.04916
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.19395
+sp_diff 	0.07169
+
+PN_size 	2000
+KC_factor	1.0
+projections	16
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.32917
+sp_diff 	0.2069
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00873
+sp_diff 	-0.131
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0272
+sp_diff 	-0.09506
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05556
+sp_diff 	-0.06671
+
+PN_size 	2000
+KC_factor	1.0
+projections	18
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05402
+sp_diff 	-0.06824
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	240.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01626
+sp_diff 	-0.106
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	80.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05713
+sp_diff 	-0.1794
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04832
+sp_diff 	-0.07394
+
+PN_size 	2000
+KC_factor	1.0
+projections	20
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.18106
+sp_diff 	-0.30333
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06156
+sp_diff 	-0.06071
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01774
+sp_diff 	-0.10452
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12425
+sp_diff 	0.00198
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.19026
+sp_diff 	0.068
+
+PN_size 	2000
+KC_factor	2.0
+projections	6
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.18082
+sp_diff 	0.05856
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.00566
+sp_diff 	-0.1166
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01778
+sp_diff 	-0.10449
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.07777
+sp_diff 	-0.20003
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01623
+sp_diff 	-0.10603
+
+PN_size 	2000
+KC_factor	2.0
+projections	8
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10872
+sp_diff 	-0.01354
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03849
+sp_diff 	-0.08377
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14345
+sp_diff 	0.02119
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.16874
+sp_diff 	0.04648
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.1065
+sp_diff 	-0.22876
+
+PN_size 	2000
+KC_factor	2.0
+projections	10
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.26475
+sp_diff 	0.14249
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04379
+sp_diff 	-0.16606
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02684
+sp_diff 	-0.09542
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.11279
+sp_diff 	-0.23506
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.1858
+sp_diff 	0.06354
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08919
+sp_diff 	-0.03307
+
+PN_size 	2000
+KC_factor	2.0
+projections	12
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05283
+sp_diff 	-0.06943
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0638
+sp_diff 	-0.05847
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.20257
+sp_diff 	0.08031
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09894
+sp_diff 	-0.02332
+
+PN_size 	2000
+KC_factor	2.0
+projections	14
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.24168
+sp_diff 	0.11941
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08614
+sp_diff 	-0.03613
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.1122
+sp_diff 	-0.01006
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.00227
+sp_diff 	-0.12
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11825
+sp_diff 	-0.00402
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.17176
+sp_diff 	0.0495
+
+PN_size 	2000
+KC_factor	2.0
+projections	16
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07704
+sp_diff 	-0.04523
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.16094
+sp_diff 	0.03867
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00453
+sp_diff 	-0.1268
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08576
+sp_diff 	-0.03651
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0151
+sp_diff 	-0.13737
+
+PN_size 	2000
+KC_factor	2.0
+projections	18
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.1639
+sp_diff 	0.04163
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12122
+sp_diff 	-0.00104
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02761
+sp_diff 	-0.09466
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01057
+sp_diff 	-0.11169
+
+PN_size 	2000
+KC_factor	2.0
+projections	20
+hash_dims	160.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.25776
+sp_diff 	0.13549
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04417
+sp_diff 	-0.16643
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.18316
+sp_diff 	0.06089
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.1284
+sp_diff 	0.00613
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02115
+sp_diff 	-0.10112
+
+PN_size 	2000
+KC_factor	4.0
+projections	6
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10717
+sp_diff 	-0.01509
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.18309
+sp_diff 	0.06082
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03094
+sp_diff 	-0.09132
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02943
+sp_diff 	-0.1517
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05134
+sp_diff 	-0.07092
+
+PN_size 	2000
+KC_factor	4.0
+projections	8
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11304
+sp_diff 	-0.00922
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07472
+sp_diff 	-0.04755
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0166
+sp_diff 	-0.10566
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.16076
+sp_diff 	0.03849
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04981
+sp_diff 	-0.07245
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15923
+sp_diff 	0.03696
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0966
+sp_diff 	-0.02566
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03849
+sp_diff 	-0.08377
+
+PN_size 	2000
+KC_factor	4.0
+projections	10
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02794
+sp_diff 	-0.09433
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09366
+sp_diff 	-0.02861
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05889
+sp_diff 	-0.06337
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0483
+sp_diff 	-0.07396
+
+PN_size 	2000
+KC_factor	4.0
+projections	12
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03058
+sp_diff 	-0.09169
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00415
+sp_diff 	-0.12642
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13444
+sp_diff 	0.01218
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.04151
+sp_diff 	-0.16377
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10344
+sp_diff 	-0.01883
+
+PN_size 	2000
+KC_factor	4.0
+projections	14
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10268
+sp_diff 	-0.01958
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08377
+sp_diff 	-0.03849
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.11073
+sp_diff 	-0.233
+
+PN_size 	2000
+KC_factor	4.0
+projections	16
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09894
+sp_diff 	-0.02332
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04757
+sp_diff 	-0.0747
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01699
+sp_diff 	-0.13925
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12193
+sp_diff 	-0.00033
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.17208
+sp_diff 	0.04981
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07245
+sp_diff 	-0.04981
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	320.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.054
+sp_diff 	-0.06826
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14766
+sp_diff 	0.02539
+
+PN_size 	2000
+KC_factor	4.0
+projections	18
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.21359
+sp_diff 	0.09132
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.17887
+sp_diff 	0.0566
+
+PN_size 	2000
+KC_factor	4.0
+projections	20
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03928
+sp_diff 	-0.08299
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01812
+sp_diff 	-0.10414
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13057
+sp_diff 	0.0083
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06418
+sp_diff 	-0.05809
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10834
+sp_diff 	-0.01392
+
+PN_size 	2000
+KC_factor	6.0
+projections	6
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01811
+sp_diff 	-0.14038
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0453
+sp_diff 	-0.07696
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15019
+sp_diff 	0.02792
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06908
+sp_diff 	-0.05318
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06491
+sp_diff 	-0.05736
+
+PN_size 	2000
+KC_factor	6.0
+projections	8
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.196
+sp_diff 	0.07373
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02038
+sp_diff 	-0.10189
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14156
+sp_diff 	0.0193
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01585
+sp_diff 	-0.10642
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.22264
+sp_diff 	0.10038
+
+PN_size 	2000
+KC_factor	6.0
+projections	10
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06491
+sp_diff 	-0.05736
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.1088
+sp_diff 	-0.01346
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.26425
+sp_diff 	0.14199
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0717
+sp_diff 	-0.05057
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04
+sp_diff 	-0.08226
+
+PN_size 	2000
+KC_factor	6.0
+projections	12
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15245
+sp_diff 	0.03019
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09132
+sp_diff 	-0.03094
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01322
+sp_diff 	-0.10905
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.00529
+sp_diff 	-0.11698
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09887
+sp_diff 	-0.0234
+
+PN_size 	2000
+KC_factor	6.0
+projections	14
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05436
+sp_diff 	-0.17663
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14572
+sp_diff 	0.02345
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05965
+sp_diff 	-0.06262
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.10646
+sp_diff 	-0.01581
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07774
+sp_diff 	-0.04453
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11401
+sp_diff 	-0.00826
+
+PN_size 	2000
+KC_factor	6.0
+projections	16
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.1023
+sp_diff 	-0.22457
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05587
+sp_diff 	-0.06639
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11396
+sp_diff 	-0.0083
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05059
+sp_diff 	-0.17285
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	480.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01888
+sp_diff 	-0.14114
+
+PN_size 	2000
+KC_factor	6.0
+projections	18
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07022
+sp_diff 	-0.05205
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05361
+sp_diff 	-0.06866
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.18491
+sp_diff 	0.06264
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	960.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01283
+sp_diff 	-0.10943
+
+PN_size 	2000
+KC_factor	6.0
+projections	20
+hash_dims	1440.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04832
+sp_diff 	-0.07394
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.0166
+sp_diff 	-0.13887
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.03321
+sp_diff 	-0.15547
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11396
+sp_diff 	-0.0083
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.05587
+sp_diff 	-0.17814
+
+PN_size 	2000
+KC_factor	8.0
+projections	6
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15483
+sp_diff 	0.03257
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08604
+sp_diff 	-0.03623
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06189
+sp_diff 	-0.06038
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04906
+sp_diff 	-0.07321
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12302
+sp_diff 	0.00075
+
+PN_size 	2000
+KC_factor	8.0
+projections	8
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12231
+sp_diff 	5e-05
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09136
+sp_diff 	-0.03091
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09434
+sp_diff 	-0.02792
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03553
+sp_diff 	-0.08674
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.01359
+sp_diff 	-0.13586
+
+PN_size 	2000
+KC_factor	8.0
+projections	10
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0823
+sp_diff 	-0.03997
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02264
+sp_diff 	-0.09962
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13817
+sp_diff 	0.0159
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01057
+sp_diff 	-0.1117
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03849
+sp_diff 	-0.08377
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04
+sp_diff 	-0.08226
+
+PN_size 	2000
+KC_factor	8.0
+projections	12
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13552
+sp_diff 	0.01326
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06002
+sp_diff 	-0.06224
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15245
+sp_diff 	0.03019
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13132
+sp_diff 	0.00906
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12349
+sp_diff 	0.00122
+
+PN_size 	2000
+KC_factor	8.0
+projections	14
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06566
+sp_diff 	-0.0566
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.1434
+sp_diff 	0.02113
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08607
+sp_diff 	-0.03619
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05434
+sp_diff 	-0.06793
+
+PN_size 	2000
+KC_factor	8.0
+projections	16
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01585
+sp_diff 	-0.10642
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.02038
+sp_diff 	-0.14264
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11589
+sp_diff 	-0.00637
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08377
+sp_diff 	-0.03849
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14642
+sp_diff 	0.02415
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05962
+sp_diff 	-0.06264
+
+PN_size 	2000
+KC_factor	8.0
+projections	18
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02982
+sp_diff 	-0.09244
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	1920.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07245
+sp_diff 	-0.04981
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	1280.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0336
+sp_diff 	-0.08867
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	2560.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05663
+sp_diff 	-0.06564
+
+PN_size 	2000
+KC_factor	8.0
+projections	20
+hash_dims	640.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15774
+sp_diff 	0.03547
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03624
+sp_diff 	-0.08602
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11245
+sp_diff 	-0.00981
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05359
+sp_diff 	-0.06868
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02943
+sp_diff 	-0.09283
+
+PN_size 	2000
+KC_factor	10.0
+projections	6
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06493
+sp_diff 	-0.05733
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.05434
+sp_diff 	-0.06793
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09022
+sp_diff 	-0.03204
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0717
+sp_diff 	-0.05057
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02566
+sp_diff 	-0.0966
+
+PN_size 	2000
+KC_factor	10.0
+projections	8
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0966
+sp_diff 	-0.02566
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.12227
+sp_diff 	0.0
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.15472
+sp_diff 	0.03245
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11778
+sp_diff 	-0.00448
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04302
+sp_diff 	-0.07925
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04719
+sp_diff 	-0.07508
+
+PN_size 	2000
+KC_factor	10.0
+projections	10
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13057
+sp_diff 	0.0083
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13288
+sp_diff 	0.01062
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04304
+sp_diff 	-0.07923
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08267
+sp_diff 	-0.03959
+
+PN_size 	2000
+KC_factor	10.0
+projections	12
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.14156
+sp_diff 	0.0193
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03547
+sp_diff 	-0.08679
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.19335
+sp_diff 	0.07109
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06304
+sp_diff 	-0.05922
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.01208
+sp_diff 	-0.11019
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.04453
+sp_diff 	-0.07774
+
+PN_size 	2000
+KC_factor	10.0
+projections	14
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07094
+sp_diff 	-0.05132
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.13213
+sp_diff 	0.00986
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.03623
+sp_diff 	-0.08604
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07437
+sp_diff 	-0.0479
+
+PN_size 	2000
+KC_factor	10.0
+projections	16
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.09208
+sp_diff 	-0.03019
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.06569
+sp_diff 	-0.05658
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.00227
+sp_diff 	-0.12
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.0
+sp_diff 	-0.12227
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07245
+sp_diff 	-0.04981
+
+PN_size 	2000
+KC_factor	10.0
+projections	18
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	-0.00717
+sp_diff 	-0.12944
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	4000.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.07286
+sp_diff 	-0.04941
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	3200.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.02341
+sp_diff 	-0.09886
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	1600.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.00755
+sp_diff 	-0.11472
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	800.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.08041
+sp_diff 	-0.04186
+
+PN_size 	2000
+KC_factor	10.0
+projections	20
+hash_dims	2400.0
+flattening	log10
+evaluated	20
+sp_before	0.12227
+sp_after	0.11623
+sp_diff 	-0.00604
+
