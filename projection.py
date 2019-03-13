@@ -1,7 +1,7 @@
 """Projection: Apply the Fruitfly Algorithm to a Distributional Space.
 
 Usage:
-  projcetion.py <space> <testset> [--eval-only | [options]] [-v]
+  projcetion.py <space> <testset> [--eval-only | [options]] [-v] [-i <runs>]
 
 Options:
   -h --help          Show this screen.
@@ -9,6 +9,7 @@ Options:
   -k=<kc_size>       Number of Kenyon cells [default: 4000]
   -p=<proj_size>     Number of projections to each KC [default: 6]
   -r=<hash_percent>  Percentage of KCs for hashing/reduction [default: 5]
+  -i=<runs>          Number of runs with the same parameters [default: 1]
   -v --verbose       Output most important dimensions per word.
   -e --eval-only     Only evaluate; no fruitfly involved.
 
@@ -50,34 +51,50 @@ kc_size = int(arguments["-k"])
 proj_size = int(arguments["-p"])
 hash_percent = int(arguments["-r"])
 
+iterations = int(arguments["-i"])
 verbose = arguments["--verbose"]
 
-#=============== FOR PURE EVALUATION OF UNHASHED SPACES
+all_spb = []
+all_spa = []
+all_spd = []
+for i in range(iterations):
+    #=============== FOR PURE EVALUATION OF UNHASHED SPACES
 
-if evaluate_mode:
+    if evaluate_mode:
+        spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
+        print("Performance:",round(spb, 4), "(calculated over",count,"items.)")
+        sys.exit()
+
+    #=============== INITIATING AND OPERATING FRUITFLY
+
+    fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
+
+    space_hashed = fruitfly.fly(unhashed_space, flattening) # a dict of word : binary_vector (= after "flying")
+    if verbose: 
+        for w in space_hashed:
+            fruitfly.show_projections(w, space_hashed[w], i_to_cols)
+
+    #=============== EVALUATION SECTION
+
     spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
-    print("Performance:",round(spb, 4), "(calculated over",count,"items.)")
-    sys.exit()
+    print("Spearman before flying:",round(spb, 4), "(calculated over",count,"items.)")
 
-#=============== INITIATING AND OPERATING FRUITFLY
+    spa,count = MEN.compute_men_spearman(space_hashed, MEN_annot)
+    print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)")
 
-fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
+    print("difference:",round(spa-spb, 4))
 
-space_hashed = fruitfly.fly(unhashed_space, flattening) # a dict of word : binary_vector (= after "flying")
-if verbose: 
-    for w in space_hashed:
-        fruitfly.show_projections(w, space_hashed[w], i_to_cols)
-
-#=============== EVALUATION SECTION
-
-spb,count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
-print("Spearman before flying:",round(spb, 4), "(calculated over",count,"items.)")
-
-spa,count = MEN.compute_men_spearman(space_hashed, MEN_annot)
-print("Spearman after flying: ",round(spa,4), "(calculated over",count,"items.)")
-
-print("difference:",round(spa-spb, 4))
-
+    all_spb.append(spb)
+    all_spa.append(spa)
+    all_spd.append(spa-spb)
+if iterations > 1:
+    print("\nFinished all",iterations,"runs. Summary:")
+    print("mean Sp. before:    ",round(np.mean(all_spb), 4))
+    print("mean Sp. after:     ",round(np.mean(all_spa), 4))
+    print("mean Sp. difference:",round(np.mean(all_spd), 4))
+    print("variance of Sp. before:    ",round(np.var(all_spb),4))
+    print("variance of Sp. after:     ",round(np.var(all_spa),4))
+    print("variance of Sp. difference:",round(np.var(all_spd),4))
 
 #========== PARAMETER VALUES
 """
