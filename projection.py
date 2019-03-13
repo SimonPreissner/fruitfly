@@ -1,12 +1,10 @@
 """Projection: Apply the Fruitfly Algorithm to a Distributional Space.
 
 Usage:
-  projcetion.py <space> <testset> [-f <flattening>] [-k <kc_size>] [-p <proj_size>] [-r <hash_percent>] [-v]
-  projcetion.py --eval-only <space> <testset> 
-  projection.py --help
+  projcetion.py <space> <testset> [--eval-only | [options]] [-v]
 
 Options:
-  --help             Show this screen.
+  -h --help          Show this screen.
   -f=<flattening>    Flattening function [default: log]
   -k=<kc_size>       Number of Kenyon cells [default: 4000]
   -p=<proj_size>     Number of projections to each KC [default: 6]
