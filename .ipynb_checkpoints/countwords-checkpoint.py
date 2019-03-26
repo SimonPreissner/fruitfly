@@ -156,7 +156,7 @@ def check_overlap(wordlist, checklist_filepath):
 
 #========== CO-OCCURRENCE COUNTING
 
-def extend_matrix_if_necessary(w):
+def extend_incremental_parts_if_necessary(w):
     global cooc, words_to_i
     if w not in words_to_i:
         words_to_i[w] = len(words_to_i) # extend the vocabulary
@@ -173,8 +173,8 @@ def count_start_of_text(): # for the first couple of words
         if words[i] in freq:
             for c in range(i+window+1): # iterate over the context
                 if words[c] in freq:
-                    extend_matrix_if_necessary(words[i])
-                    extend_matrix_if_necessary(words[c])
+                    extend_incremental_parts_if_necessary(words[i])
+                    extend_incremental_parts_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 # increment cooccurrence
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
@@ -184,8 +184,8 @@ def count_middle_of_text(): # for most of the words
         if words[i] in freq:
             for c in range(i-window, i+window+1): 
                 if words[c] in freq:
-                    extend_matrix_if_necessary(words[i])
-                    extend_matrix_if_necessary(words[c])
+                    extend_incremental_parts_if_necessary(words[i])
+                    extend_incremental_parts_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
@@ -195,8 +195,8 @@ def count_end_of_text(): # for the last couple of words
         if words[i] in freq:
             for c in range(i-window, len(words)):
                 if words[c] in freq:
-                    extend_matrix_if_necessary(words[i])
-                    extend_matrix_if_necessary(words[c])
+                    extend_incremental_parts_if_necessary(words[i])
+                    extend_incremental_parts_if_necessary(words[c])
                     cooc[words_to_i[words[i]]][words_to_i[words[c]]] += 1 
             cooc[words_to_i[words[i]]][words_to_i[words[i]]]-=1
 
@@ -235,7 +235,7 @@ all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 #if verbose_wanted: print("creating empty matrix...")
 #wordset = set(words)
 #for w in freq.keys(): # This limits the matrix to the required size
-#        cooc, words_to_i = extend_matrix_if_necessary(cooc, words_to_i, w)
+#        cooc, words_to_i = extend_incremental_parts_if_necessary(cooc, words_to_i, w)
 
 if verbose_wanted: print("\ncounting cooccurrences...")
 if type(words[0]) is list:

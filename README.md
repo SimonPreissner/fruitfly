@@ -77,15 +77,31 @@ Be careful with large numbers for the ranges of -kc and -proj! These parameters 
 
 
 ### Compiling semantic spaces with countwords.py
-Part of the project is to be able to integrate new data into an already-processed corpus. For now, `countwords.py` takes a text coprus and compiles a co-occurrence matrix of words. Run it without parameters for details.  
+Part of the project is to be able to integrate new data into an already-processed corpus. For now, `countwords.py` takes a text coprus and compiles a co-occurrence matrix of words. Run it with the `--help` option for details.  
 The most important parameters are 
-- `-dim`, which limits the dimensionality of the resulting space
-- `-window`, which specifies the range (before and after a word) that is used for co-occurrence counting 
-- `-check`, which checks the word overlap of a specified file with the resulting space
+- `-d`, which limits the dimensionality of the resulting space
+- `-w`, which specifies the range (before and after a word) that is used for co-occurrence counting 
+- `-x`, which checks the word overlap of a specified file with the resulting space
 
-For example, `ukwac_1k_GS-checked.dm` (and `.cols`) was compiled from `ukwac_100m.txt` (which is not available in this repository) with the following command:
+For example, `space_1k_dims.dm` (and `.cols`) can be compiled from `ukwac_100m.txt` (which is not available in this repository) with the following command:
 ```
-python3 countwords.py ukwac_100m.txt ukwac_1k_GS-checked -dim 1000 -window 5 -check data/MEN_dataset_natural_form_full
+python3 countwords.py ukwac_100m.txt space_1k_dims -d 1000 -w 5 -x data/MEN_dataset_natural_form_full
 ```
 
-Countwords.py is intended to implement incremental development of a Fruitfly object; that is, whenever a new word is observed, the Fruitfly object's parts (PN layer, KC layer, and projection connections) adapt to that new word.
+### Going incremental
+Countwords.py also implements incrementality for both cooccurrence counting and the FFA: if specified, a Fruitfly "grows" alongside counting by creating nodes and connections whenever a new word is observed. 
+
+Incrementality is specified by setting the `-i` flag, which uses the specified output space file as input. Fruitflies can be stored as well. 
+
+Initially, you will want to set up a space (and if you want to grow a fruitfly, also a fruitfly) with a command similar to this:
+```
+python3 countwords.py textsource.txt spacefile --grow-fly new ff_config.txt -v 
+```
+Note that `spacefile` has no file extension, but the other files (`textsource.txt` and `ff_config.txt`) have. Also, there is no incrementality flag. The `-v` flag lets you observe the progress while the program is running.
+
+In order to build on the space and the fruitfly, you can use
+```
+python3 countwords.py newtextsource.txt spacefile --grow-fly ff_config.txt -i -v
+```
+
+Happy flying!
