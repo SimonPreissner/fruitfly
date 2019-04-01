@@ -3,6 +3,7 @@ from math import sqrt
 from matplotlib import cm
 import pandas as pd
 from sklearn.decomposition import PCA
+import time
 
 def readDM(dm_file): # read word vectors
     dm_dict = {}
@@ -110,4 +111,19 @@ def run_PCA(dm_dict, words, savefile):
     cax = png.get_axes()[1]
     cax.set_visible(False)
     png.savefig(savefile)
+                                          
+
+def timeit(method):
+    """
+    wrapper for timing. Usage leads to returning of an additional value:
+    a tuple containing timing information.
+    """
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        stats = (method.__name__, args, kw, te-ts)
+        return result+((stats,))
+    return timed # returning a function object makes it a wrapper
+
 

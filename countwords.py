@@ -272,7 +272,7 @@ if verbose_wanted: print("\nchecking overlap...")
 all_in, unshared_words = check_overlap(freq.keys(), required_voc)
 
 
-if verbose_wanted: print("\ncounting cooccurrences...")
+if verbose_wanted: print("\ncounting cooccurrences within",window,"words distance...")
 if linewise_corpus:
     for line in tqdm(words):
         if len(line) >= 2*window: # to avoid index errors

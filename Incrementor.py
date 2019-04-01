@@ -1,0 +1,383 @@
+"""This is a fork program of countwords.py, forked on 2019-03-30_21:11
+
+Usage:
+  Incrementor.py [--help] 
+  Incrementor.py <text_source> <out_file> [--grow_fly [new] <config>] [options]
+
+Options:
+  -h --help          show this screen
+  -t --tokenize      run a simple tokenizer over the input text
+  -l --linewise      don't count cooccurrences across lines
+  -i --increment     load the existing space in <out_file> and extend it
+  -v --verbose       comment program status with command-line output
+  --grow_fly         develop a fruitfly alongside the space; either from scratch or from a config
+  -d=<dims>          limit space to a number of dimensions 
+  -w=<window>        number of tokens in the context (to each side) [default: 5]
+  -x=<checkfile>     check whether all words of <checkfile> are in <text_source>
+  
+OBACHT!
+  # File extensions: use them for <text_source>, <ff_config>, <checkfile>,
+                     DON'T use them for <out_file>!
+"""
+
+
+import sys
+from docopt import docopt
+
+import utils
+import Fruitfly
+from Fruitfly import Fruitfly
+import MEN
+import re
+import numpy as np
+from tqdm import tqdm
+from nltk.tokenize import RegexpTokenizer
+
+
+class Incrementor:
+
+    def __init__(self, corpus_file, matrix_file,
+        corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
+        matrix_incremental=True, matrix_maxdims=None,
+        fly_new=False, fly_grow=False, fly_file=None, 
+        verbose=False):
+
+        self.verbose = verbose
+
+        self.infile       = corpus_file
+        self.is_tokenize  = corpus_tokenize
+        self.is_linewise  = corpus_linewise
+        self.required_voc = corpus_checkvoc
+        
+        self.outspace = matrix_file+".dm" # e.g. "data/potato"
+        self.outcols  = matrix_file+".cols"
+        self.is_incremental = matrix_incremental
+        self.max_dims = matrix_maxdims
+
+        self.is_new_fly  = fly_new
+        self.is_grow_fly = fly_grow
+        self.flyfile     = fly_file
+
+
+        self.words = self.read_corpus(self.infile, \
+                                      tokenize_corpus=self.is_tokenize, \
+                                      linewise=self.is_linewise, \
+                                      verbose=self.verbose)
+
+        self.cooc, self.words_to_i, self.fruitfly = \
+            self.read_incremental_parts(self.outspace, \
+                                        self.outcols, \
+                                        self.flyfile, \
+                                        verbose=self.verbose)
+
+        # words that will be counted (= labels of the final matrix dimensions)
+        self.freq = self.freq_dist(self.words, \
+                                   size_limit=self.max_dims, \
+                                   required_words=self.required_voc, \
+                                   verbose=self.verbose)
+
+        if self.verbose: print("\tVocabulary size:",len(self.freq),\
+                               "\n\tTokens (or lines) for cooccurrence count:",len(self.words))
+
+
+    #========== FILE READING
+
+    def read_corpus(self, infile, tokenize_corpus=False, linewise=False, verbose=False):
+        if verbose: print("\nreading corpus...")
+        lines = [] # list of lists of words
+        nonword = re.compile("\W+") # to delete punctuation entries
+        lc = 0 # for files with more than one line
+        wc = 0 # wordcount
+        with open(infile) as f:
+            for line in f:
+                lc += 1
+                line = line.rstrip().lower()
+                if tokenize_corpus:
+                    tokenizer = RegexpTokenizer(r'\w+')
+                    tokens = tokenizer.tokenize(line)
+                else:
+                    tokens = line.split()
+                linewords = []
+                for t in tokens:
+                    if (re.fullmatch(nonword, t) is None): # ignore punctuation
+                        linewords.append(t) # adds the list as a unit to 'lines'
+                    wc+=1
+                    if verbose and wc%100000 == 0:
+                        print("\twords read:",wc/1000000,"million",end="\r")
+                lines.append(linewords)
+
+
+        if linewise is False:
+            return [w for l in lines for w in l] # flattens to a simple word list
+        else: 
+            return(lines)
+
+    def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False): # matrix, vocabulary, fruitfly (if wanted)
+        """
+        Return a matrix, a vocabulary, and a Fruitfly object.
+        The matrix can be newly instantiated or taken from an already 
+        existing space; the vocabulary aswell.
+        The fruitfly can be optionally created alongside, also either new 
+        or from an already existing config file.
+        """
+        if self.is_incremental:
+            if verbose: print("\nloading existing space...")
+            unhashed_space = utils.readDM(outspace) # returns dict of word : vector
+            i_to_words, words_to_i = utils.readCols(outcols)
+            dimensions = sorted(words_to_i, key=words_to_i.get)
+            cooc = np.stack(tuple([unhashed_space[w] for w in dimensions]))
+        else: 
+            cooc = np.array([[]]) # cooccurrence count (only numbers)
+            words_to_i = {} # vocabulary and word positions 
+        
+        if self.is_grow_fly:
+            if self.is_new_fly:
+                if verbose: print("\ncreating new fruitfly...")
+                fruitfly = Fruitfly.from_scratch() # default config: 2pn,8kc,6proj,5perc
+            else:
+                if verbose: print("\nloading fruitfly...")
+                fruitfly = Fruitfly.from_config(flyfile)
+        else:
+            fruitfly = None
+
+        return cooc, words_to_i, fruitfly
+
+    def freq_dist(self, wordlist, size_limit=None, required_words=None, verbose=False):
+        if verbose: print("\ncreating frequency distribution...")
+        freq = {}
+        if self.is_linewise:
+            for line in tqdm(wordlist):
+                for w in line:
+                    if w in freq:
+                        freq[w] += 1
+                    else:
+                        freq[w] = 1
+        else:
+            for w in tqdm(wordlist):
+                if w in freq:
+                    freq[w] += 1
+                else:
+                    freq[w] = 1
+
+        frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
+
+        if required_words is not None:
+            checklist = self.read_checklist(required_words)
+            overlap = list(set(checklist).intersection(set(frequency_sorted)))
+            rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
+            returnlist = overlap+rest_words 
+        else: 
+            returnlist = frequency_sorted
+
+        if(size_limit is not None and size_limit <= len(freq)):
+            return {k:freq[k] for k in returnlist[:size_limit]}
+        else:
+            return freq
+
+    def read_checklist(self, checklist_filepath):
+        if checklist_filepath is None:
+            return []
+
+        checklist = []
+
+        with open(checklist_filepath, "r") as f:
+            #TODO generalize this so that it takes any text file
+            paired_lists = ["data/MEN_dataset_natural_form_full",
+                            "incrementality_sandbox/data/sandbox_MEN_pairs"]
+            if checklist_filepath in paired_lists: 
+                for line in f:
+                    words = line.rstrip().split()[:2]
+                    checklist.extend(words)
+            else:
+                for word in f:
+                    word = word.rstrip()
+                    checklist.append(word)
+            
+        pos_tag = re.compile("_.+?") # get rid of simple POS-tags
+        return [re.sub(pos_tag, "", w) for w in checklist]
+
+    def check_overlap(self, checklist_filepath, verbose=False):
+        checklist = self.read_checklist(checklist_filepath)
+        if len(checklist) == 0: # if no checking is specified, go on without checking
+            if verbose: 
+                print("\tcheck_overlap(): nothing to check.")
+            return True, []
+
+        unshared_words = list(set(checklist).difference(set(self.freq.keys())))
+
+        if verbose:
+            if len(unshared_words) == 0:
+                print("\tComplete overlap with",checklist_filepath)
+            else:
+                print("\tChecked for overlap with",checklist_filepath,\
+                      "\n\twords missing in the corpus:",len(unshared_words),\
+                      "\n\texamples:",unshared_words[:10])
+
+        return (unshared_words is True), unshared_words
+
+
+
+    #========== CO-OCCURRENCE COUNTING
+
+    def extend_incremental_parts_if_necessary(self, w): # matrix dimensions and fruitfly PN layer
+        #global cooc, words_to_i #CLEANUP
+        if w not in self.words_to_i:
+            self.words_to_i[w] = len(self.words_to_i) # extend the vocabulary
+            temp = np.zeros((len(self.words_to_i), len(self.words_to_i))) # make bigger matrix
+            temp[0:self.cooc.shape[0], 0:self.cooc.shape[1]] = self.cooc # paste current matrix into the new one
+            self.cooc = temp
+        if self.fruitfly is not None and len(self.words_to_i) > self.fruitfly.pn_size:
+            self.fruitfly.extend() # extend if needed (incl. "catching up" with vocabulary size)
+
+    def count_start_of_text(self, words, window): # for the first couple of words
+        #global cooc, words_to_i #CLEANUP
+        for i in range(window): 
+            if words[i] in self.freq:
+                for c in range(i+window+1): # iterate over the context
+                    if words[c] in self.freq:
+                        self.extend_incremental_parts_if_necessary(words[i])
+                        self.extend_incremental_parts_if_necessary(words[c])
+                        self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
+                self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+
+    def count_middle_of_text(self, words, window): # for most of the words
+        #global cooc, words_to_i #CLEANUP
+        if self.is_linewise: # this loop is without tqdm, the other loop with.
+            for i in range(window, len(words)-window): 
+                if words[i] in self.freq: 
+                    for c in range(i-window, i+window+1): # iterate over the context
+                        if words[c] in self.freq:
+                            self.extend_incremental_parts_if_necessary(words[i])
+                            self.extend_incremental_parts_if_necessary(words[c])
+                            self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
+                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+        else:
+            for i in tqdm(range(window, len(words)-window)): 
+                if words[i] in self.freq:
+                    for c in range(i-window, i+window+1): # iterate over the context
+                        if words[c] in self.freq:
+                            self.extend_incremental_parts_if_necessary(words[i])
+                            self.extend_incremental_parts_if_necessary(words[c])
+                            self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
+                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+
+    def count_end_of_text(self, words, window): # for the last couple of words
+        #global cooc, words_to_i #CLEANUP 
+        for i in range(len(words)-window, len(words)):
+            if words[i] in self.freq:
+                for c in range(i-window, len(words)): # iterate over the context
+                    if words[c] in self.freq:
+                        self.extend_incremental_parts_if_necessary(words[i])
+                        self.extend_incremental_parts_if_necessary(words[c])
+                        self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
+                self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+
+    def count_cooccurrences(self, window=5, verbose=False):
+        if self.verbose: print("\ncounting cooccurrences within",window,"words distance...")
+        if self.is_linewise:
+            for line in tqdm(self.words):
+                if len(line) >= 2*window: # to avoid index errors
+                    self.count_start_of_text(line, window)
+                    self.count_middle_of_text(line, window)
+                    self.count_end_of_text(line, window)
+                else:
+                    if self.verbose: print("\tline too short for cooccurrence counting:",line)
+        else:
+            self.count_start_of_text(self.words, window)
+            self.count_middle_of_text(self.words, window)
+            self.count_end_of_text(self.words, window)
+
+        if self.verbose:
+            print("\nfinished counting; matrix shape:",self.cooc.shape)
+            print("vocabulary size:",len(self.words_to_i))
+            print("first words in the vocabulary:\n\t",\
+                   [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
+
+
+
+    #========== LOGGING
+
+    def log_matrix(self, outspace=None, outcols=None, verbose=False):
+        if outspace is None: outspace = self.outspace
+        if outcols  is None: outcols  = self.outcols
+        with open(outspace, "w") as dm_file, open(outcols, "w") as cols_file:
+            if self.verbose:
+                print("\nwriting vectors to",outspace,\
+                      "\nwriting dictionary to",outcols,"...")
+
+            for word,i in tqdm(sorted(self.words_to_i.items(), key=lambda x: x[1])):
+                cols_file.write(word+"\n")
+                vectorstring = " ".join([str(v) for v in self.cooc[i]])
+                dm_file.write(word+" "+vectorstring+"\n")
+
+    def log_fly(self, flyfile=None, verbose=False): # allows to specify a destination
+        if flyfile is None: flyfile = self.flyfile
+        if flyfile is not None and self.fruitfly is not None: 
+            if verbose: print("\nlogging fruitfly to",flyfile,"...")
+            self.fruitfly.log_params(filename=flyfile, timestamp=False) 
+
+    def get_setup(self):
+        return {
+            "verbose":self.verbose,
+            "infile":self.infile,
+            "is_tokenize":self.is_tokenize,
+            "is_linewise":self.is_linewise,
+            "required_voc":self.required_voc,
+            "outspace":self.outspace,
+            "outcols":self.outcols,
+            "is_incremental":self.is_incremental,
+            "max_dims":self.max_dims,
+            "is_new_fly":self.is_new_fly,
+            "is_grow_fly":self.is_grow_fly,
+            "flyfile":self.flyfile,
+            "cooc":self.cooc[:10,:10],
+            "words_to_i":sorted(self.words_to_i, key=self.words_to_i.get)[:10],
+            "fruitfly":self.fruitfly.get_specs(),
+            "words":self.words[:20],
+            "freq":sorted(self.freq, key=self.freq.get, reverse=True)[:10]
+        }
+
+
+
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__)
+
+    is_verbose = arguments["--verbose"]
+    infile = arguments["<text_source>"] # e.g. "data/potato.txt"
+    outfiles = arguments["<out_file>"] # e.g. "data/potato"
+
+    tknz = arguments["--tokenize"]
+    lnws = arguments["--linewise"]
+    xvoc = arguments["-x"]
+
+    incr = arguments["--increment"]
+    try: dims=int(arguments["-d"]) 
+    except TypeError: dims=None
+
+    nfly = arguments["new"]
+    grow = arguments["--grow_fly"]
+    fcfg = arguments["<config>"]
+
+    window = int(arguments["-w"]) # not part of the Incrementor object
+
+
+    incrementor = Incrementor(infile, outfiles, \
+        corpus_tokenize=tknz, corpus_linewise=lnws, corpus_checkvoc=xvoc, \
+        matrix_incremental=incr, matrix_maxdims=dims, \
+        fly_new=nfly, fly_grow=grow, fly_file=fcfg, \
+        verbose=is_verbose)
+
+    if is_verbose: print("\nchecking overlap...")
+    all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc, verbose=incrementor.verbose)
+
+    incrementor.count_cooccurrences(window=window, verbose=incrementor.verbose)
+    incrementor.log_matrix(verbose=incrementor.verbose)
+    incrementor.log_fly(verbose=incrementor.verbose) 
+
+    print("done.")
+
+
+"""
+"""
+

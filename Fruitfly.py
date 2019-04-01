@@ -16,6 +16,9 @@ class Fruitfly:
     It does not implement any cooccurrence counting or evaluation.
     """
 
+
+#========== CONSTRUCTORS AND SETUP
+
     def __init__(self, pn_size, kc_size, proj_size, hash_percent, old_proj=None):
         '''Create layers and random projections. For initialization, use one of the classmethods'''
         self.pn_size   = pn_size
@@ -38,7 +41,7 @@ class Fruitfly:
             with open(filename, "r") as f:
                 lines = f.readlines()
 
-            specs = {p[0]:int(p[1]) for p in [l.split() for l in lines[:5]]}
+            specs = {p[0]:int(p[1]) for p in [l.split() for l in lines[:1]+lines[2:5]]}
 
             connections = {}
             for line in lines[5:]:
@@ -56,7 +59,6 @@ class Fruitfly:
         """ This is a workaround for issues with the default constructor """
         return cls(pn_size, kc_size, proj_size, hash_percent)
 
-
     def create_projections(self):
         proj_functions = {}
         print("\nCreating new projections...")
@@ -67,7 +69,6 @@ class Fruitfly:
             proj_functions[cell] = activated_pns
 
         return proj_functions
-
 
     def forward_connections(self, pn_indices): 
         pn_indices = [pn_indices] if type(pn_indices) != list else pn_indices
@@ -84,6 +85,9 @@ class Fruitfly:
             print("Warning: in Fruitfly.forward_connections(): no connections found for PN",pn)
         return pn_to_kc
 
+
+
+#========== STRINGS AND LOGGING
             
     def show_off(self):
         """ for command line output """
@@ -133,6 +137,9 @@ class Fruitfly:
         print(w,"BEST PNS", sorted(important_words, key=important_words.get, reverse=True)[:self.proj_size]) # only print the most important words
 
 
+
+#========== INCREMENTALITY
+
     def extend(self): #TODO 'num_proj' needed?
         """ add a PN to the fruitfly and connect it"""
         self.pn_size+=1
@@ -165,6 +172,9 @@ class Fruitfly:
 
         self.pn_to_kc.update(self.forward_connections([self.pn_size-1]))
 
+
+
+#========== FFA APPLICATION
 
     def flatten(self, frequency_vector, method=None): 
         """ 
