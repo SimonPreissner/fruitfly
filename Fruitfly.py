@@ -103,7 +103,7 @@ class Fruitfly:
                 "proj_size":self.proj_size, 
                 "hash_percent":self.hash_percent}
 
-    def log_params(self, filename="log/configs/ff_config.txt", timestamp=True):
+    def log_params(self, filename="log/configs/ff_config.cfg", timestamp=True):
         """ writes parameters and projection connections to a specified file"""
         if timestamp is True: 
             filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename

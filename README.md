@@ -43,7 +43,7 @@ Finally, with the -v flag ("verbose"), the script prints out the projection neur
 The Fruitfly class implements the Fruitfly algorithm and utilities for logging and inspecting any one fruitfly instance. 
  
 `Fruitfly.from_scratch()` instantiates a new fruitfly,  
-`Fruitfly.log_params()`  outputs a fruitfly to a text file, and with  
+`Fruitfly.log_params()`  outputs a fruitfly to a .cfg file, and with  
 `Fruitfly.from_config()`, you can re-use the exact same net (including all projection connections) later on.  
 `Fruitfly.fly()` implements the actual application of the algorithm (hashing a distributional space).  
 `Fruitfly.extend()` implements the incremental feature of this project's variant of the Fruitfly algorithm.  
