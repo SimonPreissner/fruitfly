@@ -1,21 +1,22 @@
 import os
 import time
+import utils
 import numpy as np
 from Fruitfly import Fruitfly
 
-log_dest = "test_cfgs/"
-if not os.path.isdir(log_dest):
-    os.makedirs(log_dest, exist_ok=True)
 
 
 """
 # TEST_01
 # make a fruitfly, save it, expand it and save each expansion state.
 
+log_dest = "test_cfgs/"
+if not os.path.isdir(log_dest):
+    os.makedirs(log_dest, exist_ok=True)
+
 fliege = Fruitfly.from_scratch(pn_size=10, kc_size=100, proj_size=6, hash_percent=5)
 print("initial fly:",fliege.show_off())
 fliege.log_params(filename=log_dest+"run-0.txt", timestamp=False)
-
 
 for i in range(5):
 	print("RUN",i+1)
@@ -29,6 +30,10 @@ for i in range(5):
 """
 # TEST_02
 # load fruitfly, expand it, save it 
+
+log_dest = "test_cfgs/"
+if not os.path.isdir(log_dest):
+    os.makedirs(log_dest, exist_ok=True)
 
 fliege = Fruitfly.from_config(log_dest+"run-0.txt")
 print("\tFliege 1:",fliege.show_off())
@@ -44,8 +49,12 @@ fliege.log_params(filename=log_dest+"run-01.txt", timestamp=False)
 # TEST_03
 # extend fruitfly several times, see how the connectedness of the PNs
 # varies (e.g., compute avg. and variance every 100th extension)
-fliege = Fruitfly.from_scratch(pn_size=2, kc_size=10000, proj_size=6, hash_percent=5)
 
+log_dest = "test_cfgs/"
+if not os.path.isdir(log_dest):
+    os.makedirs(log_dest, exist_ok=True)
+
+fliege = Fruitfly.from_scratch(pn_size=2, kc_size=10000, proj_size=6, hash_percent=5)
 
 loopstart = time.time()
 while fliege.pn_size < 20:
@@ -68,3 +77,27 @@ while fliege.pn_size < 20:
 
 print("total runtime:",round(time.time()-loopstart,5),"seconds)")
 """
+
+
+
+# TEST_04
+# this tests the utilitymethods concerning saving and loading a hashed space.
+# writeDH(), readDH(), and sparsifyDH()
+
+unhashed_space = utils.readDM("data/BNC-MEN.dm") # returns dict of word : word_vector
+i_to_cols, cols_to_i = utils.readCols("data/BNC-MEN.cols") # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
+
+fruitfly = Fruitfly.from_scratch(4000, 1000, 6, 5)
+space_hashed, t_flight = fruitfly.fly(unhashed_space, "log") # a dict of word : binary_vector (= after "flying")
+print("coin_N\n\n",space_hashed["coin_N"][:100],"\n") # TARGET
+
+utils.writeDH(space_hashed, "testwrite.dh")
+loaded_hashes = utils.readDH("testwrite.dh")
+print(loaded_hashes["coin_N"][:100]) # outputs a dense representation
+
+sparse_space = utils.sparsifyDH(loaded_hashes, 1000) # is the same as TARGET
+print(sparse_space["coin_N"][:100])
+"""
+"""
+
+

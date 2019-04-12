@@ -1,7 +1,8 @@
 import sys
 import time # for logging
-import utils
 import MEN
+import utils
+from utils import timeit
 from tqdm import tqdm
 from math import ceil
 import numpy as np
@@ -73,16 +74,12 @@ class Fruitfly:
     def forward_connections(self, pn_indices): 
         pn_indices = [pn_indices] if type(pn_indices) != list else pn_indices
 
-        pn_to_kc = {} # { pn_index : [connected KCs] }
+        pn_to_kc = {pn:[] for pn in pn_indices} # { pn_index : [connected KCs] }
         for kc,connections in self.proj_functions.items():
             for pn in pn_indices: # only for the PNs given to the method!
                 if pn in connections:
-                    try:
-                        pn_to_kc[pn].append(kc)
-                    except KeyError as e:
-                        pn_to_kc[pn] = [kc]
-        if pn_to_kc[pn] is None:
-            print("Warning: in Fruitfly.forward_connections(): no connections found for PN",pn)
+                    pn_to_kc[pn].append(kc)
+
         return pn_to_kc
 
 
@@ -123,18 +120,27 @@ class Fruitfly:
             logfile.write(connections)
         logfile.close()
 
-    def show_projections(self, w, hw, i_to_cols):
-        important_words = {} # dict of word:number
-        for i in range(len(hw)):
-            if hw[i] == 1:
+    def important_words_for(self, word_hash, i_to_cols, n=None):
+        """ 
+        For every PN that is connected to an activated KC of the given 
+        hash, count the number of connections from that PN to connected
+        KCs.
+        """
+        important_words = {} # dict of word:count_of_connections
+        for i in range(len(word_hash)):
+            if word_hash[i] == 1:
                 activated_pns = self.proj_functions[i] # retrieve transitions of an activated KC
-                for pn in activated_pns: # count which word helped how many times to lead to 'hw'
+                for pn in activated_pns: # count which word helped how many times to lead to 'word_hash'
                     w = i_to_cols[pn] # retrieve word from PN index
                     if w in important_words:
-                        important_words[w]+=1
+                        important_words[w]+=1 
                     else:
                         important_words[w]=1
-        print(w,"BEST PNS", sorted(important_words, key=important_words.get, reverse=True)[:self.proj_size]) # only print the most important words
+        count_ranked = sorted(important_words, key=important_words.get, reverse=True)
+        if n is None: 
+            return count_ranked # only print the most important words
+        else:
+            return count_ranked[:n]
 
 
 
@@ -214,6 +220,7 @@ class Fruitfly:
             kc_activations[cell] = 1 # assign 1 to the winners
         return kc_activations
 
+    @timeit
     def fly(self, unhashed_space, flattening=None):
         """
         Hash each element of the input space. Apply flattening before input, 

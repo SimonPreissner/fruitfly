@@ -23,8 +23,8 @@ OBACHT!
 
 import sys
 from docopt import docopt
-
 import utils
+from utils import timeit
 import Fruitfly
 from Fruitfly import Fruitfly
 import MEN
@@ -64,7 +64,7 @@ class Incrementor:
                                       linewise=self.is_linewise, \
                                       verbose=self.verbose)
 
-        self.cooc, self.words_to_i, self.fruitfly = \
+        self.cooc, self.words_to_i, self.i_to_words, self.fruitfly = \
             self.read_incremental_parts(self.outspace, \
                                         self.outcols, \
                                         self.flyfile, \
@@ -133,14 +133,14 @@ class Incrementor:
         if self.is_grow_fly:
             if self.is_new_fly:
                 if verbose: print("\ncreating new fruitfly...")
-                fruitfly = Fruitfly.from_scratch() # default config: 2pn,8kc,6proj,5perc
+                fruitfly = Fruitfly.from_scratch() # default config: (50,30000,6,5)
             else:
                 if verbose: print("\nloading fruitfly...")
                 fruitfly = Fruitfly.from_config(flyfile)
         else:
             fruitfly = None
 
-        return cooc, words_to_i, fruitfly
+        return cooc, words_to_i, i_to_words, fruitfly
 
     def freq_dist(self, wordlist, size_limit=None, required_words=None, verbose=False):
         if verbose: print("\ncreating frequency distribution...")
@@ -196,14 +196,16 @@ class Incrementor:
         pos_tag = re.compile("_.+?") # get rid of simple POS-tags
         return [re.sub(pos_tag, "", w) for w in checklist]
 
-    def check_overlap(self, checklist_filepath, verbose=False):
+    def check_overlap(self, checklist_filepath=None, wordlist=None, verbose=False):
+        if checklist_filepath is None: checklist_filepath = self.required_voc
+        if wordlist is None: wordlist = self.freq.keys()
         checklist = self.read_checklist(checklist_filepath)
         if len(checklist) == 0: # if no checking is specified, go on without checking
             if verbose: 
                 print("\tcheck_overlap(): nothing to check.")
             return True, []
 
-        unshared_words = list(set(checklist).difference(set(self.freq.keys())))
+        unshared_words = list(set(checklist).difference(set(wordlist)))
 
         if verbose:
             if len(unshared_words) == 0:
@@ -272,10 +274,12 @@ class Incrementor:
                         self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
                 self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
 
-    def count_cooccurrences(self, window=5, verbose=False):
+    @timeit
+    def count_cooccurrences(self, words=None, window=5, verbose=False):
+        if words is None: words = self.words # to allow partial counting
         if self.verbose: print("\ncounting cooccurrences within",window,"words distance...")
         if self.is_linewise:
-            for line in tqdm(self.words):
+            for line in tqdm(words):
                 if len(line) >= 2*window: # to avoid index errors
                     self.count_start_of_text(line, window)
                     self.count_middle_of_text(line, window)
@@ -283,9 +287,9 @@ class Incrementor:
                 else:
                     if self.verbose: print("\tline too short for cooccurrence counting:",line)
         else:
-            self.count_start_of_text(self.words, window)
-            self.count_middle_of_text(self.words, window)
-            self.count_end_of_text(self.words, window)
+            self.count_start_of_text(words, window)
+            self.count_middle_of_text(words, window)
+            self.count_end_of_text(words, window)
 
         if self.verbose:
             print("\nfinished counting; matrix shape:",self.cooc.shape)
@@ -297,6 +301,7 @@ class Incrementor:
 
     #========== LOGGING
 
+    @timeit
     def log_matrix(self, outspace=None, outcols=None, verbose=False):
         if outspace is None: outspace = self.outspace
         if outcols  is None: outcols  = self.outcols
@@ -310,6 +315,7 @@ class Incrementor:
                 vectorstring = " ".join([str(v) for v in self.cooc[i]])
                 dm_file.write(word+" "+vectorstring+"\n")
 
+    @timeit
     def log_fly(self, flyfile=None, verbose=False): # allows to specify a destination
         if flyfile is None: flyfile = self.flyfile
         if flyfile is not None and self.fruitfly is not None: 
@@ -371,7 +377,7 @@ if __name__ == '__main__':
     if is_verbose: print("\nchecking overlap...")
     all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc, verbose=incrementor.verbose)
 
-    incrementor.count_cooccurrences(window=window, verbose=incrementor.verbose)
+    incrementor.count_cooccurrences(words=incrementor.words, window=window, verbose=incrementor.verbose)
     incrementor.log_matrix(verbose=incrementor.verbose)
     incrementor.log_fly(verbose=incrementor.verbose) 
 

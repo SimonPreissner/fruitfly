@@ -145,8 +145,7 @@ def evaluate(orig_space, result_space, goldstd):
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
     sp_diff = sp_after-sp_before
 
-    results = {"testset":count_after, "sp_before":sp_before, "sp_after":sp_after, "sp_diff":sp_diff}
-    return results
+    return (count_after, sp_before, sp_after, sp_diff)
 
 def log_results(results, flattening, ff_config, log_dest, result_space=None, pair_cos=True):
     pns = ff_config["pn_size"]
@@ -211,7 +210,7 @@ verbose = "-v" in sys.argv
 no_overall_summary_wanted = "-no-summary" in sys.argv
 all_ff_specs = {}
 internal_log = {}
-sp_diffs = {}
+sp_vals = {}
 
 
 
@@ -226,17 +225,20 @@ for flat in flattening:
 
                 # make and apply fruitfly
                 fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
+                #fruitfly = Fruitfly.from_config(...) # for using the same fruitfly
                 run += 1
                 if verbose is True:
                     print("Run number",run,"; config:", fruitfly.show_off(), "flattening:\t", flat)
-                out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
+                out_space, t_flight = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
                 # evaluate
                 internal_log[run] = evaluate(in_space, out_space, goldstandard)
 
                 # log externally and internally
                 log_results(internal_log[run], flat, fruitfly.get_specs(), log_dest, out_space)
-                sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
+                #sp_diffs[run] = (internal_log[run]["sp_before"], #CLEANUP
+                #                internal_log[run]["sp_diff"],
+                #                internal_log[run]["sp_diff"]) # record all performances
                 all_ff_specs[run] = fruitfly.get_specs()
                 all_ff_specs[run]["flattening"] = flat
 
@@ -249,21 +251,27 @@ if verbose is True:
 
 if no_overall_summary_wanted is False:
     with open(log_dest+"/summary.txt", "w") as f:
-        ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
-        summary_header = "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
-                         "KC factor (min, max, steps): "+str(kc_factor_min)+" "+str(kc_factor_max)+" "+str(kc_steps)+"\n"+\
-                         "projections (min, max, steps): "+str(projections_min)+" "+str(projections_max)+" "+str(proj_steps)+"\n"+\
-                         "hash percent (min, max, steps): "+str(hash_perc_min)+" "+str(hash_perc_max)+" "+str(hash_steps)+"\n"+\
-                         "flattening functions: "+", ".join(flattening)+"\n"\
-                         "number of runs: "+str(len(ranked_runs))+"\n\n"
+        ranked_res = sorted(internal_log.items(), key=lambda x:x[1][3], reverse=True) # data type: [(run,(results))]
+        summary_header = 
+            "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
+            "KC factor (min, max, steps): {0} {1} {2}\n".format(kc_factor_min, kc_factor_max, kc_steps)+\
+            "projections (min, max, steps): {0} {1} {2}\n".format(projections_min, projections_max, proj_steps)+\
+            "hash percent (min, max, steps): {0} {1} {2}\n".format(hash_perc_min, hash_perc_max, hash_steps)+\
+            "flattening functions: "+", ".join(flattening)+"\n"\
+            "number of runs: "+str(len(ranked_res))+"\n\n"
+
+
         f.write(summary_header)
-        for run in ranked_runs:
-            f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
+        for run in ranked_res:
+            f.write("{0}\t{1}\t{2}\tconfig: {3}".format(internal_log[run[0]][1], 
+                                                        internal_log[run[0]][2],
+                                                        internal_log[run[0]][3],
+                                                        all_ff_specs[run[0]]))
 
         if verbose is True:
             print("Best runs by performance:")
-            for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
-                print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
+            for run in ranked_res[:min(10, int(round(len(ranked_res)/10+1)))]:
+                print("improvement:",round(internal_log[run[0]][3],5),"with configuration:",all_ff_specs[run[0]])
 
 """
 

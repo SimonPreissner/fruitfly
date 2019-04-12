@@ -9,38 +9,34 @@ The aim of this project is to create an architecture for distributional semantic
 The data/ directory contains several semantic spaces:
 
 - one from the British National Corpus, containing lemmas expressed in 4000 dimensions. (BNC-MEN)
-- one from a subset of Wikipedia, containing words expressed in 1000 dimensions. (wiki.all)
+- one from a subset of Wikipedia, containing words expressed in 1000 dimensions. (wiki_all)
 - one from a subset of UKWAC, containing words expressed in 1000 dimensions. (ukwac_1k_GS-checked)
 
 The cells in the BNC and the Wikipedia space are normalised co-occurrence frequencies *without any additional weighting* (PMI, for instance); the cells in the UKWAC space are raw frequency counts. The UKWAC space contains only words that are in the test set (see below).
 
 The directory also contains test pairs from the [MEN similarity dataset](https://staff.fnwi.uva.nl/e.bruni/MEN), both in lemmatised and natural forms.
 
-Finally, it contains a file *generic_pod.csv*, which is a compilation of around 2400 distributional web page signatures, in [PeARS](http://pearsearch.org) format. The web pages span various topics: Harry Potter, Star Wars, the Black Panther film, the Black Panther social rights movement, search engines and various small topics involving architecture.
-
 ### Running the fruit fly code with projection.py
 To create a Fruitfly, let it run over a space, and evaluate it, use this script.
-For detailed usage description, run it without parameters:
+For detailed usage description, run it with the `--help` option:
 ```
-python3 projection.py
+python3 projection.py --help
 ```
-A standard run might look like this (test on he BNC corpus with 8000 Kenyon cells (=KCs), 6 projections leading to each KC, and 5% hashing): 
+A standard run might look like this (hash the raw count wikipedia vectors and test on he BNC space. Flatten the inputs with logarithm and use a fruit fly with 8000 Kenyon cells (=KCs), 6 projections leading to each KC, and 5% hashing (or, 'reduction')): 
 ```
-python3 projection.py bnc 8000 6 5
+python3 projection.py data/wiki_abs-freq data/MEN_dataset_natural_form_full -f log -k 8000 -p 6 -r 5
 ```
-Or for the Wikipedia space (4000 KCs, 4 projections, 10% hashing):
-```
-python3 projection.py wiki 4000 4 10
-```
-The program returns the Spearman correlation with the MEN similarity data, as calculated a) from the raw frequency space; and b) after running the fly's random projections, as well as the difference between the two.
 
-If you want to set a baseline and evaluate a semantic space without "flying", use the `eval-only` option (you will still have to set the fruitfly's parameters):
+The program returns the Spearman correlation with the MEN similarity data, as calculated a) from the raw frequency space; and b) after running the fly's random projections, as well as the difference between the two.
+Except for input and test space, all parameters are optional and set to default values.
+
+If you want to set a baseline and evaluate a semantic space without "flying", use the `eval-only` option (fruit fly parameters are not important here):
 ```
-python3 projection.py 1k 1 1 1 eval-only
+python3 projection.py data/BNC-MEN eval-only
 ```
 Finally, with the -v flag ("verbose"), the script prints out the projection neurons that are most responsible for the activation in the Kenyon layer.
 ```
-    python3 projection.py bnc 8000 6 5 -v
+    python3 projection.py data/BNC-MEN data/MEN_dataset_lemma_form_full -v
 ```
 
 ### The algorithm itself: Fruitfly.py
@@ -87,6 +83,16 @@ For example, `space_1k_dims.dm` (and `.cols`) can be compiled from `ukwac_100m.t
 ```
 python3 countwords.py ukwac_100m.txt space_1k_dims -d 1000 -w 5 -x data/MEN_dataset_natural_form_full
 ```
+
+
+### The fruitfly's work: storing dense, locality-sensitive hashes
+Applying the FFA to a cooccurrence cound is called "flying". This happens with `Fruitfly.fly()`, which returns a dictionary of words to their binary hashes. 
+In order to store these hashes in a dense format and re-convert stored hashes into the binary form, there are three functions in the `utils` package:
+- `writeDH()`: converts the binary hashes to dense hashes and writes them to a .dh file.
+- `readDH()`: reads a .dh file and returns the dense hashes from it.
+- `sparsifyDH()`: returns the sparse representation of dense hashes.
+
+
 
 ### Going incremental
 Countwords.py also implements incrementality for both cooccurrence counting and the FFA: if specified, a Fruitfly "grows" alongside counting by creating nodes and connections whenever a new word is observed. 
