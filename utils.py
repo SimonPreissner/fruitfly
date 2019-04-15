@@ -1,10 +1,33 @@
 import numpy as np
 from math import sqrt
-from matplotlib import cm
-import pandas as pd
-from sklearn.decomposition import PCA
+import time
+
+
+def timeit(method): # wrapper for performance monitoring
+    """
+    wrapper for timing. Usage leads to returning of an additional value:
+    a tuple containing timing information.
+    - if used for functions without return value: 
+        stats = function()[1]
+    - if used for functions with 1 return value: 
+        value, stats = function()
+    - if used for functions with 1 return value, but no stats wanted:
+        value = function[0]
+    """
+    def timed(*args, **kw):
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        stats = te-ts
+        return result, (stats,)
+    return timed # returning a function object makes it a wrapper
 
 def readDM(dm_file): # read word vectors
+    """
+    read word vectors from a .dm file, where the first word of a line is 
+    the actual word and all other elements, separated by space of tab, 
+    are the word's vector. 
+    """
     dm_dict = {}
     version = ""
     with open(dm_file, "r") as f:
@@ -12,7 +35,7 @@ def readDM(dm_file): # read word vectors
 
     #Make dictionary with key=word, value=vector
     for l in dmlines:
-        items=l.rstrip().split()
+        items=l.rstrip().split() # splits at spaces and at tabs
         row=items[0] # word
         vec=[float(i) for i in items[1:]] # vector values
         vec=np.array(vec)
@@ -20,6 +43,10 @@ def readDM(dm_file): # read word vectors
     return dm_dict
 
 def readCols(cols_file):
+    """
+    read a .cols file and return two dictionaries: word:index and 
+    index:word. 
+    """
     i_to_cols = {}
     cols_to_i = {}
     c = 0
@@ -31,20 +58,41 @@ def readCols(cols_file):
             c+=1
     return i_to_cols, cols_to_i # dimension_number : word and word : dimension_number
 
-def parse_pod(pod):
-    pod_dict = {}
-    with open(pod, "r") as f:
-        for l in f:
-            if l[0] != '#':
-                try:
-                    fields = l.rstrip('\n').split(',')
-                    url = fields[1]
-                    vector = np.array([float(i) for i in fields[4].split()])
-                    pod_dict[url] = vector
-                except:
-                    pass
-    return pod_dict
+def readDH(dh_file):
+    """
+    read a hashed space file (file extension: .dh)
+    hashed spaces are stored like .dm files, but values are all integers.
+    """
+    dh_dict = readDM(dh_file)
+    for w,h in dh_dict.items():
+        dh_dict[w] = [int(v) for v in h]
+    return dh_dict
 
+def writeDH(sparse_space, dh_file):
+    """
+    write a hashed space to a file with the extension .hs;
+    """
+    dense_space = {w:np.nonzero(h)[0] for w,h in sparse_space.items()}
+
+    with open(dh_file, "w") as f:
+        for w,h in dense_space.items():
+            vectorstring = " ".join([str(v) for v in h])
+            f.write("{0} {1}\n".format(w, vectorstring))
+
+def sparsifyDH(dense_space, dims):
+    """
+    return the sparse representations of dense hashes. This means that 
+    each number in the dense hash implies 1 at the sparse hash's index 
+    of that number.
+    The size of the retured sparse hashes has to be provided.
+    """
+    sparse_space = {}
+    for w,h in dense_space.items():
+        sv = np.zeros(shape=(dims,))
+        for i in h:
+            sv[i] = 1
+        sparse_space[w] = sv
+    return sparse_space
 
 def cosine_similarity(v1, v2):
     if len(v1) != len(v2):
@@ -54,60 +102,21 @@ def cosine_similarity(v1, v2):
     den_b = np.dot(v2, v2)
     return num / (sqrt(den_a) * sqrt(den_b))
 
-
-def neighbours(dm_dict,word,n):
+def neighbours(space,word,n):
+    """
+    find the n closest neighbours (by cosine) to a word in a space.
+    """
     cosines={}
-    c=0
-    vec = dm_dict[word]
-    for k,v in dm_dict.items():
+    vec = space[word]
+    for k,v in space.items():
         cos = cosine_similarity(vec, v)
         cosines[k]=cos
-        c+=1
-    c=0
-    neighbours = []
-    for t in sorted(cosines, key=cosines.get, reverse=True):
-        if c<n:
-             #print(t,cosines[t])
-             neighbours.append(t)
-             c+=1
-        else:
-            break
+
+    neighbours = sorted(cosines, key=cosines.get, reverse=True)[:n]
     return neighbours
 
 
-def make_figure(m_2d, labels):
-    cmap = cm.get_cmap('nipy_spectral')
 
-    existing_m_2d = pd.DataFrame(m_2d)
-    existing_m_2d.index = labels
-    existing_m_2d.columns = ['PC1','PC2']
-    existing_m_2d.head()
-
-    ax = existing_m_2d.plot(kind='scatter', x='PC2', y='PC1', figsize=(30,18), c=range(len(existing_m_2d)), colormap=cmap, linewidth=0, legend=False)
-    ax.set_xlabel("A dimension of meaning")
-    ax.set_ylabel("Another dimension of meaning")
-
-    for i, word in enumerate(existing_m_2d.index):
-        #print(word+" "+str(existing_m_2d.iloc[i].PC2)+" "+str(existing_m_2d.iloc[i].PC1))
-        ax.annotate(
-            word,
-            (existing_m_2d.iloc[i].PC2, existing_m_2d.iloc[i].PC1), color='black', size='large', textcoords='offset points')
-
-    fig = ax.get_figure()
-    return fig
-
-
-def run_PCA(dm_dict, words, savefile):
-    m = []
-    labels = []
-    for w in words:
-        labels.append(w)
-        m.append(dm_dict[w])
-    pca = PCA(n_components=2)
-    pca.fit(m)
-    m_2d = pca.transform(m)
-    png = make_figure(m_2d,labels)
-    cax = png.get_axes()[1]
-    cax.set_visible(False)
-    png.savefig(savefile)
+"""
+"""
 

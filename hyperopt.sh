@@ -36,4 +36,4 @@ for F in ${FLAT[@]};
         done
     done
 
-echo \[bash script message\] done. Number of runs: ${RUN}
+echo ... done. Number of runs: ${RUN}

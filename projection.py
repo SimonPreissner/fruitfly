@@ -20,15 +20,16 @@ OBACHT!
 
 import sys
 from docopt import docopt
-#=============== PARAMETER INPUT
-if __name__ == '__main__':
-    arguments = docopt(__doc__)
-
 import utils
 import Fruitfly
 from Fruitfly import Fruitfly
 import MEN
 import numpy as np
+
+
+#=============== PARAMETER INPUT
+if __name__ == '__main__':
+    arguments = docopt(__doc__)
 
 data = arguments["<space>"]+".dm"
 column_labels = arguments["<space>"]+".cols"
@@ -54,6 +55,9 @@ hash_percent = int(arguments["-r"])
 iterations = int(arguments["-i"])
 verbose = arguments["--verbose"]
 
+
+
+#=============== EXECUTIVE CODE
 all_spb = []
 all_spa = []
 all_spd = []
@@ -71,10 +75,19 @@ for i in range(iterations):
 
     fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
 
-    space_hashed = fruitfly.fly(unhashed_space, flattening) # a dict of word : binary_vector (= after "flying")
+    space_hashed, space_dic, space_ind, t_flight = fruitfly.fly(unhashed_space, flattening) # a dict of word : binary_vector (= after "flying")
+
+    #utils.writeDH(space_hashed, "testwrite.dh")
+    #loaded_hashes = utils.readDH("testwrite.dh")
+    #sparse_space = utils.sparsifyDH(loaded_hashes, 1000) # dims = kc_size
+
     if verbose: 
         for w in space_hashed:
-            fruitfly.show_projections(w, space_hashed[w], i_to_cols)
+            words = fruitfly.important_words_for(space_hashed[w], space_ind, n=6)
+            print("{0} IMPORTANT WORDS: {1}".format(w, words))
+
+    print("done.") #CLEANUP
+    sys.exit() #BREAKPOINT
 
     #=============== EVALUATION SECTION
 
@@ -89,20 +102,23 @@ for i in range(iterations):
     all_spb.append(spb)
     all_spa.append(spa)
     all_spd.append(spa-spb)
+
 if iterations > 1:
     best = sorted(all_spd, reverse=True)
 
     print("\nFinished all",iterations,"runs. Summary:")
     print("best and worst runs:",[round(e, 4) for e in best[:3]].extend([round(e, 4) for e in best[:-3]]))
-    print("mean Sp. before:    ",round(np.mean(all_spb), 4))
-    print("mean Sp. after:     ",round(np.mean(all_spa), 4))
-    print("mean Sp. difference:",round(np.mean(all_spd), 4))
-    print("var of Sp. before:    ",round(np.var(all_spb),8))
-    print("var of Sp. after:     ",round(np.var(all_spa),8))
-    print("var of Sp. difference:",round(np.var(all_spd),8))
-    print("std of Sp. before:     ",round(np.std(all_spb), 8))
-    print("std of Sp. after:      ",round(np.std(all_spa), 8))
-    print("std of Sp. difference: ",round(np.std(all_spd), 8))
+    print("mean Sp. before:    ",round(np.average(all_spb), 4))
+    print("mean Sp. after:     ",round(np.average(all_spa), 4))
+    print("mean Sp. difference:",round(np.average(all_spd), 4))
+    print("var of Sp. before:    ",round(np.var(all_spb, ddof=1),8))
+    print("var of Sp. after:     ",round(np.var(all_spa, ddof=1),8))
+    print("var of Sp. difference:",round(np.var(all_spd, ddof=1),8))
+    print("std of Sp. before:     ",round(np.std(all_spb, ddof=1), 8))
+    print("std of Sp. after:      ",round(np.std(all_spa, ddof=1), 8))
+    print("std of Sp. difference: ",round(np.std(all_spd, ddof=1), 8))
+
+
 
 #========== PARAMETER VALUES
 """
