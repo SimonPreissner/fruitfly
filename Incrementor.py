@@ -39,7 +39,7 @@ class Incrementor:
     def __init__(self, corpus_file, matrix_file,
         corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
         matrix_incremental=True, matrix_maxdims=None,
-        fly_new=False, fly_grow=False, fly_file=None, 
+        fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None, 
         verbose=False):
 
         self.verbose = verbose
@@ -57,6 +57,7 @@ class Incrementor:
         self.is_new_fly  = fly_new
         self.is_grow_fly = fly_grow
         self.flyfile     = fly_file
+        self.fly_max_pn  = fly_max_pn
 
 
         self.words = self.read_corpus(self.infile, \
@@ -129,14 +130,16 @@ class Incrementor:
         else: 
             cooc = np.array([[]]) # cooccurrence count (only numbers)
             words_to_i = {} # vocabulary and word positions 
+            i_to_words = {}
         
         if self.is_grow_fly:
             if self.is_new_fly:
                 if verbose: print("\ncreating new fruitfly...")
-                fruitfly = Fruitfly.from_scratch() # default config: (50,30000,6,5)
+                fruitfly = Fruitfly.from_scratch(max_pn_size=self.fly_max_pn) # default config: (50,30000,6,5)
             else:
                 if verbose: print("\nloading fruitfly...")
                 fruitfly = Fruitfly.from_config(flyfile)
+                self.fly_max_pn = fruitfly.max_pn_size # update the attribute
         else:
             fruitfly = None
 
@@ -183,7 +186,8 @@ class Incrementor:
         with open(checklist_filepath, "r") as f:
             #TODO generalize this so that it takes any text file
             paired_lists = ["data/MEN_dataset_natural_form_full",
-                            "incrementality_sandbox/data/sandbox_MEN_pairs"]
+                            "incrementality_sandbox/data/sandbox_MEN_pairs",
+                            "pipe/testset_MEN_pairs"]
             if checklist_filepath in paired_lists: 
                 for line in f:
                     words = line.rstrip().split()[:2]
@@ -277,7 +281,7 @@ class Incrementor:
     @timeit
     def count_cooccurrences(self, words=None, window=5, verbose=False):
         if words is None: words = self.words # to allow partial counting
-        if self.verbose: print("\ncounting cooccurrences within",window,"words distance...")
+        if self.verbose: print("\ncounting inner cooccurrences within",window,"words distance...")
         if self.is_linewise:
             for line in tqdm(words):
                 if len(line) >= 2*window: # to avoid index errors
@@ -302,15 +306,16 @@ class Incrementor:
     #========== LOGGING
 
     @timeit
-    def log_matrix(self, outspace=None, outcols=None, verbose=False):
+    def log_matrix(self, outspace=None, outcols=None, only_these=None, verbose=False):
         if outspace is None: outspace = self.outspace
         if outcols  is None: outcols  = self.outcols
+        if only_these is None: only_these  = self.words_to_i
         with open(outspace, "w") as dm_file, open(outcols, "w") as cols_file:
             if self.verbose:
                 print("\nwriting vectors to",outspace,\
                       "\nwriting dictionary to",outcols,"...")
 
-            for word,i in tqdm(sorted(self.words_to_i.items(), key=lambda x: x[1])):
+            for word,i in tqdm(sorted(only_these.items(), key=lambda x: x[1])):
                 cols_file.write(word+"\n")
                 vectorstring = " ".join([str(v) for v in self.cooc[i]])
                 dm_file.write(word+" "+vectorstring+"\n")
@@ -336,6 +341,7 @@ class Incrementor:
             "is_new_fly":self.is_new_fly,
             "is_grow_fly":self.is_grow_fly,
             "flyfile":self.flyfile,
+            "fly_max_pn":self.fly_max_pn,
             "cooc":self.cooc[:10,:10],
             "words_to_i":sorted(self.words_to_i, key=self.words_to_i.get)[:10],
             "fruitfly":self.fruitfly.get_specs(),
@@ -371,7 +377,7 @@ if __name__ == '__main__':
     incrementor = Incrementor(infile, outfiles, \
         corpus_tokenize=tknz, corpus_linewise=lnws, corpus_checkvoc=xvoc, \
         matrix_incremental=incr, matrix_maxdims=dims, \
-        fly_new=nfly, fly_grow=grow, fly_file=fcfg, \
+        fly_new=nfly, fly_grow=grow, fly_file=fcfg, fly_max_pn=None, \
         verbose=is_verbose)
 
     if is_verbose: print("\nchecking overlap...")

@@ -18,8 +18,8 @@ def timeit(method): # wrapper for performance monitoring
         ts = time.time()
         result = method(*args, **kw)
         te = time.time()
-        stats = (method.__name__, args, kw, te-ts)
-        return result, ((stats,))
+        stats = te-ts
+        return result, (stats,)
     return timed # returning a function object makes it a wrapper
 
 def readDM(dm_file): # read word vectors

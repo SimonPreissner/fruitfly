@@ -145,7 +145,7 @@ def evaluate(orig_space, result_space, goldstd):
     sp_after, count_after = MEN.compute_men_spearman(result_space, goldstd)
     sp_diff = sp_after-sp_before
 
-    return (count_after, sp_before, sp_after, sp_diff)
+    return (count_before, count_after, sp_before, sp_after, sp_diff)
 
 def log_results(results, flattening, ff_config, log_dest, result_space=None, pair_cos=True):
     pns = ff_config["pn_size"]
@@ -157,17 +157,19 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
                   +str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
     summarydump = log_dest+"/dump.txt"
 
-    items = results["testset"]
-    spb = round(results["sp_before"], 5)
-    spa = round(results["sp_after"], 5)
-    diff = round(results["sp_diff"], 5)
+    countb = results[0]
+    counta = results[1]
+    spb = round(results[2], 5)# results["sp_before"]
+    spa = round(results[3], 5)# results["sp_after"]
+    diff = round(results[4], 5)# results["sp_diff"]
     
     specs_statement =   "PN_size \t" + str(pns)+\
                         "\nKC_factor\t" + str(kcs/pns)+\
                         "\nprojections\t"+ str(proj)+\
                         "\nhash_dims\t"+ str((hp*kcs)/100)+\
                         "\nflattening\t"+ flattening
-    results_statement = "evaluated\t" + str(items)+\
+    results_statement = "testwords_before\t" + str(countb)+\
+                        "testwords_after\t" + str(counta)+\
                         "\nsp_before\t" + str(spb)+\
                         "\nsp_after\t" + str(spa)+\
                         "\nsp_diff \t" + str(diff)+"\n"
@@ -228,8 +230,8 @@ for flat in flattening:
                 #fruitfly = Fruitfly.from_config(...) # for using the same fruitfly
                 run += 1
                 if verbose is True:
-                    print("Run number",run,"; config:", fruitfly.show_off(), "flattening:\t", flat)
-                out_space, t_flight = fruitfly.fly(in_space, flat) # this is where the magic happens 
+                    print("Run number {0}; config: {1} flattening:\t{2}".format(run, fruitfly.show_off(), flat))
+                out_space, space_dic, space_ind, t_flight = fruitfly.fly(in_space, cols_to_i, flat) # this is where the magic happens 
                 
                 # evaluate
                 internal_log[run] = evaluate(in_space, out_space, goldstandard)
@@ -263,15 +265,15 @@ if no_overall_summary_wanted is False:
 
         f.write(summary_header)
         for run in ranked_res:
-            f.write("{0}\t{1}\t{2}\tconfig: {3}".format(internal_log[run[0]][1], 
-                                                        internal_log[run[0]][2],
+            f.write("{0}\t{1}\t{2}\tconfig: {3}".format(internal_log[run[0]][2], 
                                                         internal_log[run[0]][3],
+                                                        internal_log[run[0]][4],
                                                         all_ff_specs[run[0]]))
 
         if verbose is True:
             print("Best runs by performance:")
             for run in ranked_res[:min(10, int(round(len(ranked_res)/10+1)))]:
-                print("improvement:",round(internal_log[run[0]][3],5),"with configuration:",all_ff_specs[run[0]])
+                print("improvement:",round(internal_log[run[0]][4],5),"with configuration:",all_ff_specs[run[0]])
 
 """
 
