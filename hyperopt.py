@@ -97,7 +97,7 @@ def get_text_resources_from_argv():
         data = sys.argv[1]+".dm"
         column_labels = sys.argv[1]+".cols"
         print("Could not identify a keyword for the vector space file.\n\
-            Proceeding with  ",data,"\nand  ",column_labels,"  as resources.")
+            Proceeding with  ",data,"\n\tand  ",column_labels,"  as resources.")
         #sys.exit() #used to terminate if the keyword was incorrect.
     return data, column_labels
 

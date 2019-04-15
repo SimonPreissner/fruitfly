@@ -9,7 +9,7 @@ echo "Usage: sh hyperopt.sh [dist_space_file] [goldstandard] [logto_folder]";
 
 
 FLAT=(log log2 log10)
-KC=(1 2 4 6 8 10)
+KC=(1 2 4 6 8)
 PROJ=(6 8 10 12 14 16 18 20)
 HASH=(4 8 12 16 20)
 
@@ -18,9 +18,11 @@ for F in ${FLAT[@]};
     do
     for K in ${KC[@]};
     	do
-    	for P in ${PROJ[@]};
+    	#for H in ${HASH[@]};
+        for P in ${PROJ[@]};
     	    do
-    	    for H in ${HASH[@]};
+    	    #for P in ${PROJ[@]};
+            for H in ${HASH[@]};
     	    	do
     	    	# performs a grid search with only one value for each parameter
     	    	# example log destination: ../gridsearch_5k 
@@ -28,8 +30,9 @@ for F in ${FLAT[@]};
     	    	echo \[bash script message\] starting run number ${RUN}
     	    	python3 hyperopt.py ${SPACE} "-testset" ${GOLD} "-logto" ${LOGTO} ${F} "-kc" ${K} ${K} 1 "-proj" ${P} ${P} 1 "-hash" ${H} ${H} 1 "-no-summary" "-v" &
     	    	done
+            #wait #activate this wait-statement for runs with large spaces, e.g. 10k dims
             done
-	    wait
+        wait
         done
     done
 

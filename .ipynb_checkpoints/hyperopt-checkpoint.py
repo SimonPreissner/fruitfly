@@ -1,32 +1,73 @@
-import os
-import sys
-import utils
-import numpy as np
-import MEN
-from Fruitfly import Fruitfly # in order to workaround the classmethod issues
+"""Countwords: Create or extend a co-occurrence matrix (and optionally a corresponding fruitfly).
+
+Usage:
+  hyperopt.py [--help] 
+  hyperopt.py <space> <testset> 
+  hyperopt.py <space> <testset> [--logto <log_dir>] [-v] [--no-summary]
+
+Options:
+  -h --help             show this screen
+  -v --verbose          comment program status with command-line output
+  --logto=<log_dir>     creates one file per run in the specified folder
+  --no-summary          omit the creation of a final summary file 
+  --flat=<flattenings>  flattening function(s), one of [log log2 log10], dash-separated [default: log]
+  --k1=<kc_min>          KC expansion factor, min< [default: 5]
+  --k2=<kc_max>                               maximum [default: 5]
+  --k3=<kc_step>                            step size [default: 1]
+  --p1=<proj_min>        projection numbers per KC, minimum [default: 5]
+  --p2=<proj_max>                                   maximum [default: 5]
+  --p3=<proj_step>                                step size [default: 1]
+  --r1=<hash_min>        percentages for hashing, minimum [default: 5]
+  --r2=<hash_max>                                 maximum [default: 5]
+  --r3=<hash_step>                              step size [default: 1]
+  
+from docopt import docopt
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__)
+    print(arguments)
+    sys.exit() # BREAKPOINT
+"""
+#  hyperopt.py <space> <testset> [--flat <flat_range>...] [-k <kc_range>...] [-p <proj_range>...] [-r <hash_range>...]  
+#TODO solve the problem of how to input multiple optional parameters ()
+
+
 
 """
 this script is for hyperparameter optimizaton. 
 It is basically brute-force grid search, but could be modified
 to a kind of early-stopping grid search.
 """
+import sys
 
-if len(sys.argv) < 2 or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","5k","10k"]:
+if len(sys.argv) < 2: #or sys.argv[1] not in ["bnc","wiki","rawiki","w2v","1k","5k","10k"]:
     print("Check your parameters! Parameter sequence: \n\
         hyperopt.py \n\
-        [corpus]              one of these: [bnc wiki rawiki w2v 5k 10k]\n\
+        [space]               e.g. one of these: [bnc wiki rawiki w2v 1k 5k 10k]\n\
+        -testset [filepath]   default: data/MEN_dataset_natural_form_full\n\
         -logto [directory]    one file in [directory] per run\n\
                                  default: log/hyperopt/default_log\n\
         [flattenings]         any combination of [log log2 log10]\n\
                                  default: log\n\
         -kc [min max steps]   expansion factor\n\
-                                 e.g. [4 20 4]; default: [5 5 1]\n\
+                                 e.g. [2 10 2]; default: [5 5 1]\n\
         -proj [min max steps] number of projections\n\
-                                 e.g. [4 20 4]; default: [5 5 1]\n\
+                                 e.g. [2 10 2]; default: [5 5 1]\n\
         -hash [min max steps] percentage of 'winner' KCs\n\
                                  e.g. [4 20 4]; default: [5 5 1]\n\
+        -no-summary           omit creation of a summary of all runs\n\
         -v                    run in verbose mode")
     sys.exit() 
+
+import os
+import utils
+import fcntl # for file locking of the output
+import numpy as np
+import MEN
+from tqdm import tqdm
+from Fruitfly import Fruitfly # in order to workaround the classmethod issues
+
+
 
 
 #========== FUNCTIONS
@@ -34,31 +75,31 @@ def get_text_resources_from_argv():
     if sys.argv[1] == "bnc":
         data = "data/BNC-MEN.dm"
         column_labels = "data/BNC-MEN.cols"
-        MEN_annot = "data/MEN_dataset_lemma_form_full"
     elif sys.argv[1] == "wiki":
         data = "data/wiki_all.dm"
         column_labels = "data/wiki_all.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "rawiki":
         data = "data/wiki_abs-freq.dm"
         column_labels = "data/wiki_abs-freq.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
     elif sys.argv[1] == "w2v":
         data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
         column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
+    elif sys.argv[1] == "1k":
+        data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.dm"
+        column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.cols"
     elif sys.argv[1] == "5k":
-        data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.dm"
-        column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
+        data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.dm"
+        column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.cols"
     elif sys.argv[1] == "10k":
-        data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k.dm"
-        column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k.cols"
-        MEN_annot = "data/MEN_dataset_natural_form_full"
+        data = "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.dm"
+        column_labels= "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
     else: 
-        print("Error reading files. Is the key word correct?")
-        sys.exit()
-    return data, column_labels, MEN_annot
+        data = sys.argv[1]+".dm"
+        column_labels = sys.argv[1]+".cols"
+        print("Could not identify a keyword for the vector space file.\n\
+            Proceeding with  ",data,"\n\tand  ",column_labels,"  as resources.")
+        #sys.exit() #used to terminate if the keyword was incorrect.
+    return data, column_labels
 
 def get_ranges_from_argv(param, minimum=5, maximum=5, steps=1):
     if param in sys.argv:
@@ -79,13 +120,20 @@ def get_flattening_from_argv():
         flattening = ["log"] # flattening happens before the PN layer (ln, log2, log10) = 3params
     return flattening
 
+def get_testset_from_argv():
+    if "-testset" in sys.argv: 
+        testfile = sys.argv[sys.argv.index("-testset")+1]
+    else: 
+        testfile = "data/MEN_dataset_natural_form_full"
+    return testfile
+
 def get_logging_from_argv():
     if "-logto" in sys.argv: 
         log_dest = sys.argv[sys.argv.index("-logto")+1]
     else: 
-        log_dest = "./log/hyperopt/default_log"
+        log_dest = "../hyperopt_default_log"
     if not os.path.isdir(log_dest):
-        os.makedirs(log_dest)
+        os.makedirs(log_dest, exist_ok=True)
     return log_dest
 
 
@@ -106,42 +154,46 @@ def log_results(results, flattening, ff_config, log_dest, result_space=None, pai
     proj= ff_config["proj_size"]
     hp  = ff_config["hash_percent"]
     
-    logfilepath = log_dest+"/"+sys.argv[1]+"-"+str(int(kcs/pns))+"-"\
+    logfilepath = log_dest+"/"+str(int(kcs/pns))+"-"\
                   +str(proj)+"-"+str(int((hp*kcs)/100))+"-"+flattening+".txt"
+    summarydump = log_dest+"/dump.txt"
 
     items = results["testset"]
     spb = round(results["sp_before"], 5)
     spa = round(results["sp_after"], 5)
     diff = round(results["sp_diff"], 5)
     
-    specs_statement = "PN_size \t" + str(pns)+\
-                      "\nKC_factor\t" + str(kcs/pns)+\
-                      "\nprojections\t"+ str(proj)+\
-                      "\nhash_dims\t"+ str((hp*kcs)/100)+\
-                      "\nflattening\t"+ flattening
+    specs_statement =   "PN_size \t" + str(pns)+\
+                        "\nKC_factor\t" + str(kcs/pns)+\
+                        "\nprojections\t"+ str(proj)+\
+                        "\nhash_dims\t"+ str((hp*kcs)/100)+\
+                        "\nflattening\t"+ flattening
     results_statement = "evaluated\t" + str(items)+\
                         "\nsp_before\t" + str(spb)+\
                         "\nsp_after\t" + str(spa)+\
                         "\nsp_diff \t" + str(diff)+"\n"
 
-    with open(logfilepath, "w") as f:
+    with open(logfilepath, "w") as f, open(summarydump, "a") as d:
+        fcntl.flock(d, fcntl.LOCK_EX) # for multiprocessing
         f.write("Evaluated corpus:\t"+data+"\n")
-        f.write(specs_statement+"\n")
-        f.write(results_statement+"\n")
+        f.write(specs_statement+"\n"+results_statement+"\n")
+        d.write(specs_statement+"\n"+results_statement+"\n")
+        fcntl.flock(d, fcntl.LOCK_UN)
 
         if (not (result_space is None) and (pair_cos is True)): 
-            pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, MEN_annot)
+            pairs, men_sim, fly_sim = MEN.compile_similarity_lists(result_space, goldstandard)
             for i in range(len(pairs)):
                 f.write(str(pairs[i][0])+"\t"+str(pairs[i][1])+"\t"+\
                         str(men_sim[i])+"\t"+str(fly_sim[i])+"\t"+"\n")
     if verbose is True:
         print(specs_statement)
-        print(results_statement, "\n")
+        print(results_statement)
 
 
 #========== PARAMETER INPUT
 
-data, column_labels, MEN_annot = get_text_resources_from_argv()
+data, column_labels= get_text_resources_from_argv()
+goldstandard = get_testset_from_argv()
 log_dest = get_logging_from_argv()
 
 flattening = get_flattening_from_argv()
@@ -156,12 +208,15 @@ pn_size = len(i_to_cols) # length of word vector (= input dimension)
 
 # for reporting purposes
 verbose = "-v" in sys.argv
+no_overall_summary_wanted = "-no-summary" in sys.argv
 all_ff_specs = {}
 internal_log = {}
 sp_diffs = {}
 
 
+
 #========== GRID SEARCH
+
 #TODO maybe: sort the parameters by relevance
 run = 0
 for flat in flattening:
@@ -171,19 +226,19 @@ for flat in flattening:
 
                 # make and apply fruitfly
                 fruitfly = Fruitfly.from_scratch(pn_size, kc_factor*pn_size, projections, hash_size) # sets up a neural net
+                run += 1
                 if verbose is True:
-                    print("New fruitfly -- configuration: ", fruitfly.show_off(), "flattening:\t", flat)
+                    print("Run number",run,"; config:", fruitfly.show_off(), "flattening:\t", flat)
                 out_space = fruitfly.fly(in_space, flat) # this is where the magic happens 
                 
                 # evaluate
-                internal_log[run] = evaluate(in_space, out_space, MEN_annot)
+                internal_log[run] = evaluate(in_space, out_space, goldstandard)
 
                 # log externally and internally
                 log_results(internal_log[run], flat, fruitfly.get_specs(), log_dest, out_space)
                 sp_diffs[run] = internal_log[run]["sp_diff"] # record all performances
                 all_ff_specs[run] = fruitfly.get_specs()
                 all_ff_specs[run]["flattening"] = flat
-                run += 1
 
 if verbose is True:
     print ("Finished grid search. Number of runs:",run)
@@ -191,22 +246,24 @@ if verbose is True:
 
 
 #========== LOG FINAL RESULTS
-with open(log_dest+"/summary.txt", "w") as f:
-    ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
-    summary_header = "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
-                     "KC factor (min, max, steps): "+str(kc_factor_min)+" "+str(kc_factor_max)+" "+str(kc_steps)+"\n"+\
-                     "projections (min, max, steps): "+str(projections_min)+" "+str(projections_max)+" "+str(proj_steps)+"\n"+\
-                     "hash percent (min, max, steps): "+str(hash_perc_min)+" "+str(hash_perc_max)+" "+str(hash_steps)+"\n"+\
-                     "flattening functions: "+", ".join(flattening)+"\n"\
-                     "number of runs: "+str(len(ranked_runs))+"\n\n"
-    f.write(summary_header)
-    for run in ranked_runs:
-        f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
 
-    if verbose is True:
-        print("Best runs by performance:")
-        for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
-            print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
+if no_overall_summary_wanted is False:
+    with open(log_dest+"/summary.txt", "w") as f:
+        ranked_runs = sorted(sp_diffs, key=sp_diffs.get, reverse=True) #[:round(0.1*len(sp_diffs))+1]
+        summary_header = "Grid search on the text data "+data+" with the following parameter ranges:\n"+\
+                         "KC factor (min, max, steps): "+str(kc_factor_min)+" "+str(kc_factor_max)+" "+str(kc_steps)+"\n"+\
+                         "projections (min, max, steps): "+str(projections_min)+" "+str(projections_max)+" "+str(proj_steps)+"\n"+\
+                         "hash percent (min, max, steps): "+str(hash_perc_min)+" "+str(hash_perc_max)+" "+str(hash_steps)+"\n"+\
+                         "flattening functions: "+", ".join(flattening)+"\n"\
+                         "number of runs: "+str(len(ranked_runs))+"\n\n"
+        f.write(summary_header)
+        for run in ranked_runs:
+            f.write(str(round(sp_diffs[run],5))+"\tconfig: "+str(all_ff_specs[run]))
+
+        if verbose is True:
+            print("Best runs by performance:")
+            for run in ranked_runs[:min(10, int(round(len(ranked_runs)/10+1)))]:
+                print("improvement:",round(sp_diffs[run],5),"with configuration:",all_ff_specs[run])
 
 """
 
