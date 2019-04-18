@@ -54,7 +54,7 @@ try:
     w2v_corpus_file      = "../"+pipedir+"w2v/ressouce.txt"
     w2v_space_location   = "../"+pipedir+"w2v/spaces/" 
 
-    for f in [fly_location, space_location, results_location, vip_words_location, w2v_space_location]
+    for f in [fly_location, space_location, results_location, vip_words_location, w2v_space_location]:
         if not os.path.isdir(f):
             os.makedirs(f, exist_ok=True)
 
