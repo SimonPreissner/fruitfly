@@ -165,7 +165,7 @@ try:
         with open(vip_words_file, "w") as f:
             for w in tqdm(hashed_space):
                 vip_words = breeder.fruitfly.important_words_for(\
-                            hashed_space[w], space_ind, n=number_of_vip_words)
+                            hashed_space[w], breeder.words_to_i, n=number_of_vip_words)
                 #print(vip_words)#CLEANUP
                 vip_words_string = ", ".join(vip_words)
                 f.write("{0} --> {1}\n".format(w, vip_words_string))
