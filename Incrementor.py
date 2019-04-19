@@ -186,6 +186,7 @@ class Incrementor:
         with open(checklist_filepath, "r") as f:
             #TODO generalize this so that it takes any text file
             paired_lists = ["data/MEN_dataset_natural_form_full",
+                            "./data/MEN_dataset_natural_form_full",
                             "incrementality_sandbox/data/sandbox_MEN_pairs",
                             "pipe/testset_MEN_pairs"]
             if checklist_filepath in paired_lists: 
@@ -229,6 +230,7 @@ class Incrementor:
         #global cooc, words_to_i #CLEANUP
         if w not in self.words_to_i:
             self.words_to_i[w] = len(self.words_to_i) # extend the vocabulary
+            self.i_to_words[self.words_to_i[w]] = w # extend the 'backwards vocabulary'
             temp = np.zeros((len(self.words_to_i), len(self.words_to_i))) # make bigger matrix
             temp[0:self.cooc.shape[0], 0:self.cooc.shape[1]] = self.cooc # paste current matrix into the new one
             self.cooc = temp
@@ -310,6 +312,7 @@ class Incrementor:
         if outspace is None: outspace = self.outspace
         if outcols  is None: outcols  = self.outcols
         if only_these is None: only_these  = self.words_to_i
+ 
         with open(outspace, "w") as dm_file, open(outcols, "w") as cols_file:
             if self.verbose:
                 print("\nwriting vectors to",outspace,\
