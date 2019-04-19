@@ -23,6 +23,7 @@ import sys
 import os
 import utils
 import math
+from tqdm import tqdm
 from utils import timeit
 import time
 import Incrementor
@@ -37,7 +38,7 @@ try:
     
     #========== PARAMETER INPUT
     corpus_file  = "./../ukwac_100m/ukwac_100m.txt"
-    w2v_exe_file = "./../share/word2vec/word2vec"
+    w2v_exe_file = "./../share/word2vec"
     testset_file = "./data/MEN_dataset_natural_form_full"
 
     pipedir = "pipe3/"
@@ -46,13 +47,13 @@ try:
     results_location     = pipedir+"ffa/results/stats/"
     w2v_results_file     = pipedir+"w2v/results.txt"
 
-    matrix_filename      = "../"+pipedir+"ffa/cooc"
-    fly_location         = "../"+pipedir+"ffa/configs/"
-    space_location       = "../"+pipedir+"ffa/spaces/"
-    vip_words_location   = "../"+pipedir+"ffa/results/words/"
+    matrix_filename      = pipedir+"ffa/cooc"
+    fly_location         = pipedir+"ffa/configs/"
+    space_location       = pipedir+"ffa/spaces/"
+    vip_words_location   = pipedir+"ffa/results/words/"
 
-    w2v_corpus_file      = "../"+pipedir+"w2v/ressouce.txt"
-    w2v_space_location   = "../"+pipedir+"w2v/spaces/" 
+    w2v_corpus_file      = pipedir+"w2v/ressouce.txt"
+    w2v_space_location   = pipedir+"w2v/" 
 
     for f in [fly_location, space_location, results_location, vip_words_location, w2v_space_location]:
         if not os.path.isdir(f):
@@ -129,15 +130,19 @@ try:
         # only log the cooccurrence counts that will be evaluated (to speed things up)
         words_for_log = breeder.read_checklist(checklist_filepath=testset_file) # disable this for full logging
         log_these = {w:breeder.words_to_i[w] for w in words_for_log if w in breeder.words_to_i} # disable this for full logging
+        print("length of words_to_i:",len(breeder.words_to_i))
+        print("length of log_these:",len(log_these))
         t_logmat = breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
 
         #========== FLY AND EVALUATE    
         unhashed_space = utils.readDM(breeder.outspace)
+        print("length of unhashed_space:",len(unhashed_space))
         i_to_words, words_to_i = utils.readCols(breeder.outcols)
 
         # this is where the magic happens
         (hashed_space, space_dic, space_ind), t_flight = \
             breeder.fruitfly.fly(unhashed_space, words_to_i, flattening=flat)
+        print("length of space_dic:",len(space_dic))
 
         spb,spa,sp_diff,tsb,tsa = 0,0,0,0,0 # be sure to start with
         #spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file)
@@ -165,8 +170,7 @@ try:
         with open(vip_words_file, "w") as f:
             for w in tqdm(hashed_space):
                 vip_words = breeder.fruitfly.important_words_for(\
-                            hashed_space[w], breeder.words_to_i, n=number_of_vip_words)
-                #print(vip_words)#CLEANUP
+                            hashed_space[w], breeder.i_to_words, n=number_of_vip_words)
                 vip_words_string = ", ".join(vip_words)
                 f.write("{0} --> {1}\n".format(w, vip_words_string))
 
@@ -212,8 +216,8 @@ try:
         occs = sorted([sum(vec) for vec in breeder.cooc]) # has only 10k dimensions
         w2v_min_count = math.floor(occs[0]/(window*2)) # selects the lowest number
 
-        w2v_space_file = w2v_space_location+"space_run_"+str(run)+".txt"
-        w2v_vocab_file = w2v_space_location+"vocab_run_"+str(run)+".vocab"
+        w2v_space_file = w2v_space_location+"space.txt"
+        w2v_vocab_file = w2v_space_location+"space.vocab"
         print("training w2v with minimum count",w2v_min_count,"...")
 
         # run the w2v code
@@ -227,7 +231,7 @@ try:
         spcorr,pairs = 0,0 # be sure to start with 0
         spcorr,pairs = MEN.compute_men_spearman(w2v_space, testset_file)
 
-        with open(w2v_results_file, "a") as f:
+        with open(w2v_results_file, "a+") as f:
             f.write("RUN {0}:\tSP_CORR: {1}\tTEST_PAIRS: {2}\n".format(run, spcorr, pairs))
 
         #keep internal log
@@ -248,7 +252,7 @@ try:
     print("done.")
 except Exception as e:
     with open(errorlog, "a") as f:
-        f.write(e)
+        f.write(str(e))
         
 
 """

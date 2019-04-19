@@ -136,7 +136,6 @@ class Fruitfly:
                           "hash_perc "  +str(self.hash_percent)+"\n"+\
                           "max_pn_size "+str(self.max_pn_size)+"\n")
             logfile.write(connections)
-        logfile.close()
 
     def important_words_for(self, word_hash, i_to_cols, n=None):
         """ 
@@ -146,15 +145,14 @@ class Fruitfly:
         """
         important_words = {} # dict of word:count_of_connections
         for i in range(len(word_hash)):
-            if word_hash[i] == 1:
+            if int(word_hash[i]) == 1:
                 activated_pns = self.proj_functions[i] # retrieve transitions of an activated KC
                 for pn in activated_pns: # count which word helped how many times to lead to 'word_hash'
-                    if pn in i_to_cols: # to avoid index errors at the beginning
-                        w = i_to_cols[pn]  # retrieve word from PN index
-                        if w in important_words:
-                            important_words[w]+=1 
-                        else:
-                            important_words[w]=1
+                    w = i_to_cols[pn]  # retrieve word from PN index
+                    if w in important_words:
+                        important_words[w]+=1 
+                    else:
+                        important_words[w]=1            
         count_ranked = sorted(important_words, key=important_words.get, reverse=True)
         if n is None: 
             return count_ranked # only print the most important words
