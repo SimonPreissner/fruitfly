@@ -138,7 +138,7 @@ class Fruitfly:
             logfile.write(connections)
         logfile.close()
 
-    def important_words_for(self, word_hash, i_to_cols, n=None):
+    def important_words_for(self, word_hash, pn_dic, n=None):
         """ 
         For every PN that is connected to an activated KC of the given 
         hash, count the number of connections from that PN to connected
@@ -149,12 +149,11 @@ class Fruitfly:
             if word_hash[i] == 1:
                 activated_pns = self.proj_functions[i] # retrieve transitions of an activated KC
                 for pn in activated_pns: # count which word helped how many times to lead to 'word_hash'
-                    if pn in i_to_cols: # to avoid index errors at the beginning
-                        w = i_to_cols[pn]  # retrieve word from PN index
-                        if w in important_words:
-                            important_words[w]+=1 
-                        else:
-                            important_words[w]=1
+                    w = pn_dic[pn]  # retrieve word from PN index
+                    if w in important_words:
+                        important_words[w]+=1 
+                    else:
+                        important_words[w]=1
         count_ranked = sorted(important_words, key=important_words.get, reverse=True)
         if n is None: 
             return count_ranked # only print the most important words
@@ -270,7 +269,7 @@ class Fruitfly:
         top = int(ceil(self.hash_percent * (self.kc_size) / 100)) # number of winners (highest activation)
         activated_kcs = np.argpartition(self.kc_layer, -top)[-top:]
         for cell in activated_kcs:
-            kc_activations[cell] = 1 # assign 1 to the winners
+            kc_activations[cell] = 1 # assign 1 to the winners #TODO fix this? (slack from 2019-04-17)
         return kc_activations
 
     @timeit
