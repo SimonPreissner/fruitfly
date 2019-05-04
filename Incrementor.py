@@ -184,7 +184,10 @@ class Incrementor:
         checklist = []
 
         with open(checklist_filepath, "r") as f:
-            #TODO generalize this so that it takes any text file
+            #CLEANUP
+            """
+            This has been generalized by making vocabulary lists out of 
+            the paired lists.
             paired_lists = ["data/MEN_dataset_natural_form_full",
                             "./data/MEN_dataset_natural_form_full",
                             "incrementality_sandbox/data/sandbox_MEN_pairs",
@@ -194,9 +197,10 @@ class Incrementor:
                     words = line.rstrip().split()[:2]
                     checklist.extend(words)
             else:
-                for word in f:
-                    word = word.rstrip()
-                    checklist.append(word)
+            """
+            for word in f:
+                word = word.rstrip()
+                checklist.append(word)
             
         pos_tag = re.compile("_.+?") # get rid of simple POS-tags
         return [re.sub(pos_tag, "", w) for w in checklist]

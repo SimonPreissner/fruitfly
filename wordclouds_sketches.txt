@@ -1,0 +1,77 @@
+reptiles_mammals 	 	 insects reptiles fish birds many species small marine mammals seen
+reptiles_amphibians 	 insects reptiles fish birds east species marine found mammals
+mammals_amphibians 	 	 insects reptiles fish birds species marine mammals british
+
+
+
+
+pigeon_hawk 	 	tailed black dove short white red breasted seen common
+pigeon_hummingbird 	billed tailed black mountain 8209 green white seen breasted
+pigeon_parrot 	 	billed black dove 8209 red white seen breasted
+
+hawk_gull 	 		tailed black crested short found grey seen common
+hawk_hummingbird 	tailed black crested found white seen breasted
+hawk_parrot 	 	white black dove found red grey seen breasted
+	
+gull_hummingbird 	billed tailed black headed crested found seen
+gull_parrot 	 	yellow billed black headed found grey seen
+
+hummingbird_parrot 	billed black crowned headed 8209 found white fronted seen breasted
+
+
+
+		    tailed black billed dove short white red breasted crested
+pigeon      X		X		X	X		X	X	  X		X	
+hawk        X		X			X		X	X	  X		X		X
+hummingbird X		X		X				X	  		X		X	
+parrot      X		X		X	X			X	  X		X			
+gull        X		X		X			X		  				X	
+
+
+
+pigeon_crow 	 	billed black 8209 white seen necked common
+eagle_hawk 	 		hawk black crested short white eagle seen common
+hawk_pelican 	 	tailed black crested white grey seen common
+gull_pelican 	 	backed tailed black headed crested tern laughing little great grey seen common
+gull_flamingo 	 	gull backed billed black first little lesser great seen common
+gull_stork 	 		yellow billed black little several seen common
+gull_mallard 	 	billed black winged great grey seen common
+hummingbird_pelican tailed black magnificent crested headed white seen
+pelican_flamingo 	backed great black egret little american white heron seen common
+pelican_stork 	 	black egret little white heron seen common
+pelican_mallard 	great black white heron grey seen common
+flamingo_stork 	 	billed black egret little white heron seen common
+flamingo_mallard 	billed teal great black duck white heron seen common
+
+
+#========================0
+
+
+[min. 5 words overlap:]
+
+aquarium_stadium 	 london park centre national new
+
+beard_wig 	 man wearing long like hair
+
+
+	[maybe a collocation?]
+steel_bracelet 	 polished bracelet case stainless watch solid
+
+
+library_museum 	     london collection national new art british
+library_collection 	 material information collection national new art
+	[library_museum		                  collection national new art london british]
+
+	[min 4 overlap:]
+	[mutual common nouns]
+cold_dirty 	 get said war mind
+
+
+
+reptiles_mammals 	 	 insects reptiles fish birds many species marine mammals seen small
+reptiles_amphibians 	 insects reptiles fish birds east species marine mammals found
+mammals_amphibians 	 	 insects reptiles fish birds 	  species marine mammals british
+insects_reptiles 	 	 insects 		  fish birds 					 mammals found 
+insects_mammals 	 	 insects 		  fish birds 					 mammals
+insects_amphibians 	 	 insects 		  fish birds 					 mammals found 
+

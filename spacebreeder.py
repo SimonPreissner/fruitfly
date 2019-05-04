@@ -40,6 +40,7 @@ try:
     corpus_file  = "./../ukwac_100m/ukwac_100m.txt"
     w2v_exe_file = "./../share/word2vec"
     testset_file = "./data/MEN_dataset_natural_form_full"
+    overlap_file = "./data/MEN_natural_vocabulary"
 
     pipedir = "pipe3/"
 
@@ -93,7 +94,7 @@ try:
     also commented out in the parameter section above.
     """
     breeder = Incrementor(corpus_file, matrix_filename,
-            corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=testset_file,
+            corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=overlap_file,
             matrix_incremental=False, matrix_maxdims=max_dims,
             fly_new=False, fly_grow=True, fly_file=initial_fly_file, 
             verbose=verbose)
@@ -125,10 +126,10 @@ try:
 
         # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
         t_count = breeder.count_cooccurrences(words=count_these, window=window)#[1] # [1] selects the stats tuple
-        is_x, x_diff = breeder.check_overlap(checklist_filepath=testset_file, wordlist=count_these)
+        is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
 
         # only log the cooccurrence counts that will be evaluated (to speed things up)
-        words_for_log = breeder.read_checklist(checklist_filepath=testset_file) # disable this for full logging
+        words_for_log = breeder.read_checklist(checklist_filepath=overlap_file) # disable this for full logging
         log_these = {w:breeder.words_to_i[w] for w in words_for_log if w in breeder.words_to_i} # disable this for full logging
         print("length of words_to_i:",len(breeder.words_to_i))
         print("length of log_these:",len(log_these))
