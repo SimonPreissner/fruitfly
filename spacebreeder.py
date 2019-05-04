@@ -37,12 +37,12 @@ errorlog = "spacebreeder_errorlog.txt"
 try:
     
     #========== PARAMETER INPUT
-    corpus_file  = "./../ukwac_100m/ukwac_100m.txt"
+    corpus_file  = "../ukwac_100m/ukwac_100m.txt"
     w2v_exe_file = "./../share/word2vec"
     testset_file = "./data/MEN_dataset_natural_form_full"
     overlap_file = "./data/MEN_natural_vocabulary"
 
-    pipedir = "pipe3/"
+    pipedir = "pipe5/"
 
     results_summary_file = pipedir+"summary.tsv"
     results_location     = pipedir+"ffa/results/stats/"
@@ -60,7 +60,7 @@ try:
         if not os.path.isdir(f):
             os.makedirs(f, exist_ok=True)
 
-    number_of_vip_words = 20
+    number_of_vip_words = 50
     test_interval_in_words = 1000000
     allow_disconnection = True # not yet implemented
 
@@ -222,9 +222,13 @@ try:
         print("training w2v with minimum count",w2v_min_count,"...")
 
         # run the w2v code
-        os.system("{0} -train {1} -output {2} -size 300 -window 5 -sample 1e-3 -negative 10 -iter 1 -min-count {3} -save-vocab {4}"\
-            .format(w2v_exe_file, w2v_corpus_file, w2v_space_file, w2v_min_count, w2v_vocab_file))
-
+        try:
+            os.system("{0} -train {1} -output {2} -size 300 -window {3} -sample 1e-3 -negative 10 -iter 1 -min-count {4} -save-vocab {5}"\
+                .format(w2v_exe_file, w2v_corpus_file, w2v_space_file, window, w2v_min_count, w2v_vocab_file))
+        except Exception as w2v_error:
+            print("OBACHT!!! An error occured while running word2vec. Look at the errorlog.")
+            with open(errorlog, "a") as f:
+                f.write(w2v_error)
 
         #========== EVALUATE WORD_2_VEC
         w2v_space = utils.readDM(w2v_space_file)
