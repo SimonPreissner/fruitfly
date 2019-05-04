@@ -20,18 +20,17 @@ OBACHT!
                      DON'T use them for <out_file>!
 """
 
-
-import sys
-from docopt import docopt
-import utils
-from utils import timeit
-import Fruitfly
-from Fruitfly import Fruitfly
-import MEN
 import re
+
 import numpy as np
-from tqdm import tqdm
+from docopt import docopt
 from nltk.tokenize import RegexpTokenizer
+from tqdm import tqdm
+
+import Fruitfly
+import utils
+from Fruitfly import Fruitfly
+from utils import timeit
 
 
 class Incrementor:
@@ -39,7 +38,7 @@ class Incrementor:
     def __init__(self, corpus_file, matrix_file,
         corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
         matrix_incremental=True, matrix_maxdims=None,
-        fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None, 
+        fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
         verbose=False):
 
         self.verbose = verbose
@@ -48,7 +47,7 @@ class Incrementor:
         self.is_tokenize  = corpus_tokenize
         self.is_linewise  = corpus_linewise
         self.required_voc = corpus_checkvoc
-        
+
         self.outspace = matrix_file+".dm" # e.g. "data/potato"
         self.outcols  = matrix_file+".cols"
         self.is_incremental = matrix_incremental
@@ -60,30 +59,31 @@ class Incrementor:
         self.fly_max_pn  = fly_max_pn
 
 
-        self.words = self.read_corpus(self.infile, \
-                                      tokenize_corpus=self.is_tokenize, \
-                                      linewise=self.is_linewise, \
+        self.words = self.read_corpus(self.infile,
+                                      tokenize_corpus=self.is_tokenize,
+                                      linewise=self.is_linewise,
                                       verbose=self.verbose)
 
         self.cooc, self.words_to_i, self.i_to_words, self.fruitfly = \
-            self.read_incremental_parts(self.outspace, \
-                                        self.outcols, \
-                                        self.flyfile, \
+            self.read_incremental_parts(self.outspace,
+                                        self.outcols,
+                                        self.flyfile,
                                         verbose=self.verbose)
 
         # words that will be counted (= labels of the final matrix dimensions)
-        self.freq = self.freq_dist(self.words, \
-                                   size_limit=self.max_dims, \
-                                   required_words=self.required_voc, \
+        self.freq = self.freq_dist(self.words,
+                                   size_limit=self.max_dims,
+                                   required_words=self.required_voc,
                                    verbose=self.verbose)
 
-        if self.verbose: print("\tVocabulary size:",len(self.freq),\
+        if self.verbose: print("\tVocabulary size:",len(self.freq),
                                "\n\tTokens (or lines) for cooccurrence count:",len(self.words))
 
 
     #========== FILE READING
 
-    def read_corpus(self, infile, tokenize_corpus=False, linewise=False, verbose=False):
+    @staticmethod
+    def read_corpus(infile, tokenize_corpus=False, linewise=False, verbose=False):
         if verbose: print("\nreading corpus...")
         lines = [] # list of lists of words
         nonword = re.compile("\W+") # to delete punctuation entries
@@ -110,7 +110,7 @@ class Incrementor:
 
         if linewise is False:
             return [w for l in lines for w in l] # flattens to a simple word list
-        else: 
+        else:
             return(lines)
 
     def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False): # matrix, vocabulary, fruitfly (if wanted)
@@ -127,11 +127,11 @@ class Incrementor:
             i_to_words, words_to_i = utils.readCols(outcols)
             dimensions = sorted(words_to_i, key=words_to_i.get)
             cooc = np.stack(tuple([unhashed_space[w] for w in dimensions]))
-        else: 
+        else:
             cooc = np.array([[]]) # cooccurrence count (only numbers)
-            words_to_i = {} # vocabulary and word positions 
+            words_to_i = {} # vocabulary and word positions
             i_to_words = {}
-        
+
         if self.is_grow_fly:
             if self.is_new_fly:
                 if verbose: print("\ncreating new fruitfly...")
@@ -168,8 +168,8 @@ class Incrementor:
             checklist = self.read_checklist(required_words)
             overlap = list(set(checklist).intersection(set(frequency_sorted)))
             rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
-            returnlist = overlap+rest_words 
-        else: 
+            returnlist = overlap+rest_words
+        else:
             returnlist = frequency_sorted
 
         if(size_limit is not None and size_limit <= len(freq)):
@@ -177,7 +177,8 @@ class Incrementor:
         else:
             return freq
 
-    def read_checklist(self, checklist_filepath):
+    @staticmethod
+    def read_checklist(checklist_filepath):
         if checklist_filepath is None:
             return []
 
@@ -201,7 +202,7 @@ class Incrementor:
             for word in f:
                 word = word.rstrip()
                 checklist.append(word)
-            
+
         pos_tag = re.compile("_.+?") # get rid of simple POS-tags
         return [re.sub(pos_tag, "", w) for w in checklist]
 
@@ -210,7 +211,7 @@ class Incrementor:
         if wordlist is None: wordlist = self.freq.keys()
         checklist = self.read_checklist(checklist_filepath)
         if len(checklist) == 0: # if no checking is specified, go on without checking
-            if verbose: 
+            if verbose:
                 print("\tcheck_overlap(): nothing to check.")
             return True, []
 
@@ -220,8 +221,8 @@ class Incrementor:
             if len(unshared_words) == 0:
                 print("\tComplete overlap with",checklist_filepath)
             else:
-                print("\tChecked for overlap with",checklist_filepath,\
-                      "\n\twords missing in the corpus:",len(unshared_words),\
+                print("\tChecked for overlap with",checklist_filepath,
+                      "\n\twords missing in the corpus:",len(unshared_words),
                       "\n\texamples:",unshared_words[:10])
 
         return (unshared_words is True), unshared_words
@@ -243,7 +244,7 @@ class Incrementor:
 
     def count_start_of_text(self, words, window): # for the first couple of words
         #global cooc, words_to_i #CLEANUP
-        for i in range(window): 
+        for i in range(window):
             if words[i] in self.freq:
                 for c in range(i+window+1): # iterate over the context
                     if words[c] in self.freq:
@@ -255,33 +256,33 @@ class Incrementor:
     def count_middle_of_text(self, words, window): # for most of the words
         #global cooc, words_to_i #CLEANUP
         if self.is_linewise: # this loop is without tqdm, the other loop with.
-            for i in range(window, len(words)-window): 
-                if words[i] in self.freq: 
-                    for c in range(i-window, i+window+1): # iterate over the context
-                        if words[c] in self.freq:
-                            self.extend_incremental_parts_if_necessary(words[i])
-                            self.extend_incremental_parts_if_necessary(words[c])
-                            self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
-                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
-        else:
-            for i in tqdm(range(window, len(words)-window)): 
+            for i in range(window, len(words)-window):
                 if words[i] in self.freq:
                     for c in range(i-window, i+window+1): # iterate over the context
                         if words[c] in self.freq:
                             self.extend_incremental_parts_if_necessary(words[i])
                             self.extend_incremental_parts_if_necessary(words[c])
-                            self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
+                            self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
+                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+        else:
+            for i in tqdm(range(window, len(words)-window)):
+                if words[i] in self.freq:
+                    for c in range(i-window, i+window+1): # iterate over the context
+                        if words[c] in self.freq:
+                            self.extend_incremental_parts_if_necessary(words[i])
+                            self.extend_incremental_parts_if_necessary(words[c])
+                            self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
                     self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
 
     def count_end_of_text(self, words, window): # for the last couple of words
-        #global cooc, words_to_i #CLEANUP 
+        #global cooc, words_to_i #CLEANUP
         for i in range(len(words)-window, len(words)):
             if words[i] in self.freq:
                 for c in range(i-window, len(words)): # iterate over the context
                     if words[c] in self.freq:
                         self.extend_incremental_parts_if_necessary(words[i])
                         self.extend_incremental_parts_if_necessary(words[c])
-                        self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1 
+                        self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
                 self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
 
     @timeit
@@ -304,8 +305,8 @@ class Incrementor:
         if self.verbose:
             print("\nfinished counting; matrix shape:",self.cooc.shape)
             print("vocabulary size:",len(self.words_to_i))
-            print("first words in the vocabulary:\n\t",\
-                   [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
+            print("first words in the vocabulary:\n\t",
+                  [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
 
 
 
@@ -316,10 +317,10 @@ class Incrementor:
         if outspace is None: outspace = self.outspace
         if outcols  is None: outcols  = self.outcols
         if only_these is None: only_these  = self.words_to_i
- 
+
         with open(outspace, "w") as dm_file, open(outcols, "w") as cols_file:
             if self.verbose:
-                print("\nwriting vectors to",outspace,\
+                print("\nwriting vectors to",outspace,
                       "\nwriting dictionary to",outcols,"...")
 
             for word,i in tqdm(sorted(only_these.items(), key=lambda x: x[1])):
@@ -330,9 +331,9 @@ class Incrementor:
     @timeit
     def log_fly(self, flyfile=None, verbose=False): # allows to specify a destination
         if flyfile is None: flyfile = self.flyfile
-        if flyfile is not None and self.fruitfly is not None: 
+        if flyfile is not None and self.fruitfly is not None:
             if verbose: print("\nlogging fruitfly to",flyfile,"...")
-            self.fruitfly.log_params(filename=flyfile, timestamp=False) 
+            self.fruitfly.log_params(filename=flyfile, timestamp=False)
 
     def get_setup(self):
         return {
@@ -371,7 +372,7 @@ if __name__ == '__main__':
     xvoc = arguments["-x"]
 
     incr = arguments["--increment"]
-    try: dims=int(arguments["-d"]) 
+    try: dims=int(arguments["-d"])
     except TypeError: dims=None
 
     nfly = arguments["new"]
@@ -381,18 +382,18 @@ if __name__ == '__main__':
     window = int(arguments["-w"]) # not part of the Incrementor object
 
 
-    incrementor = Incrementor(infile, outfiles, \
-        corpus_tokenize=tknz, corpus_linewise=lnws, corpus_checkvoc=xvoc, \
-        matrix_incremental=incr, matrix_maxdims=dims, \
-        fly_new=nfly, fly_grow=grow, fly_file=fcfg, fly_max_pn=None, \
-        verbose=is_verbose)
+    incrementor = Incrementor(infile, outfiles,
+                              corpus_tokenize=tknz, corpus_linewise=lnws, corpus_checkvoc=xvoc,
+                              matrix_incremental=incr, matrix_maxdims=dims,
+                              fly_new=nfly, fly_grow=grow, fly_file=fcfg, fly_max_pn=None,
+                              verbose=is_verbose)
 
     if is_verbose: print("\nchecking overlap...")
     all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc, verbose=incrementor.verbose)
 
     incrementor.count_cooccurrences(words=incrementor.words, window=window, verbose=incrementor.verbose)
     incrementor.log_matrix(verbose=incrementor.verbose)
-    incrementor.log_fly(verbose=incrementor.verbose) 
+    incrementor.log_fly(verbose=incrementor.verbose)
 
     print("done.")
 

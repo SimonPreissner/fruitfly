@@ -8,10 +8,10 @@ menfile = "../data/MEN_dataset_natural_form_full"
 wordlist = []
 pairs = []
 with open(menfile, "r") as f:
-    for line in f:
-        words = line.rstrip().split()[:2]
-        pairs.append(words)
-        wordlist.extend(words)
+	for line in f:
+		words = line.rstrip().split()[:2]
+		pairs.append(words)
+		wordlist.extend(words)
 
 freq = {}
 for w in wordlist:

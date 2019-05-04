@@ -19,19 +19,17 @@ from docopt import docopt
   
 """
 
-import sys
 import os
-import utils
-import math
-from tqdm import tqdm
-from utils import timeit
 import time
-import Incrementor
-from Incrementor import Incrementor
-import Fruitfly
-from Fruitfly import Fruitfly
-import MEN
+
+import math
 import numpy as np
+from tqdm import tqdm
+
+import MEN
+import utils
+from Fruitfly import Fruitfly
+from Incrementor import Incrementor
 
 errorlog = "spacebreeder_errorlog.txt"
 try:
@@ -78,7 +76,7 @@ try:
     This step is taken because Incrmentor can't do custom initialization 
     """
     initial_fly_file = fly_location+"first_fly.cfg"
-    first_fly = Fruitfly.from_scratch(pn_size=pns, kc_size=kcs, proj_size=con, hash_percent=red, max_pn_size=max_pns)
+    first_fly = Fruitfly.from_scratch(flattening=flat, pn_size=pns, kc_size=kcs, proj_size=con, hash_percent=red, max_pn_size=max_pns)
     first_fly.log_params(filename=initial_fly_file, timestamp=False)
 
     #========== SETUP INCREMENTOR
@@ -142,10 +140,9 @@ try:
 
         # this is where the magic happens
         (hashed_space, space_dic, space_ind), t_flight = \
-            breeder.fruitfly.fly(unhashed_space, words_to_i, flattening=flat)
+            breeder.fruitfly.fly(unhashed_space, words_to_i)
         print("length of space_dic:",len(space_dic))
 
-        spb,spa,sp_diff,tsb,tsa = 0,0,0,0,0 # be sure to start with
         #spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file)
         spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file) 
         spa,tsa = MEN.compute_men_spearman(hashed_space, testset_file)
@@ -170,8 +167,8 @@ try:
         print("Logging most important words to",vip_words_file,"...")
         with open(vip_words_file, "w") as f:
             for w in tqdm(hashed_space):
-                vip_words = breeder.fruitfly.important_words_for(\
-                            hashed_space[w], breeder.i_to_words, n=number_of_vip_words)
+                vip_words = breeder.fruitfly.important_words_for(
+                    hashed_space[w], breeder.i_to_words, n=number_of_vip_words)
                 vip_words_string = ", ".join(vip_words)
                 f.write("{0} --> {1}\n".format(w, vip_words_string))
 
@@ -184,7 +181,7 @@ try:
                             "SP_DIFF:   {0}\nSP_AFTER:  {1}\nSP_BEFORE: {2}\nTESTED_AFT.: {3}\nTESTED_BEF.: {4}\n\n"\
                             .format(sp_diff, spa, spb, tsa, tsb)
             fly_specs = breeder.fruitfly.get_specs()
-            t = (fly_specs["pn_size"], fly_specs["kc_size"], fly_specs["proj_size"], fly_specs["hash_percent"],flat)
+            t = (fly_specs["flattening"], fly_specs["pn_size"], fly_specs["kc_size"], fly_specs["proj_size"], fly_specs["hash_percent"])
             fruitfly_string = "FLY CONFIG: ({0}, {1}, {2}, {3}, {4})\n"\
                               .format(t[0],t[1],t[2],t[3],t[4])+\
                               "AVG PN CON.:  {0}\nVAR PN CON.: {1}\nSTD PN CON.: {2}\n\n"\
@@ -228,12 +225,11 @@ try:
         except Exception as w2v_error:
             print("OBACHT!!! An error occured while running word2vec. Look at the errorlog.")
             with open(errorlog, "a") as f:
-                f.write(w2v_error)
+                f.write(str(w2v_error))
 
         #========== EVALUATE WORD_2_VEC
         w2v_space = utils.readDM(w2v_space_file)
 
-        spcorr,pairs = 0,0 # be sure to start with 0
         spcorr,pairs = MEN.compute_men_spearman(w2v_space, testset_file)
 
         with open(w2v_results_file, "a+") as f:

@@ -32,7 +32,7 @@ print("Types in the checklist:", len(checkset))
 
 unshared_words = list(checkset.difference(wordset_WAC))
 
-if len(unshared_words) == 0  :
+if len(unshared_words) == 0:
     print("All required words are in the corpus.")
 else:
     print(unshared_words[:min(int(np.ceil(len(unshared_words)/10)), 25)])

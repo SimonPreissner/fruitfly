@@ -1,12 +1,13 @@
-import sys
-import time # for logging
-import MEN
-import utils
-from utils import timeit
-from tqdm import tqdm
-from math import ceil
-import numpy as np
+import time  # for logging
 
+import numpy as np
+from math import ceil
+from tqdm import tqdm
+
+from utils import timeit
+
+
+# noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 class Fruitfly:
     """
     This class contains all the architecture and methods of the FFA:
@@ -20,10 +21,13 @@ class Fruitfly:
 
 #========== CONSTRUCTORS AND SETUP
 
-    def __init__(self, pn_size, kc_size, proj_size, hash_percent, max_pn_size=None, old_proj=None):
-        '''Create layers and random projections. For initialization, use one of the classmethods'''
-        self.pn_size   = pn_size
-        self.kc_size   = kc_size
+    def __init__(self, flattening, pn_size, kc_size, proj_size, hash_percent, max_pn_size=None, old_proj=None):
+        """Create layers and random projections. For initialization, use one of the class methods"""
+        self.flattening = flattening
+        if self.flattening not in ["log", "log2", "log10"]:
+            print("No valid flattening method for the FFA. Continuing without flattening.")
+        self.pn_size = pn_size
+        self.kc_size = kc_size
         self.kc_factor = kc_size/pn_size
         self.proj_size = proj_size
         self.hash_percent = hash_percent
@@ -43,8 +47,31 @@ class Fruitfly:
         try:
             with open(filename, "r") as f:
                 lines = f.readlines()
+            specs = {}
 
+            lnr = 0
+            con_ind = 0
+            paramline = True
+            while paramline:
+                params = lines[lnr].rstrip().split()
+                if type(params[0]) is str: # only holds for the parameters
+                    try:
+                        specs[params[0]]=int(params[1]) # converts to int if possible
+                    except ValueError:
+                        specs[params[0]]=params[1] # leaves string parameters as strings
+                    lnr+=1
+                else:
+                    con_ind = lnr # indicates that the connections begin here
+                    paramline = False # exit the while loop
+
+
+            if "max_pn_size" not in specs or specs["max_pn_size"] == "None":
+                specs["max_pn_size"] = None
+
+
+            """ #CLEANUP
             specs = {p[0]:int(p[1]) for p in [l.split() for l in lines[:1]+lines[2:5]]}
+            
             
             if lines[5].split()[0] == "max_pn_size": # to be compatible with old configs
                 try:
@@ -56,24 +83,25 @@ class Fruitfly:
             else:
                 specs["max_pn_size"] = None
                 con_ind = 5
+            """
 
             connections = {}
             for line in lines[con_ind:]:
                 values = line.split()
                 connections[int(values[0])] = [int(v) for v in values[1:]]
 
-            return cls(specs["pn_size"],specs["kc_size"],\
-                       specs["proj_size"],specs["hash_perc"],\
+            return cls(specs["flattening"], specs["pn_size"], specs["kc_size"],
+                       specs["proj_size"], specs["hash_perc"],
                        max_pn_size=specs["max_pn_size"], old_proj=connections)
-        except FileNotFoundError as e:
-            print("FileNotFoundError in Fruitfly.from_config()!\n"\
-                  "\tcontinuing with a fruitfly from scratch (50,30000,6,5)!")
-            return from_scratch()
+        except FileNotFoundError:
+            print("FileNotFoundError in Fruitfly.from_config()!\n"
+                  "\tcontinuing with a fruitfly from scratch (log,50,30000,6,5)!")
+            return Fruitfly.from_scratch()
 
     @classmethod
-    def from_scratch(cls, pn_size=50, kc_size=30000, proj_size=6, hash_percent=5, max_pn_size=None):
+    def from_scratch(cls, flattening="log", pn_size=50, kc_size=30000, proj_size=6, hash_percent=5, max_pn_size=None):
         """ This is a workaround for issues with the default constructor """
-        return cls(pn_size, kc_size, proj_size, hash_percent, max_pn_size=max_pn_size)
+        return cls(flattening, pn_size, kc_size, proj_size, hash_percent, max_pn_size=max_pn_size)
 
     def create_projections(self):
         proj_functions = {}
@@ -103,7 +131,8 @@ class Fruitfly:
             
     def show_off(self):
         """ for command line output """
-        statement = "pn_size: "    +str(self.pn_size)+"\t"+\
+        statement = "flattening: " +str(self.flattening)+"\t"+\
+                    "pn_size: "    +str(self.pn_size)+"\t"+\
                     "kc_factor: "  +str(self.kc_factor)+"\t"+\
                     "kc_size: "    +str(self.kc_size)+"\t"+\
                     "proj_size: "  +str(self.proj_size)+"\t"+\
@@ -113,7 +142,8 @@ class Fruitfly:
 
     def get_specs(self):
         """ for in-code usage """
-        return {"pn_size":self.pn_size, 
+        return {"flattening":self.flattening,
+                "pn_size":self.pn_size, 
                 "kc_factor":self.kc_factor, 
                 "kc_size":self.kc_size,
                 "proj_size":self.proj_size, 
@@ -129,11 +159,12 @@ class Fruitfly:
         for kc,pns in tqdm(self.proj_functions.items()):
             connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
         with open(filename, "w") as logfile:
-            logfile.write("pn_size "    +str(self.pn_size)+"\n"+\
-                          "kc_factor "  +str(self.kc_factor)+"\n"+\
-                          "kc_size "    +str(self.kc_size)+"\n"+\
-                          "proj_size "  +str(self.proj_size)+"\n"+\
-                          "hash_perc "  +str(self.hash_percent)+"\n"+\
+            logfile.write("flattening " +str(self.flattening)+"\n"+
+                          "pn_size "    +str(self.pn_size)+"\n"+
+                          "kc_factor "  +str(self.kc_factor)+"\n"+
+                          "kc_size "    +str(self.kc_size)+"\n"+
+                          "proj_size "  +str(self.proj_size)+"\n"+
+                          "hash_perc "  +str(self.hash_percent)+"\n"+
                           "max_pn_size "+str(self.max_pn_size)+"\n")
             logfile.write(connections)
 
@@ -173,14 +204,14 @@ class Fruitfly:
         self.kc_factor = self.kc_size/self.pn_size 
 
         """number of connections from the new PN = avg. PN connectedness"""
-        new_avg_pn_con = int(sum([len(p) for k,p in self.proj_functions.items()])/(self.pn_size))
+        new_avg_pn_con = int(sum([len(p) for k,p in self.proj_functions.items()])/self.pn_size)
 
         """weight KCs with inverse of their respective connectednesses"""
-        weighted_KCs = {}
+        weighted_kcs = {}
         for cell in self.proj_functions:
-            weighted_KCs[cell] = 1.0/(1+len(self.proj_functions[cell]))
-            weighted_KCs[cell] = weighted_KCs[cell]*np.random.rand()
-        winners = sorted(weighted_KCs, key=weighted_KCs.get, reverse=True)[:new_avg_pn_con]
+            weighted_kcs[cell] = 1.0/(1+len(self.proj_functions[cell]))
+            weighted_kcs[cell] = weighted_kcs[cell]*np.random.rand()
+        winners = sorted(weighted_kcs, key=weighted_kcs.get, reverse=True)[:new_avg_pn_con]
 
         """fully connected winner KCs experience connection switching"""
         for kc in winners: # add PN to connections of the winner KCs
@@ -188,7 +219,7 @@ class Fruitfly:
                 pn_con = {pn:len(self.pn_to_kc[pn]) for pn in self.proj_functions[kc]}
                 # the most connected PN gets robbed
                 robbed_pn = sorted(pn_con, key=pn_con.get, reverse=True)[0]
-                # replace PN indices in peroj_functions
+                # replace PN indices in proj_functions
                 self.proj_functions[kc][self.proj_functions[kc].index(robbed_pn)] = self.pn_size-1
                 # update pn_to_kc
                 del self.pn_to_kc[robbed_pn][self.pn_to_kc[robbed_pn].index(kc)] 
@@ -233,23 +264,23 @@ class Fruitfly:
 
 #========== FFA APPLICATION
 
-    def flatten(self, frequency_vector, method=None): 
+    def flatten(self, frequency_vector):
         """ 
         make extremely frequent words (especially stopwords) less important 
         before they hit the projection algorithm
         """
         flat_vector = np.zeros(len(frequency_vector))
-        if (method == "log"):
+
+        if self.flattening == "log":
             for i, freq in enumerate(frequency_vector):
                 flat_vector[i] = np.log(1.0+freq) # '1.0+' for values < 1
-        elif (method == "log2"):
+        elif self.flattening == "log2":
             for i, freq in enumerate(frequency_vector):
                 flat_vector[i] = np.log2(1.0+freq)
-        elif (method == "log10"):
+        elif self.flattening == "log10":
             for i, freq in enumerate(frequency_vector):
                 flat_vector[i] = np.log10(1.0+freq)
         else: 
-            print("No valid flattening method specified. Continuing without flattening.")
             return frequency_vector
         return flat_vector
 
@@ -265,14 +296,14 @@ class Fruitfly:
     def hash_kenyon(self):
         """ choose the most activated KCs, set them to 1 and the rest to 0 """
         kc_activations = np.zeros(self.kc_size)
-        top = int(ceil(self.hash_percent * (self.kc_size) / 100)) # number of winners (highest activation)
+        top = int(ceil(self.hash_percent * self.kc_size / 100)) # number of winners (highest activation)
         activated_kcs = np.argpartition(self.kc_layer, -top)[-top:]
         for cell in activated_kcs:
-            kc_activations[cell] = 1 # assign 1 to the winners #TODO fix this? (slack from 2019-04-17)
+            kc_activations[cell] = 1 # assign 1 to the winners
         return kc_activations
 
     @timeit
-    def fly(self, unhashed_space, words_to_i, flattening=None):
+    def fly(self, unhashed_space, words_to_i):
         """
         Hash each element of the input space. 
         Fit input space to the Fruitfly's PN layer (if necessary) by
@@ -287,8 +318,9 @@ class Fruitfly:
         space_hashed = {} # a dict of word : binary_vector (= after "flying")
         print("\nStarting flying...")
         for w in tqdm(fitted_space): # iterate through space, word by word 
-            self.pn_layer = self.flatten(fitted_space[w], flattening)
+            self.pn_layer = self.flatten(fitted_space[w])
             self.kc_layer = self.projection()
             space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'
         return space_hashed, flight_dic, flight_ind
+
 

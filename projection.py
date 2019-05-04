@@ -19,13 +19,13 @@ OBACHT!
 """
 
 import sys
-from docopt import docopt
-import utils
-import Fruitfly
-from Fruitfly import Fruitfly
-import MEN
-import numpy as np
 
+import numpy as np
+from docopt import docopt
+
+import MEN
+import utils
+from Fruitfly import Fruitfly
 
 #=============== PARAMETER INPUT
 if __name__ == '__main__':
@@ -73,9 +73,9 @@ for i in range(iterations):
 
     #=============== INITIATING AND OPERATING FRUITFLY
 
-    fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent)
+    fruitfly = Fruitfly.from_scratch(flattening, pn_size, kc_size, proj_size, hash_percent)
 
-    space_hashed, space_dic, space_ind, t_flight = fruitfly.fly(unhashed_space, flattening) # a dict of word : binary_vector (= after "flying")
+    space_hashed, space_dic, space_ind, t_flight = fruitfly.fly(unhashed_space) # a dict of word : binary_vector (= after "flying")
 
     #utils.writeDH(space_hashed, "testwrite.dh")
     #loaded_hashes = utils.readDH("testwrite.dh")
@@ -86,8 +86,8 @@ for i in range(iterations):
             words = fruitfly.important_words_for(space_hashed[w], space_ind, n=6)
             print("{0} IMPORTANT WORDS: {1}".format(w, words))
 
-    print("done.") #CLEANUP
-    sys.exit() #BREAKPOINT
+    #print("done.") #CLEANUP
+    #sys.exit() #BREAKPOINT
 
     #=============== EVALUATION SECTION
 

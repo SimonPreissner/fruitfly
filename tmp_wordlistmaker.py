@@ -1,13 +1,13 @@
 #infile = "data/MEN_dataset_natural_form_full"
-outfile = "data/MEN_natural_vocabulary"
+#outfile = "data/MEN_natural_vocabulary"
 
 #infile = "data/MEN_dataset_lemma_form_full"
-outfile = "data/MEN_lemma_vocabulary"
+#outfile = "data/MEN_lemma_vocabulary"
 
 #infile = "incrementality_sandbox/data/sandbox_MEN_pairs"
-outfile = "incrementality_sandbox/data/sandbox_MEN_vocabulary"
+#outfile = "incrementality_sandbox/data/sandbox_MEN_vocabulary"
 
-#infile = "pipe/testset_MEN_pairs"
+infile = "pipe/testset_MEN_pairs"
 outfile = "pipe/testset_MEN_vocabulary"
 
 
