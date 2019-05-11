@@ -50,40 +50,23 @@ class Fruitfly:
             specs = {}
 
             lnr = 0
-            con_ind = 0
+            con_ind = 0 # will be set to the line number of the first connection
             paramline = True
             while paramline:
                 params = lines[lnr].rstrip().split()
-                if type(params[0]) is str: # only holds for the parameters
+                try:
+                    int(params[0]) # only connection lines have int-able first elements
+                    paramline = False
+                    con_ind = lnr
+                except ValueError: # non-int-able first elements are from paramlines
                     try:
                         specs[params[0]]=int(params[1]) # converts to int if possible
                     except ValueError:
                         specs[params[0]]=params[1] # leaves string parameters as strings
                     lnr+=1
-                else:
-                    con_ind = lnr # indicates that the connections begin here
-                    paramline = False # exit the while loop
-
 
             if "max_pn_size" not in specs or specs["max_pn_size"] == "None":
                 specs["max_pn_size"] = None
-
-
-            """ #CLEANUP
-            specs = {p[0]:int(p[1]) for p in [l.split() for l in lines[:1]+lines[2:5]]}
-            
-            
-            if lines[5].split()[0] == "max_pn_size": # to be compatible with old configs
-                try:
-                    specs["max_pn_size"] = int(lines[5].split()[1])
-                    con_ind = 6
-                except ValueError as e:
-                    specs["max_pn_size"] = None
-                    con_ind = 5
-            else:
-                specs["max_pn_size"] = None
-                con_ind = 5
-            """
 
             connections = {}
             for line in lines[con_ind:]:
@@ -174,6 +157,11 @@ class Fruitfly:
         hash, count the number of connections from that PN to connected
         KCs.
         """
+        if len(pn_dic) != self.pn_size:
+            print("WARNING: in Fruitfly.important_words_for(): \
+            vocabulary doesn't match PN layer!", end=" ")
+            print("Make sure to call this method with the vocabulary obtained from flying! \
+            Continuing with 'wrong' vocabulary")
         important_words = {} # dict of word:count_of_connections
         for i in range(len(word_hash)):
             if int(word_hash[i]) == 1:

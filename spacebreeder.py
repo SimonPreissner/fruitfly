@@ -168,7 +168,7 @@ try:
         with open(vip_words_file, "w") as f:
             for w in tqdm(hashed_space):
                 vip_words = breeder.fruitfly.important_words_for(
-                    hashed_space[w], breeder.i_to_words, n=number_of_vip_words)
+                    hashed_space[w], space_ind, n=number_of_vip_words)
                 vip_words_string = ", ".join(vip_words)
                 f.write("{0} --> {1}\n".format(w, vip_words_string))
 
@@ -255,26 +255,4 @@ except Exception as e:
     with open(errorlog, "a") as f:
         f.write(str(e))
         
-
-"""
-Attributes of Incrementor
-
-verbose,
-infile,
-is_tokenize,
-is_linewise,
-required_voc,         # checklist
-outspace,             # logging destination for matrix
-outcols,              # logging destination for matrix word list
-is_incremental,
-max_dims,
-is_new_fly,
-is_grow_fly,
-flyfile,              # logging destination for FF
-cooc,                 # cooccurrence matrix
-words_to_i,           # word list (index)
-fruitfly,             # fruitfly
-words,                # corpus (as words)
-freq                  # freqdist of the whole corpus
-"""
 

@@ -103,6 +103,7 @@ print(sparse_space["coin_N"][:100])
 """
 
 
+
 """
 # TEST_05
 # this tests Fruitfly.fit_space()
@@ -185,6 +186,80 @@ print("before: {0}\t({1} items)\nafter: {2}\t({3} items)\n\
 
 
 
+"""
+#TEST_07
+# this tests whether fitting works and whether the call of most_important_words()
+# with the fitted space's vocabulary works.
+
+# define corpus, output files, ...
+corpus_file = "data/potato.txt"
+matrix_filename = "test/cooc"
+flyfile = "test/flatfly.cfg"
+space_file = "test/space.dh"
+vip_words_file = "test/important_words.txt"
+
+number_of_vip_words = 30
+
+# make a smallish Fruitfly
+first_fly = Fruitfly.from_scratch(
+    flattening="log", pn_size=25, kc_size=100,
+    proj_size=6, hash_percent=20, max_pn_size=100)
+first_fly.log_params(filename=flyfile, timestamp=False)
+
+# make an Incrementor that uses this small Fruitfly
+breeder = Incrementor(corpus_file, matrix_filename,
+                      corpus_tokenize=True, corpus_linewise=False,
+                      matrix_incremental=False,
+                      fly_new=False, fly_grow=True, fly_file=flyfile,
+                      verbose=True)
+
+# count coocs of the corpus
+t_count = breeder.count_cooccurrences()
+print("length of breeder.words_to_i:", len(breeder.words_to_i))
+t_logmat = breeder.log_matrix()
+
+# read in the logged matrix to get the dictionaries
+unhashed_space = utils.readDM(breeder.outspace)
+print("length of unhashed_space:", len(unhashed_space))
+i_to_words, words_to_i = utils.readCols(breeder.outcols)
+print("length of unhashed_space:", len(words_to_i))
+print(len(words_to_i) == len(breeder.words_to_i), "-- breeder.words_to_i is as long as words_to_i")
+
+# fly the count with fitting (should work)
+(hashed_space, space_dic, space_ind), t_flight = \
+    breeder.fruitfly.fly(unhashed_space, words_to_i)
+print("length of space_dic:", len(space_dic))
+print("length of space_ind:", len(space_ind))
+
+# most_important_words with the original dicts (works, but not correctly)
+print("Logging most important words to", vip_words_file, "...")
+with open(vip_words_file, "w") as f:
+    for w in hashed_space:
+        vip_words = breeder.fruitfly.important_words_for(
+            hashed_space[w], breeder.i_to_words, n=number_of_vip_words)
+        vip_words_string = ", ".join(vip_words)
+        f.write("{0} --> {1}\n".format(w, vip_words_string))
+
+# most_important_words with the fitted dicts (should work correctly)
+print("Logging most important words to", vip_words_file+"_2", "...")
+with open(vip_words_file+"_2", "w") as f:
+    for w in hashed_space:
+        vip_words = breeder.fruitfly.important_words_for(
+            hashed_space[w], space_ind, n=number_of_vip_words)  # TODO change breeder.i_to_words to space_ind?
+        vip_words_string = ", ".join(vip_words)
+        f.write("{0} --> {1}\n".format(w, vip_words_string))
+
+print("breeder.i_to_words:", [str(i)+", "+str(w) for i,w in breeder.i_to_words.items()])
+print("space_ind:", [str(i)+", "+str(w) for i,w in space_ind.items()])
+
+print("\n\n")
+breederwords = set(breeder.i_to_words.values())
+print("breederwords:",breederwords)
+spacewords = set(space_ind.values())
+print("spacewords:",spacewords)
+overlap = breederwords.difference(spacewords)
+print("vocabulary difference:",len(overlap),"\n", overlap)
+"""
 
 
 
