@@ -1,9 +1,9 @@
 import math
 
-corpus = "../ukwac_100m/ukwac_100m.txt" # alternative: sandbox_corpus_multiline.txt
+corpus = "../ukwac_100m/ukwac_100m.txt"
 outdir = "data/chunks/"
-w_per_file = 1000000 # 1m
-w_limit = 10000000 # 10m
+w_per_file = 100000 # 1m
+w_limit = 1000000 # 10m
 
 wordlist = []
 with open(corpus, "r") as f:
