@@ -31,6 +31,15 @@ import utils
 from Fruitfly import Fruitfly
 from Incrementor import Incrementor
 
+
+global errorlog, corpus_file, w2v_exe_file, testset_file, overlap_file,\
+       pipedir, results_summary_file, results_location, w2v_results_file,\
+       matrix_filename, fly_location, space_location, vip_words_location,\
+       w2v_corpus_file, w2v_space_location, number_of_vip_words, test_interval_in_words,\
+       pns, kcs, con, red, flat, max_pns, tokenize, verbose, window
+
+
+
 errorlog = "spacebreeder_errorlog.txt"
 try:
     
@@ -40,7 +49,7 @@ try:
     testset_file = "./data/MEN_dataset_natural_form_full"
     overlap_file = "./data/MEN_natural_vocabulary"
 
-    pipedir = "pipe5/"
+    pipedir = "pipe_lemma/"
 
     results_summary_file = pipedir+"summary.tsv"
     results_location     = pipedir+"ffa/results/stats/"
@@ -60,7 +69,6 @@ try:
 
     number_of_vip_words = 50
     test_interval_in_words = 1000000
-    allow_disconnection = True # not yet implemented
 
     # Initial Fruitfly parameters (taken from the ukwac_100m gridsearch on 10k dims)
     pns,kcs,con,red,flat,max_pns = 50, 40000, 20, 8, "log", 10000
@@ -69,13 +77,13 @@ try:
     #linewise = False # DON'T SET THIS TO True! It will break the loop.
     verbose  = True
     max_dims = max_pns
-    window = 5
+    window = 5 # one-directional window size for counting (+/- 5 words)
 
     #========== SETUP INITIAL FRUIT FLY
     """ 
     This step is taken because Incrmentor can't do custom initialization 
     """
-    initial_fly_file = fly_location+"first_fly.cfg"
+    initial_fly_file = fly_location+"fly_run_0.cfg"
     first_fly = Fruitfly.from_scratch(flattening=flat, pn_size=pns, kc_size=kcs, proj_size=con, hash_percent=red, max_pn_size=max_pns)
     first_fly.log_params(filename=initial_fly_file, timestamp=False)
 
