@@ -88,7 +88,7 @@ class Incrementor:
     def read_corpus(infile, tokenize_corpus=False, linewise=False, verbose=False):
         if verbose: print("\nreading corpus...")
         lines = [] # list of lists of words
-        nonword = re.compile("\W+") # to delete punctuation entries
+        nonword = re.compile("\W+(_X)?") # to delete punctuation entries
         lc = 0 # for files with more than one line
         wc = 0 # wordcount
         with open(infile) as f:
