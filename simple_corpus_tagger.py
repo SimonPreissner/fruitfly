@@ -10,7 +10,7 @@ postags = {"N" :["NN", "NNS", "NNP", "NNPS"],
            "V" :["VB", "VBD", "VBG", "VBN", "VBZ", "VBP"],
            "J" :["JJ", "JJR", "JJS"]}
 
-corpusfile =    "/mnt/8tera/shareclic/fruitfly/ukwac_100m.txt" #"data/potato.txt" #CLEANUP
+corpusfile =    "../ukwac_100m/ukwac_100m_oneline.txt" #"data/potato.txt" #CLEANUP
 tagged_corpus = "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" #"test/postag_potato.txt" #CLEANUP
 
 def simplify_postags(tagged_words):
