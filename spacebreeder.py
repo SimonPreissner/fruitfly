@@ -47,7 +47,7 @@ try:
     corpus_file  = "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" # "../ukwac_100m/ukwac_100m.txt"
     w2v_exe_file = "./../share/word2vec"
     testset_file = "./data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full"
-    overlap_file = ".data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary"
+    overlap_file = "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary"
 
     pipedir = "pipe_postagged/"
 
