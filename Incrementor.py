@@ -24,7 +24,8 @@ import re
 
 import numpy as np
 from docopt import docopt
-from nltk.tokenize import RegexpTokenizer
+#from nltk.tokenize import RegexpTokenizer #CLEANUP
+import nltk
 from tqdm import tqdm
 
 import Fruitfly
@@ -37,7 +38,7 @@ class Incrementor:
 
     def __init__(self, corpus_file, matrix_file,
         corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
-        matrix_incremental=True, matrix_maxdims=None,
+        matrix_incremental=True, matrix_maxdims=None, contentwords_only=False,
         fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
         verbose=False):
 
@@ -52,6 +53,7 @@ class Incrementor:
         self.outcols  = matrix_file+".cols"
         self.is_incremental = matrix_incremental
         self.max_dims = matrix_maxdims
+        self.postag_simple = contentwords_only
 
         self.is_new_fly  = fly_new
         self.is_grow_fly = fly_grow
@@ -94,8 +96,8 @@ class Incrementor:
                 lc += 1
                 line = line.rstrip().lower()
                 if tokenize_corpus:
-                    tokenizer = RegexpTokenizer(r'\w+')
-                    tokens = tokenizer.tokenize(line)
+                    #tokenizer = RegexpTokenizer(r'\w+') #CLEANUP
+                    tokens = nltk.word_tokenize(line) # CLEANUP tokenizer.tokenize(line)
                 else:
                     tokens = line.split()
                 linewords = []
@@ -148,19 +150,32 @@ class Incrementor:
     def freq_dist(self, wordlist, size_limit=None, required_words=None, verbose=False):
         if verbose: print("\ncreating frequency distribution...")
         freq = {}
+        #TODO make this code better. There are too many ifs and loops.
         if self.is_linewise:
             for line in tqdm(wordlist):
                 for w in line:
+                    if self.postag_simple and w.endswith(("_N", "_V", "_J")):
+                        if w in freq:
+                            freq[w] += 1
+                        else:
+                            freq[w] = 1
+                    else:
+                        if w in freq:
+                            freq[w] += 1
+                        else:
+                            freq[w] = 1
+        else:
+            for w in tqdm(wordlist):
+                if self.postag_simple and w.endswith(("_N", "_V", "_J")):
                     if w in freq:
                         freq[w] += 1
                     else:
                         freq[w] = 1
-        else:
-            for w in tqdm(wordlist):
-                if w in freq:
-                    freq[w] += 1
                 else:
-                    freq[w] = 1
+                    if w in freq:
+                        freq[w] += 1
+                    else:
+                        freq[w] = 1
 
         frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
 
@@ -286,9 +301,11 @@ class Incrementor:
                 self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
 
     @timeit
-    def count_cooccurrences(self, words=None, window=5, verbose=False):
+    def count_cooccurrences(self, words=None, window=5):
         if words is None: words = self.words # to allow partial counting
         if self.verbose: print("\ncounting inner cooccurrences within",window,"words distance...")
+        #if self.postag_simple: #CLEANUP
+        #    words = simplify_postags(words)
         if self.is_linewise:
             for line in tqdm(words):
                 if len(line) >= 2*window: # to avoid index errors
@@ -307,6 +324,7 @@ class Incrementor:
             print("vocabulary size:",len(self.words_to_i))
             print("first words in the vocabulary:\n\t",
                   [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
+
 
 
 
