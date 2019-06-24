@@ -36,7 +36,7 @@ global errorlog, corpus_file, w2v_exe_file, testset_file, overlap_file,\
        pipedir, results_summary_file, results_location, w2v_results_file,\
        matrix_filename, fly_location, space_location, vip_words_location,\
        w2v_corpus_file, w2v_space_location, number_of_vip_words, test_interval_in_words,\
-       pns, kcs, con, red, flat, max_pns, tokenize, verbose, window
+       pns, kcs, con, red, flat, max_pns, tokenize, postag_simple, verbose, window
 
 
 
@@ -44,12 +44,12 @@ errorlog = "spacebreeder_errorlog.txt"
 try:
     
     #========== PARAMETER INPUT
-    corpus_file  = "../ukwac_100m/ukwac_100m.txt"
+    corpus_file  = "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" # "../ukwac_100m/ukwac_100m.txt"
     w2v_exe_file = "./../share/word2vec"
-    testset_file = "./data/MEN_dataset_natural_form_full"
-    overlap_file = "./data/MEN_natural_vocabulary"
+    testset_file = "./data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full"
+    overlap_file = ".data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary"
 
-    pipedir = "pipe_lemma/"
+    pipedir = "pipe_postagged/"
 
     results_summary_file = pipedir+"summary.tsv"
     results_location     = pipedir+"ffa/results/stats/"
@@ -74,6 +74,7 @@ try:
     pns,kcs,con,red,flat,max_pns = 50, 40000, 20, 8, "log", 10000
 
     tokenize = True
+    postag_simple = True # if true, it will only count nouns, verbs, and adjectives.
     #linewise = False # DON'T SET THIS TO True! It will break the loop.
     verbose  = True
     max_dims = max_pns
@@ -101,7 +102,7 @@ try:
     """
     breeder = Incrementor(corpus_file, matrix_filename,
             corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=overlap_file,
-            matrix_incremental=False, matrix_maxdims=max_dims,
+            matrix_incremental=False, matrix_maxdims=max_dims, contentwords_only=postag_simple,
             fly_new=False, fly_grow=True, fly_file=initial_fly_file, 
             verbose=verbose)
 
