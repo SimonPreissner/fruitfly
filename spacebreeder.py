@@ -45,11 +45,12 @@ try:
     
     #========== PARAMETER INPUT
     corpus_file  = "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" # "../ukwac_100m/ukwac_100m.txt"
+    #corpus_file = "test/pride_postagged.txt" #CLEANUP
     w2v_exe_file = "./../share/word2vec"
     testset_file = "./data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full"
     overlap_file = "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary"
 
-    pipedir = "pipe_postagged/"
+    pipedir = "/mnt/8tera/shareclic/fruitfly/pipe_postagged/"
 
     results_summary_file = pipedir+"summary.tsv"
     results_location     = pipedir+"ffa/results/stats/"
@@ -136,23 +137,33 @@ try:
         is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
 
         # only log the cooccurrence counts that will be evaluated (to speed things up)
-        words_for_log = breeder.read_checklist(checklist_filepath=overlap_file) # disable this for full logging
-        log_these = {w:breeder.words_to_i[w] for w in words_for_log if w in breeder.words_to_i} # disable this for full logging
-        print("length of words_to_i:",len(breeder.words_to_i))
-        print("length of log_these:",len(log_these))
-        t_logmat = breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
+        #words_for_log = breeder.read_checklist(checklist_filepath=overlap_file, with_pos_tags=breeder.postag_simple) # disable this for full logging #CLEANUP?
+        #print("length of checklist (= words_for_log):",len(words_for_log)) #CLEANUP
+        #log_these = {w:breeder.words_to_i[w] for w in words_for_log if w in breeder.words_to_i} # disable this for full logging
+        #print("length of words_to_i:",len(breeder.words_to_i))
+        #print("length of log_these:",len(log_these))
+        #t_logmat = breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
+        t_logmat = breeder.log_matrix()
 
         #========== FLY AND EVALUATE    
         unhashed_space = utils.readDM(breeder.outspace)
         print("length of unhashed_space:",len(unhashed_space))
         i_to_words, words_to_i = utils.readCols(breeder.outcols)
+        print("length of words_to_i obtained from unhashed_space: {0}".format(len(words_to_i))) #CLEANUP
 
+        # new idea (#CLEANUP?)
+        words_for_flight = breeder.read_checklist(checklist_filepath=overlap_file,
+                                                  with_pos_tags=breeder.postag_simple)
+        # only select words that will be needed for evaluation:
+        fly_these = {w:unhashed_space[w] for w in words_for_flight if w in unhashed_space}
+        print("length of words_to_i:",len(breeder.words_to_i))
+        print("length of fly_these:",len(fly_these))
+        
+        
         # this is where the magic happens
-        (hashed_space, space_dic, space_ind), t_flight = \
-            breeder.fruitfly.fly(unhashed_space, words_to_i)
-        print("length of space_dic:",len(space_dic))
+        (hashed_space, space_dic, space_ind), t_flight = breeder.fruitfly.fly(fly_these, words_to_i)
+        print("length of space_dic:",len(space_dic)) # space_dic = {word:i}; space_ind = {i:word} # or hash unhashed_space in stead of fly_these?
 
-        #spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file)
         spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file) 
         spa,tsa = MEN.compute_men_spearman(hashed_space, testset_file)
         sp_diff = spa-spb
@@ -262,6 +273,6 @@ try:
     print("done.")
 except Exception as e:
     with open(errorlog, "a") as f:
-        f.write(str(e))
+        f.write(str(e)[:500])
         
 

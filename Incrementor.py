@@ -63,6 +63,7 @@ class Incrementor:
 
         self.words = self.read_corpus(self.infile,
                                       tokenize_corpus=self.is_tokenize,
+                                      postag_simple=self.postag_simple,
                                       linewise=self.is_linewise,
                                       verbose=self.verbose)
 
@@ -85,7 +86,7 @@ class Incrementor:
     #========== FILE READING
 
     @staticmethod
-    def read_corpus(infile, tokenize_corpus=False, linewise=False, verbose=False):
+    def read_corpus(infile, tokenize_corpus=False, postag_simple=False, linewise=False, verbose=False):
         if verbose: print("\nreading corpus...")
         lines = [] # list of lists of words
         nonword = re.compile("\W+(_X)?") # to delete punctuation entries
@@ -102,6 +103,8 @@ class Incrementor:
                     tokens = line.split()
                 linewords = []
                 for t in tokens:
+                    if postag_simple:
+                        t = t[:-1]+t[-1].upper()
                     if (re.fullmatch(nonword, t) is None): # ignore punctuation
                         linewords.append(t) # adds the list as a unit to 'lines'
                     wc+=1
@@ -154,11 +157,12 @@ class Incrementor:
         if self.is_linewise:
             for line in tqdm(wordlist):
                 for w in line:
-                    if self.postag_simple and w.endswith(("_N", "_V", "_J")):
-                        if w in freq:
-                            freq[w] += 1
-                        else:
-                            freq[w] = 1
+                    if self.postag_simple:
+                        if w.endswith(("_N", "_V", "_J")): # leaves out all non-content words
+                            if w in freq:
+                                freq[w] += 1
+                            else:
+                                freq[w] = 1
                     else:
                         if w in freq:
                             freq[w] += 1
@@ -166,11 +170,12 @@ class Incrementor:
                             freq[w] = 1
         else:
             for w in tqdm(wordlist):
-                if self.postag_simple and w.endswith(("_N", "_V", "_J")):
-                    if w in freq:
-                        freq[w] += 1
-                    else:
-                        freq[w] = 1
+                if self.postag_simple:
+                    if w.endswith(("_N", "_V", "_J")):
+                        if w in freq:
+                            freq[w] += 1
+                        else:
+                            freq[w] = 1
                 else:
                     if w in freq:
                         freq[w] += 1
@@ -180,7 +185,7 @@ class Incrementor:
         frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
 
         if required_words is not None:
-            checklist = self.read_checklist(required_words)
+            checklist = self.read_checklist(checklist_filepath=required_words, with_pos_tags=self.postag_simple)
             overlap = list(set(checklist).intersection(set(frequency_sorted)))
             rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
             returnlist = overlap+rest_words
@@ -193,7 +198,7 @@ class Incrementor:
             return freq
 
     @staticmethod
-    def read_checklist(checklist_filepath):
+    def read_checklist(checklist_filepath, with_pos_tags=False):
         if checklist_filepath is None:
             return []
 
@@ -217,14 +222,18 @@ class Incrementor:
             for word in f:
                 word = word.rstrip()
                 checklist.append(word)
+                
+        if with_pos_tags is False:
+            pos_tag = re.compile("_.+?") # get rid of simple POS-tags
+            return [re.sub(pos_tag, "", w) for w in checklist]
+        else: 
+            return checklist
 
-        pos_tag = re.compile("_.+?") # get rid of simple POS-tags
-        return [re.sub(pos_tag, "", w) for w in checklist]
-
+        
     def check_overlap(self, checklist_filepath=None, wordlist=None, verbose=False):
         if checklist_filepath is None: checklist_filepath = self.required_voc
         if wordlist is None: wordlist = self.freq.keys()
-        checklist = self.read_checklist(checklist_filepath)
+        checklist = self.read_checklist(checklist_filepath, with_pos_tags=self.postag_simple)
         if len(checklist) == 0: # if no checking is specified, go on without checking
             if verbose:
                 print("\tcheck_overlap(): nothing to check.")

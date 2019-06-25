@@ -300,7 +300,7 @@ class Fruitfly:
         complete hashed space.
         """
 
-        # choose most frequent word to hash
+        # choose most frequent words to hash
         fitted_space, flight_dic, flight_ind = self.fit_space(unhashed_space, words_to_i)
 
         space_hashed = {} # a dict of word : binary_vector (= after "flying")
