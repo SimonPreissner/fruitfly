@@ -75,7 +75,7 @@ for i in range(iterations):
 
     fruitfly = Fruitfly.from_scratch(flattening, pn_size, kc_size, proj_size, hash_percent)
 
-    space_hashed, space_dic, space_ind, t_flight = fruitfly.fly(unhashed_space) # a dict of word : binary_vector (= after "flying")
+    space_hashed, space_dic, space_ind, t_flight = fruitfly.fly(unhashed_space, cols_to_i) # a dict of word : binary_vector (= after "flying")
 
     #utils.writeDH(space_hashed, "testwrite.dh")
     #loaded_hashes = utils.readDH("testwrite.dh")
