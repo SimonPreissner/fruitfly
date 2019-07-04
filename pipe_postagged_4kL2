@@ -1,0 +1,3 @@
+run	new_data_in_words	PN_size	testset	spearman_before	spearman_after	sp_diff	time-taken	w2v-score	w2v_testset
+
+1	95273347	4000	2991	0.23324321654122881	0.3421494679896804	0.10890625144845156	2588.8146657943726	0.542448036299893	2991
