@@ -1,6 +1,7 @@
 import time  # for logging
 
 import numpy as np
+from sklearn import preprocessing
 from math import ceil
 from tqdm import tqdm
 
@@ -306,7 +307,9 @@ class Fruitfly:
         space_hashed = {} # a dict of word : binary_vector (= after "flying")
         print("\nStarting flying...")
         for w in tqdm(fitted_space): # iterate through space, word by word 
-            self.pn_layer = self.flatten(fitted_space[w])
+            flatvec = self.flatten(fitted_space[w]) #TODO: CLEANUP
+            normvec = preprocessing.normalize(flatvec.reshape(1,-1), norm='l2') #TODO: CLEANUP
+            self.pn_layer = normvec.flatten() #this flattens to a 1D array again #TODO: deactivate L2 normalization again!!! -> = self.flatten(fitted_space[w])
             self.kc_layer = self.projection()
             space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'
         return space_hashed, flight_dic, flight_ind
