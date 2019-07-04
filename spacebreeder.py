@@ -50,7 +50,7 @@ try:
     testset_file = "./data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full"
     overlap_file = "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary"
 
-    pipedir = "/mnt/8tera/shareclic/fruitfly/pipe_postagged/"
+    pipedir = "/mnt/8tera/shareclic/fruitfly/pipe_postagged_4k/"
 
     results_summary_file = pipedir+"summary.tsv"
     results_location     = pipedir+"ffa/results/stats/"
@@ -69,10 +69,10 @@ try:
             os.makedirs(f, exist_ok=True)
 
     number_of_vip_words = 50
-    test_interval_in_words = 1000000
+    test_interval_in_words = 100000000 #TODO: reset this to 1M
 
     # Initial Fruitfly parameters (taken from the ukwac_100m gridsearch on 10k dims)
-    pns,kcs,con,red,flat,max_pns = 50, 40000, 20, 8, "log", 10000
+    pns,kcs,con,red,flat,max_pns = 50, 40000, 20, 8, "log", 4000 #TODO: reset max_pns to 10k
 
     tokenize = True
     postag_simple = True # if true, it will only count nouns, verbs, and adjectives.
