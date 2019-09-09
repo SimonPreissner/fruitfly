@@ -8,12 +8,7 @@
   <component name="ChangeListManager">
     <list default="true" id="e58266fc-c657-4b8a-8505-1d7fe6999616" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Fruitfly.py" beforeDir="false" afterPath="$PROJECT_DIR$/Fruitfly.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Incrementor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Incrementor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hyperopt.py" beforeDir="false" afterPath="$PROJECT_DIR$/hyperopt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/projection.py" beforeDir="false" afterPath="$PROJECT_DIR$/projection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spacebreeder.py" beforeDir="false" afterPath="$PROJECT_DIR$/spacebreeder.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/corpuschunker.py" beforeDir="false" afterPath="$PROJECT_DIR$/corpuschunker.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

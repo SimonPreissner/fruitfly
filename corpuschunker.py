@@ -1,7 +1,7 @@
 import math
 
-corpus = "../ukwac_100m/ukwac_100m.txt"
-outdir = "data/chunks/"
+corpus = "/mnt/8tera/corpora/enwiki-20181120/enwiki-20181120-pages-meta-current10.txt-p2336425p3046511"
+outdir = "data/chunks_wiki/"
 w_per_file = 100000 # 1m
 w_limit = 1000000 # 10m
 
@@ -22,3 +22,15 @@ for wc in range (0, len(wordlist), w_per_file):
         print("writing to",outfile,"...")
         f.write(" ".join(wordlist[wc:wc+w_per_file]))
 
+
+
+"""
+corpus = 
+"../ukwac_100m/ukwac_100m.txt"
+"/mnt/8tera/corpora/enwiki-20181120/enwiki-20181120-pages-meta-current10.txt-p2336425p3046511"
+
+outdir = 
+"data/chunks/"
+"data/chunks_wiki/"
+
+"""
