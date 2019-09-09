@@ -82,9 +82,7 @@ try:
     window = 5 # one-directional window size for counting (+/- 5 words)
 
     #========== SETUP INITIAL FRUIT FLY
-    """ 
-    This step is taken because Incrmentor can't do custom initialization 
-    """
+    """ This step is taken because Incrementor can't do custom initialization """
     initial_fly_file = fly_location+"fly_run_0.cfg"
     first_fly = Fruitfly.from_scratch(flattening=flat, pn_size=pns, kc_size=kcs, proj_size=con, hash_percent=red, max_pn_size=max_pns)
     first_fly.log_params(filename=initial_fly_file, timestamp=False)
@@ -113,7 +111,7 @@ try:
     runtime_zero = time.time()
     performance_summary = {} # for a final summary
 
-    for i in range(0, len(breeder.words), test_interval_in_words):
+    for i in range(0, len(breeder.words), test_interval_in_words): #TODO change to iterate over resource files in a directory
         t_thisrun = time.time() # ends before logging
         run = int(i/test_interval_in_words)+1
         print("\n\nNEW RUN OF THE PIPELINE:",run,"\n")
@@ -133,7 +131,7 @@ try:
             print("This batch of words only has",len(count_these),"items")
 
         # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
-        t_count = breeder.count_cooccurrences(words=count_these, window=window)#[1] # [1] selects the stats tuple
+        breeder.count_cooccurrences(words=count_these, window=window)#[1] # [1] selects the stats tuple
         is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
 
         # only log the cooccurrence counts that will be evaluated (to speed things up)
@@ -142,8 +140,8 @@ try:
         #log_these = {w:breeder.words_to_i[w] for w in words_for_log if w in breeder.words_to_i} # disable this for full logging
         #print("length of words_to_i:",len(breeder.words_to_i))
         #print("length of log_these:",len(log_these))
-        #t_logmat = breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
-        t_logmat = breeder.log_matrix()
+        #breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
+        breeder.log_matrix()
 
         #========== FLY AND EVALUATE    
         unhashed_space = utils.readDM(breeder.outspace)
@@ -161,7 +159,7 @@ try:
         
         
         # this is where the magic happens
-        (hashed_space, space_dic, space_ind), t_flight = breeder.fruitfly.fly(fly_these, words_to_i)
+        hashed_space, space_dic, space_ind, t_flight = breeder.fruitfly.fly(fly_these, words_to_i, timed=True)
         print("length of space_dic:",len(space_dic)) # space_dic = {word:i}; space_ind = {i:word} # or hash unhashed_space in stead of fly_these?
 
         spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file) 
@@ -193,7 +191,7 @@ try:
                 f.write("{0} --> {1}\n".format(w, vip_words_string))
 
         # log the whole fruitfly
-        t_logfly = breeder.log_fly()#[1] # flyfile is updated above
+        breeder.log_fly()#[1] # flyfile is updated above
 
         # log the results
         with open(results_file, "w") as f:
@@ -206,8 +204,7 @@ try:
                               .format(t[0],t[1],t[2],t[3],t[4])+\
                               "AVG PN CON.:  {0}\nVAR PN CON.: {1}\nSTD PN CON.: {2}\n\n"\
                               .format(avg_PN_con, var_PN_con, std_PN_con)
-            time_string = "TIMES TAKEN:\nCOOC COUNT:   {0}\nFLYING:       {1}\nWRITE MATRIX: {2}\nLOG FLY:      {3}\nTHIS RUN:     {4}\n\n"\
-                          .format(t_count[-1][-1], t_flight[-1], t_logmat[-1][-1], t_logfly[-1][-1], t_thisrun)
+            time_string = "TIME TAKEN: \nFLYING: {0}\nTOTAL: {1}\n\n".format(t_flight, t_thisrun)
             file_string = "RELATED FILES:\nFRUITFLY: {0}\nSPACE: {1}\nVIP WORDS: {2}\n"\
                           .format(breeder.flyfile, space_file, vip_words_file)
 

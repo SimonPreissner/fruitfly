@@ -1,26 +1,5 @@
 import numpy as np
 from math import sqrt
-import time
-
-
-def timeit(method): # wrapper for performance monitoring
-    """
-    wrapper for timing. Usage leads to returning of an additional value:
-    a tuple containing timing information.
-    - if used for functions without return value: 
-        stats = function()[1]
-    - if used for functions with 1 return value: 
-        value, stats = function()
-    - if used for functions with 1 return value, but no stats wanted:
-        value = function[0]
-    """
-    def timed(*args, **kw):
-        ts = time.time()
-        result = method(*args, **kw)
-        te = time.time()
-        stats = te-ts
-        return result, (stats,)
-    return timed # returning a function object makes it a wrapper
 
 def readDM(dm_file): # read word vectors
     """

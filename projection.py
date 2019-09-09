@@ -1,21 +1,4 @@
-"""Projection: Apply the Fruitfly Algorithm to a Distributional Space.
-
-Usage:
-  projcetion.py <space> <testset> [--eval-only | [options]] [-v] [-i <runs>]
-
-Options:
-  -h --help          Show this screen.
-  -f=<flattening>    Flattening function [default: log]
-  -k=<kc_size>       Number of Kenyon cells [default: 4000]
-  -p=<proj_size>     Number of projections to each KC [default: 6]
-  -r=<hash_percent>  Percentage of KCs for hashing/reduction [default: 5]
-  -i=<runs>          Number of runs with the same parameters [default: 1]
-  -v --verbose       Output most important dimensions per word.
-  -e --eval-only     Only evaluate; no fruitfly involved.
-
-OBACHT!
-  # Use the file names for <space> and <testset> WITHOUT file extension!
-  
+""" Projection: Apply the Fruitfly Algorithm to a Distributional Space.
 """
 
 import sys
@@ -28,12 +11,10 @@ import utils
 from Fruitfly import Fruitfly
 
 #=============== PARAMETER INPUT
-if __name__ == '__main__':
-    arguments = docopt(__doc__)
-
-data = arguments["<space>"]+".dm"
-column_labels = arguments["<space>"]+".cols"
-MEN_annot = arguments["<testset>"]
+spacefiles = input("Space to be used (without file extension): ")
+data = spacefiles+".dm"
+column_labels = spacefiles+".cols"
+MEN_annot = input("Testset to be used: ")
 
 try:
     unhashed_space = utils.readDM(data) # returns dict of word : word_vector
@@ -45,15 +26,16 @@ except FileNotFoundError as e:
            - don't specify the file extension.")
     sys.exit()
 
-evaluate_mode = arguments["--eval-only"]
-flattening = arguments["-f"]
+evaluate_mode = True if input("Only evaluate the space (without flying)? [y/n] ").lower()=="y" else False
+flattening = input("Choose flattening function: ")
 pn_size = len(cols_to_i) # length of word vector (= input dimension)
-kc_size = int(arguments["-k"])
-proj_size = int(arguments["-p"])
-hash_percent = int(arguments["-r"])
+print ("Number of PNs:",pn_size)
+kc_size = int(input("Number of KCs: "))
+proj_size = int(input("Number of projections per KC: "))
+hash_percent = int(input("Percentage of winners in the hash: "))
 
-iterations = int(arguments["-i"])
-verbose = arguments["--verbose"]
+iterations = int(input("How many runs? "))
+verbose = True if input("Verbose mode? [y/n] ").lower()=="y" else False
 
 
 
@@ -75,7 +57,7 @@ for i in range(iterations):
 
     fruitfly = Fruitfly.from_scratch(flattening, pn_size, kc_size, proj_size, hash_percent)
 
-    space_hashed, space_dic, space_ind, t_flight = fruitfly.fly(unhashed_space, cols_to_i) # a dict of word : binary_vector (= after "flying")
+    space_hashed, space_dic, space_ind = fruitfly.fly(unhashed_space, cols_to_i) # a dict of word : binary_vector (= after "flying")
 
     #utils.writeDH(space_hashed, "testwrite.dh")
     #loaded_hashes = utils.readDH("testwrite.dh")

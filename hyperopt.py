@@ -228,7 +228,7 @@ for flat in flattening:
                 run += 1
                 if verbose is True:
                     print("Run number {0}; config: {1}".format(run, fruitfly.show_off()))
-                out_space, space_dic, space_ind, t_flight = fruitfly.fly(in_space, cols_to_i)  # this is where the magic happens
+                out_space, space_dic, space_ind = fruitfly.fly(in_space, cols_to_i)  # this is where the magic happens
 
                 # evaluate
                 internal_log[run] = evaluate(in_space, out_space, goldstandard)

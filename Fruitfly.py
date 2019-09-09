@@ -4,8 +4,6 @@ import numpy as np
 from math import ceil
 from tqdm import tqdm
 
-from utils import timeit
-
 
 # noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 class Fruitfly:
@@ -221,33 +219,35 @@ class Fruitfly:
         if self.max_pn_size is not None and len(words_to_i)<=self.max_pn_size:
             print("no space fitting needed.")#CLEANUP
             return unhashed_space, words_to_i, {v:k for k,v in words_to_i.items()}
+        elif self.max_pn_size is None:
+            return unhashed_space, words_to_i, {v: k for k, v in words_to_i.items()}
+        else:
+            """ extract the most frequent words"""
+            freq = {w:sum(vec) for w,vec in unhashed_space.items()}
+            new_keys = sorted(freq, key=freq.get, reverse=True)[:self.max_pn_size]
+            #print("fit_space() -- new_keys: {0} ({1})".format(new_keys, len(new_keys)))#CLEANUP
+            """ delete dimensions of words that are not frequent enough"""
 
-        """ extract the most frequent words"""
-        freq = {w:sum(vec) for w,vec in unhashed_space.items()}
-        new_keys = sorted(freq, key=freq.get, reverse=True)[:self.max_pn_size]
-        #print("fit_space() -- new_keys: {0} ({1})".format(new_keys, len(new_keys)))#CLEANUP
-        """ delete dimensions of words that are not frequent enough"""
+            fitted_space = {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows
+            #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP
 
-        fitted_space = {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows
-        #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP
+            old_dims = [i for w,i in words_to_i.items() if w not in new_keys]
 
-        old_dims = [i for w,i in words_to_i.items() if w not in new_keys]
+            for w,vec in fitted_space.items():
+                fitted_space[w] = np.delete(vec,old_dims)
 
-        for w,vec in fitted_space.items():
-            fitted_space[w] = np.delete(vec,old_dims)
+            #unhashed_space = np.delete(unhashed_space, old_dims, 0) # rows #CLEANUP
+            #unhashed_space = np.delete(unhashed_space, old_dims, 1) # columns #CLEANUP
 
-        #unhashed_space = np.delete(unhashed_space, old_dims, 0) # rows #CLEANUP
-        #unhashed_space = np.delete(unhashed_space, old_dims, 1) # columns #CLEANUP
-
-        new_keys.sort() # sort words alphabetically (htis sorts the space)
-        new_dic = {k:new_keys.index(k) for k in new_keys} # word:index
-        new_ind = {v:k for k,v in new_dic.items()} # index:word
-        #print("fit_space() -- fitted_space vector length:",len(fitted_space[new_ind[0]]))#CLEANUP
+            new_keys.sort() # sort words alphabetically (htis sorts the space)
+            new_dic = {k:new_keys.index(k) for k in new_keys} # word:index
+            new_ind = {v:k for k,v in new_dic.items()} # index:word
+            #print("fit_space() -- fitted_space vector length:",len(fitted_space[new_ind[0]]))#CLEANUP
 
 
-        #print("fit_space() -- new_ind: {0} ({1})".format(new_ind, len(new_ind)))#CLEANUP
+            #print("fit_space() -- new_ind: {0} ({1})".format(new_ind, len(new_ind)))#CLEANUP
 
-        return fitted_space, new_dic, new_ind
+            return fitted_space, new_dic, new_ind
 
 
 #========== FFA APPLICATION
@@ -277,6 +277,7 @@ class Fruitfly:
         kc_layer = np.zeros(self.kc_size)
         for cell in range(self.kc_size):
             activated_pns = self.proj_functions[cell] # PNs connected to the KC
+            #print("activated PNs for cell",cell,": ",activated_pns) #CLEANUP
             for pn in activated_pns:
                 kc_layer[cell]+=self.pn_layer[pn] # sum activation of the PNs for the KC
         return kc_layer
@@ -290,8 +291,7 @@ class Fruitfly:
             kc_activations[cell] = 1 # assign 1 to the winners
         return kc_activations
 
-    @timeit
-    def fly(self, unhashed_space, words_to_i):
+    def fly(self, unhashed_space, words_to_i, timed=False):
         """
         Hash each element of the input space. 
         Fit input space to the Fruitfly's PN layer (if necessary) by
@@ -299,7 +299,7 @@ class Fruitfly:
         flattening before input, afterwards project, hash, and return the 
         complete hashed space.
         """
-
+        t0 = time.time()
         # choose most frequent words to hash
         fitted_space, flight_dic, flight_ind = self.fit_space(unhashed_space, words_to_i)
 
@@ -309,6 +309,9 @@ class Fruitfly:
             self.pn_layer = self.flatten(fitted_space[w])
             self.kc_layer = self.projection()
             space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'
-        return space_hashed, flight_dic, flight_ind
+        if timed is True:
+            return space_hashed, flight_dic, flight_ind, time.time()-t0
+        else:
+            return space_hashed, flight_dic, flight_ind
 
 

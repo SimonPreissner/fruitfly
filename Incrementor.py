@@ -24,14 +24,12 @@ import re
 
 import numpy as np
 from docopt import docopt
-#from nltk.tokenize import RegexpTokenizer #CLEANUP
 import nltk
 from tqdm import tqdm
 
 import Fruitfly
 import utils
 from Fruitfly import Fruitfly
-from utils import timeit
 
 
 class Incrementor:
@@ -309,7 +307,6 @@ class Incrementor:
                         self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
                 self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
 
-    @timeit
     def count_cooccurrences(self, words=None, window=5):
         if words is None: words = self.words # to allow partial counting
         if self.verbose: print("\ncounting inner cooccurrences within",window,"words distance...")
@@ -339,7 +336,6 @@ class Incrementor:
 
     #========== LOGGING
 
-    @timeit
     def log_matrix(self, outspace=None, outcols=None, only_these=None, verbose=False):
         if outspace is None: outspace = self.outspace
         if outcols  is None: outcols  = self.outcols
@@ -355,7 +351,6 @@ class Incrementor:
                 vectorstring = " ".join([str(v) for v in self.cooc[i]])
                 dm_file.write(word+" "+vectorstring+"\n")
 
-    @timeit
     def log_fly(self, flyfile=None, verbose=False): # allows to specify a destination
         if flyfile is None: flyfile = self.flyfile
         if flyfile is not None and self.fruitfly is not None:
