@@ -216,11 +216,11 @@ class Fruitfly:
         self.pn_to_kc.update(self.forward_connections([self.pn_size-1]))
 
     def fit_space(self, unhashed_space, words_to_i):
-        if self.max_pn_size is not None and len(words_to_i)<=self.max_pn_size:
+        if self.max_pn_size is None:
+            return unhashed_space, words_to_i, {v: k for k, v in words_to_i.items()}
+        elif self.max_pn_size is not None and len(words_to_i)<=self.max_pn_size:
             print("no space fitting needed.")#CLEANUP
             return unhashed_space, words_to_i, {v:k for k,v in words_to_i.items()}
-        elif self.max_pn_size is None:
-            return unhashed_space, words_to_i, {v: k for k, v in words_to_i.items()}
         else:
             """ extract the most frequent words"""
             freq = {w:sum(vec) for w,vec in unhashed_space.items()}
