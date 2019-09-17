@@ -26,6 +26,7 @@ import numpy as np
 from docopt import docopt
 import nltk
 from tqdm import tqdm
+from os import walk
 
 import Fruitfly
 import utils
@@ -34,15 +35,15 @@ from Fruitfly import Fruitfly
 
 class Incrementor:
 
-    def __init__(self, corpus_file, matrix_file,
-        corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
-        matrix_incremental=True, matrix_maxdims=None, contentwords_only=False,
-        fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
-        verbose=False):
+    def __init__(self, corpus_dir, matrix_file,
+                 corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
+                 matrix_incremental=True, matrix_maxdims=None, contentwords_only=False,
+                 fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
+                 verbose=False):
 
         self.verbose = verbose
 
-        self.infile       = corpus_file
+        self.corpus_dir   = corpus_dir
         self.is_tokenize  = corpus_tokenize
         self.is_linewise  = corpus_linewise
         self.required_voc = corpus_checkvoc
@@ -59,7 +60,7 @@ class Incrementor:
         self.fly_max_pn  = fly_max_pn
 
 
-        self.words = self.read_corpus(self.infile,
+        self.words = self.read_corpus(self.corpus_dir,
                                       tokenize_corpus=self.is_tokenize,
                                       postag_simple=self.postag_simple,
                                       linewise=self.is_linewise,
@@ -84,31 +85,35 @@ class Incrementor:
     #========== FILE READING
 
     @staticmethod
-    def read_corpus(infile, tokenize_corpus=False, postag_simple=False, linewise=False, verbose=False):
-        if verbose: print("\nreading corpus...")
+    def read_corpus(indir, tokenize_corpus=False, postag_simple=False, linewise=False, verbose=False):
+        if verbose: print("\nreading corpus from",indir,"...")
         lines = [] # list of lists of words
         nonword = re.compile("\W+(_X)?") # to delete punctuation entries
         lc = 0 # for files with more than one line
         wc = 0 # wordcount
-        with open(infile) as f:
-            for line in f:
-                lc += 1
-                line = line.rstrip().lower()
-                if tokenize_corpus:
-                    #tokenizer = RegexpTokenizer(r'\w+') #CLEANUP
-                    tokens = nltk.word_tokenize(line) # CLEANUP tokenizer.tokenize(line)
-                else:
-                    tokens = line.split()
-                linewords = []
-                for t in tokens:
-                    if postag_simple:
-                        t = t[:-1]+t[-1].upper()
-                    if (re.fullmatch(nonword, t) is None): # ignore punctuation
-                        linewords.append(t) # adds the list as a unit to 'lines'
-                    wc+=1
-                    if verbose and wc%100000 == 0:
-                        print("\twords read:",wc/1000000,"million",end="\r")
-                lines.append(linewords)
+        filepaths = []
+        for (dirpath, dirnames, filenames) in walk(indir):
+            filepaths.extend([dirpath+"/"+f for f in filenames])
+        for file in filepaths:
+            with open(file) as f:
+                print("reading",file,"...")
+                for line in f:
+                    lc += 1
+                    line = line.rstrip().lower()
+                    if tokenize_corpus:
+                        tokens = nltk.word_tokenize(line) # CLEANUP tokenizer.tokenize(line)
+                    else:
+                        tokens = line.split()
+                    linewords = []
+                    for t in tokens:
+                        if postag_simple:
+                            t = t[:-1]+t[-1].upper()
+                        if (re.fullmatch(nonword, t) is None): # ignores punctuation
+                            linewords.append(t) # adds the list as a unit to 'lines'
+                        wc+=1
+                        if verbose and wc%1000000 == 0:
+                            print("\twords read:",wc/1000000,"million",end="\r")
+                    lines.append(linewords)
 
 
         if linewise is False:
@@ -155,12 +160,11 @@ class Incrementor:
         if self.is_linewise:
             for line in tqdm(wordlist):
                 for w in line:
-                    if self.postag_simple:
-                        if w.endswith(("_N", "_V", "_J")): # leaves out all non-content words
-                            if w in freq:
-                                freq[w] += 1
-                            else:
-                                freq[w] = 1
+                    if self.postag_simple and w.endswith(("_N", "_V", "_J")): # leaves out all non-content words
+                        if w in freq:
+                            freq[w] += 1
+                        else:
+                            freq[w] = 1
                     else:
                         if w in freq:
                             freq[w] += 1
@@ -168,12 +172,11 @@ class Incrementor:
                             freq[w] = 1
         else:
             for w in tqdm(wordlist):
-                if self.postag_simple:
-                    if w.endswith(("_N", "_V", "_J")):
-                        if w in freq:
-                            freq[w] += 1
-                        else:
-                            freq[w] = 1
+                if self.postag_simple and w.endswith(("_N", "_V", "_J")):
+                    if w in freq:
+                        freq[w] += 1
+                    else:
+                        freq[w] = 1
                 else:
                     if w in freq:
                         freq[w] += 1
@@ -227,7 +230,6 @@ class Incrementor:
         else: 
             return checklist
 
-        
     def check_overlap(self, checklist_filepath=None, wordlist=None, verbose=False):
         if checklist_filepath is None: checklist_filepath = self.required_voc
         if wordlist is None: wordlist = self.freq.keys()
@@ -360,7 +362,7 @@ class Incrementor:
     def get_setup(self):
         return {
             "verbose":self.verbose,
-            "infile":self.infile,
+            "corpus_dir":self.corpus_dir,
             "is_tokenize":self.is_tokenize,
             "is_linewise":self.is_linewise,
             "required_voc":self.required_voc,
