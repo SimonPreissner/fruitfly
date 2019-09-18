@@ -232,14 +232,13 @@ class Fruitfly:
             #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP
 
             old_dims = [i for w,i in words_to_i.items() if w not in new_keys]
-
             for w,vec in fitted_space.items():
-                fitted_space[w] = np.delete(vec,old_dims)
+                fitted_space[w] = np.delete(vec,old_dims) # reduce columns
 
             #unhashed_space = np.delete(unhashed_space, old_dims, 0) # rows #CLEANUP
             #unhashed_space = np.delete(unhashed_space, old_dims, 1) # columns #CLEANUP
 
-            new_keys.sort() # sort words alphabetically (htis sorts the space)
+            new_keys.sort() # sort words alphabetically (this sorts the space)
             new_dic = {k:new_keys.index(k) for k in new_keys} # word:index
             new_ind = {v:k for k,v in new_dic.items()} # index:word
             #print("fit_space() -- fitted_space vector length:",len(fitted_space[new_ind[0]]))#CLEANUP

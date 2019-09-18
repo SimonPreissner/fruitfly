@@ -76,7 +76,7 @@ try:
     print("=== Other Parameters ===")
     s = input("Window size (to each side) for counting (default: 5):")
     window = int(s) if len(s) > 0 else 5  # one-directional window size for counting (+/- 5 words)
-    s = input("Maximal vocabulary size for the co-occurrence count:")
+    s = input("Maximal vocabulary size for the count (skip this for true incrementality):")
     max_dims = int(s) if len(s) > 0 else None
     s = input("Test interval in words (default: 1000000):")
     test_interval_in_words = int(s) if len(s) > 0 else 1000000
@@ -162,20 +162,23 @@ try:
 
         #========== FLY AND EVALUATE    
         unhashed_space = utils.readDM(breeder.outspace)
-        print("length of unhashed_space:",len(unhashed_space))
+        print("length of unhashed_space:",len(unhashed_space)) #CLEANUP
         i_to_words, words_to_i = utils.readCols(breeder.outcols)
         print("length of words_to_i obtained from unhashed_space: {0}".format(len(words_to_i))) #CLEANUP
 
-        # new idea (#CLEANUP?)
-        words_for_flight = breeder.read_checklist(checklist_filepath=overlap_file,
-                                                  with_pos_tags=breeder.postag_simple)
         # only select words that will be needed for evaluation:
-        fly_these = {w:unhashed_space[w] for w in words_for_flight if w in unhashed_space}
-        print("length of words_to_i:",len(breeder.words_to_i))
-        print("length of fly_these:",len(fly_these))
+        if overlap_file is None:
+            fly_these = unhashed_space # in this case, fly() is applied to the whole of unhashed_space
+        else:
+            words_for_flight = breeder.read_checklist(checklist_filepath=overlap_file,
+                                                      with_pos_tags=breeder.postag_simple)
+            fly_these = {w:unhashed_space[w] for w in words_for_flight if w in unhashed_space}
+        print("length of words_to_i:",len(breeder.words_to_i)) #CLEANUP
+        print("length of fly_these:",len(fly_these)) #CLEANUP
         
         
         # this is where the magic happens
+        # space_dic and space_ind are the words_to_i and i_to_words of the cropped vectors (done in Fruitfly.fit_space())
         hashed_space, space_dic, space_ind, t_flight = breeder.fruitfly.fly(fly_these, words_to_i, timed=True)
         print("length of space_dic:",len(space_dic)) # space_dic = {word:i}; space_ind = {i:word} # or hash unhashed_space in stead of fly_these?
 

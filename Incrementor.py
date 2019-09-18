@@ -21,6 +21,7 @@ OBACHT!
 """
 
 import re
+from typing import Dict, Any
 
 import numpy as np
 from docopt import docopt
@@ -86,14 +87,27 @@ class Incrementor:
 
     @staticmethod
     def read_corpus(indir, tokenize_corpus=False, postag_simple=False, linewise=False, verbose=False):
+        """
+        :param indir: a directory or a single file as text resource
+        :param tokenize_corpus:
+        :param postag_simple:
+        :param linewise:
+        :param verbose:
+        :return:
+        """
         if verbose: print("\nreading corpus from",indir,"...")
         lines = [] # list of lists of words
         nonword = re.compile("\W+(_X)?") # to delete punctuation entries
         lc = 0 # for files with more than one line
         wc = 0 # wordcount
+
         filepaths = []
-        for (dirpath, dirnames, filenames) in walk(indir):
-            filepaths.extend([dirpath+"/"+f for f in filenames])
+        if os.path.isfile(indir):
+            filepaths = [indir]
+        else:
+            for (dirpath, dirnames, filenames) in walk(indir):
+                filepaths.extend([dirpath+"/"+f for f in filenames])
+
         for file in filepaths:
             with open(file) as f:
                 print("reading",file,"...")
@@ -154,6 +168,17 @@ class Incrementor:
         return cooc, words_to_i, i_to_words, fruitfly
 
     def freq_dist(self, wordlist, size_limit=None, required_words=None, verbose=False):
+        """
+        This method is used to limit the dimensionality of the count matrix, which speeds up processing.
+        The obtained dictionary is used as vocabulary reference of the current corpus at several processing steps.
+        For true incrementality, size_limit is None and the dictionary is computed over the currently available corpus.
+        If size_limit is None, required_words has no effect on the obtained dictionary.
+        :param wordlist: list of (word) tokens from the text resource
+        :param size_limit: maximum length of the returned frequency distribution
+        :param required_words: file path to a list with prioritized words (regardless of their frequencies)
+        :param verbose: comment on workings via print statements
+        :return: dict[str:int]
+        """
         if verbose: print("\ncreating frequency distribution...")
         freq = {}
         #TODO make this code better. There are too many ifs and loops.
