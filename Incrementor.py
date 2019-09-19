@@ -21,15 +21,15 @@ OBACHT!
 """
 
 import re
+import os
 from typing import Dict, Any
 
 import numpy as np
 from docopt import docopt
 import nltk
-from tqdm import tqdm
-from os import walk
 
 import Fruitfly
+from tqdm import tqdm
 import utils
 from Fruitfly import Fruitfly
 
@@ -76,7 +76,7 @@ class Incrementor:
         # words that will be counted (= labels of the final matrix dimensions)
         self.freq = self.freq_dist(self.words,
                                    size_limit=self.max_dims,
-                                   required_words=self.required_voc,
+                                   required_words_file=self.required_voc,
                                    verbose=self.verbose)
 
         if self.verbose: print("\tVocabulary size:",len(self.freq),
@@ -95,45 +95,76 @@ class Incrementor:
         :param verbose:
         :return:
         """
-        if verbose: print("\nreading corpus from",indir,"...")
-        lines = [] # list of lists of words
-        nonword = re.compile("\W+(_X)?") # to delete punctuation entries
-        lc = 0 # for files with more than one line
-        wc = 0 # wordcount
-
-        filepaths = []
-        if os.path.isfile(indir):
-            filepaths = [indir]
+        if indir is None: # i.e. for initialization without resources
+            if verbose: print("No text resources specified. Continuing with empty corpus.")
+            lines = []
         else:
-            for (dirpath, dirnames, filenames) in walk(indir):
-                filepaths.extend([dirpath+"/"+f for f in filenames])
+            if verbose: print("\nreading text resources from",indir,"...")
+            filepaths = []
+            lines = [] # list of lists of words
+            nonword = re.compile("\W+(_X)?") # to delete punctuation entries in simple-POS-tagged data (_N, _V, _A, _X)
+            lc = 0 # for files with more than one line
+            wc = 0 # wordcount
 
-        for file in filepaths:
-            with open(file) as f:
-                print("reading",file,"...")
-                for line in f:
-                    lc += 1
-                    line = line.rstrip().lower()
-                    if tokenize_corpus:
-                        tokens = nltk.word_tokenize(line) # CLEANUP tokenizer.tokenize(line)
-                    else:
-                        tokens = line.split()
-                    linewords = []
-                    for t in tokens:
-                        if postag_simple:
-                            t = t[:-1]+t[-1].upper()
-                        if (re.fullmatch(nonword, t) is None): # ignores punctuation
-                            linewords.append(t) # adds the list as a unit to 'lines'
-                        wc+=1
-                        if verbose and wc%1000000 == 0:
-                            print("\twords read:",wc/1000000,"million",end="\r")
-                    lines.append(linewords)
+            if os.path.isfile(indir): # for a single file that is passed
+                filepaths = [indir]
+            else:
+                for (dirpath, dirnames, filenames) in os.walk(indir):
+                    filepaths.extend([dirpath+"/"+f for f in filenames])
 
+            for file in filepaths:
+                try:
+                    with open(file) as f:
+                        print("reading",file,"...")
+                        for line in f:
+                            lc += 1
+                            line = line.rstrip().lower()
+                            if tokenize_corpus:
+                                tokens = nltk.word_tokenize(line) # CLEANUP tokenizer.tokenize(line)
+                            else:
+                                tokens = line.split()
+                            linewords = []
+                            for t in tokens:
+                                if postag_simple:
+                                    t = t[:-1]+t[-1].upper()
+                                if (re.fullmatch(nonword, t) is None): # ignores punctuation
+                                    linewords.append(t) # adds the list as a unit to 'lines'
+                                wc+=1
+                                if verbose and wc%1000000 == 0:
+                                    print("\twords read:",wc/1000000,"million",end="\r")
+                            lines.append(linewords)
+                except FileNotFoundError as e:
+                    print(e)
+            if verbose: print("Finished reading.",wc,"words read.")
 
         if linewise is False:
             return [w for l in lines for w in l] # flattens to a simple word list
         else:
             return(lines)
+
+    def extend_corpus(self, text_resource):
+        """
+        Takes a file path, reads the file's content, and extends the Incrementor object's available text
+        as well as its freq_dist.
+        :param text_resource: file path
+        """
+        new_text = self.read_corpus(text_resource,
+                                   tokenize_corpus=self.is_tokenize,
+                                   postag_simple=self.postag_simple,
+                                   linewise=self.is_linewise,
+                                   verbose=self.verbose)
+        self.words.extend(new_text)
+        new_freq = self.freq_dist(new_text,
+                                  size_limit=self.max_dims,
+                                  required_words_file=self.required_voc,
+                                  required_words=self.freq.keys(), # for the neq freq.keys() to comply with the old one
+                                  verbose=self.verbose)
+        for k, v in new_freq.items():
+            if k in self.freq:
+                self.freq[k] += v
+            else:
+                self.freq[k] = v
+
 
     def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False): # matrix, vocabulary, fruitfly (if wanted)
         """
@@ -167,7 +198,7 @@ class Incrementor:
 
         return cooc, words_to_i, i_to_words, fruitfly
 
-    def freq_dist(self, wordlist, size_limit=None, required_words=None, verbose=False):
+    def freq_dist(self, wordlist, size_limit=None, required_words_file=None, required_words=None, verbose=False):
         """
         This method is used to limit the dimensionality of the count matrix, which speeds up processing.
         The obtained dictionary is used as vocabulary reference of the current corpus at several processing steps.
@@ -175,13 +206,13 @@ class Incrementor:
         If size_limit is None, required_words has no effect on the obtained dictionary.
         :param wordlist: list of (word) tokens from the text resource
         :param size_limit: maximum length of the returned frequency distribution
-        :param required_words: file path to a list with prioritized words (regardless of their frequencies)
+        :param required_words_file: file path to a list with prioritized words (regardless of their frequencies)
+        :param required_words: list of words; used to pass already existing freq keys if freq needs to be extended
         :param verbose: comment on workings via print statements
         :return: dict[str:int]
         """
-        if verbose: print("\ncreating frequency distribution...")
+        if verbose: print("\ncreating frequency distribution over",len(wordlist),"tokens...")
         freq = {}
-        #TODO make this code better. There are too many ifs and loops.
         if self.is_linewise:
             for line in tqdm(wordlist):
                 for w in line:
@@ -210,13 +241,19 @@ class Incrementor:
 
         frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
 
-        if required_words is not None:
-            checklist = self.read_checklist(checklist_filepath=required_words, with_pos_tags=self.postag_simple)
+        if required_words_file is None and required_words is None:
+            returnlist = frequency_sorted
+        else:
+            checklist = []
+            if required_words_file is not None:
+                checklist.extend(self.read_checklist(checklist_filepath=required_words_file, with_pos_tags=self.postag_simple))
+            if required_words is not None: # in case that freq needs to be extended
+                checklist.extend(required_words)
+
             overlap = list(set(checklist).intersection(set(frequency_sorted)))
             rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
             returnlist = overlap+rest_words
-        else:
-            returnlist = frequency_sorted
+
 
         if(size_limit is not None and size_limit <= len(freq)):
             return {k:freq[k] for k in returnlist[:size_limit]}
@@ -225,7 +262,7 @@ class Incrementor:
 
     @staticmethod
     def read_checklist(checklist_filepath, with_pos_tags=False):
-        if checklist_filepath is None:
+        if checklist_filepath is None: #TODO why is this coded like this? maybe try/except?
             return []
 
         checklist = []

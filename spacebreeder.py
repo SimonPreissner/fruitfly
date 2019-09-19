@@ -23,7 +23,7 @@ global errorlog, corpus_dir, w2v_exe_file, testset_file, overlap_file,\
        pipedir, results_summary_file, results_location, w2v_results_file,\
        matrix_filename, fly_location, space_location, vip_words_location,\
        w2v_corpus_file, w2v_space_location, number_of_vip_words, test_interval_in_words,\
-       pns, kcs, con, red, flat, max_pns, tokenize, postag_simple, verbose, window
+       pns, kcs, con, red, flat, max_pns, tokenize, postag_simple, verbose, window #TODO is this really needed? is it dangerous?
 
 
 
@@ -31,7 +31,6 @@ errorlog = "spacebreeder_errorlog.txt"
 
 #========== PARAMETER INPUT
 try:
-    
 
     print("=== Resources and Output Directories ===")
     s = input("Path to text resources (default: data/chunks):") #TODO for final version, set the path to the chunks directory
@@ -78,8 +77,14 @@ try:
     window = int(s) if len(s) > 0 else 5  # one-directional window size for counting (+/- 5 words)
     s = input("Maximal vocabulary size for the count (skip this for true incrementality):")
     max_dims = int(s) if len(s) > 0 else None
-    s = input("Test interval in words (default: 1000000):")
-    test_interval_in_words = int(s) if len(s) > 0 else 1000000
+    s = input("Test interval in words (default: 1000000; file-wise testing with 'f'):") #TODO change so that 'None' means file-wise testing
+    try:
+        test_interval_in_words = int(s) if len(s) > 0 else 1000000
+        test_filewise = False
+    except ValueError as e:
+        test_interval_in_words = None
+        test_filewise = True
+
     s = input("Number of important words to be extracted (default: 50):")
     number_of_vip_words = int(s) if len(s) > 0 else 50
 
@@ -94,8 +99,15 @@ except Exception as e:
         f.write(str(e)[:500])
     print("An error occured. Check",errorlog,"for further information.")
 
-#========== SETUP INITIAL FRUIT FLY AND INCREMENTOR
+#========== SETUP RESOURCE PATHS, INITIAL FRUIT FLY, AND INCREMENTOR
 try:
+    """ make a list of file paths to be passed one by one to an Incrementor object """
+    corpus_files = []
+    if os.path.isfile(corpus_dir):
+        corpus_files = [corpus_dir]
+    else:
+        for (dirpath, dirnames, filenames) in walk(corpus_dir):
+            corpus_files.extend([dirpath + "/" + f for f in filenames])
 
     """ This step is taken because Incrementor can't do custom initialization """
     initial_fly_file = fly_location+"fly_run_0.cfg"
@@ -103,32 +115,138 @@ try:
     first_fly.log_params(filename=initial_fly_file, timestamp=False)
 
     """
-    This 
-    - reads the whole corpus
-    - makes a freq_dist of the whole corpus (with a limited number, if given)
-    - sets up a Fruitfly
-    - sets up a cooccurence matrix
+    The constructor of Incrementor 
+    - reads in text files from a directory (if specified)
+    - makes a frequency distribution
+    - sets up a Fruitfly object from an already-logged Fruitfly
+    - sets up a cooccurence matrix, with a limit if specified
     matrix_incremental=False because it would need to load an existing matrix;
     however, in this setup, it can increment all the way from an initial one.
     linewise=False because it would destroy the whole loop. Therefore, it is
     also commented out in the parameter section above.
     """
-    breeder = Incrementor(corpus_dir, matrix_filename,
+
+    """ Initialization without corpus. File paths are passed to the Incrementor via the loop. """
+    breeder = Incrementor(None, matrix_filename,
                           corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=overlap_file,
                           matrix_incremental=False, matrix_maxdims=max_dims, contentwords_only=postag_simple,
                           fly_new=False, fly_grow=True, fly_file=initial_fly_file,
-                          verbose=verbose)
+                          verbose=verbose) #TODO rename breeder
 except Exception as e:
     with open(errorlog, "a") as f:
         f.write(str(e)[:500])
     print("An error occured. Check", errorlog, "for further information.")
 
 #========== LOOP
-try:
+
+# breeder.words contains the currently available text  #CLEANUP
+
+try: #TODO make the try:except blocks smaller
     runtime_zero = time.time()
     performance_summary = {} # for a final summary
 
+#===== #TODO implement the new loop.
+
+    wc = 0 # word count; used for slicing
+    run = 0
+    
+    for (file_n, file) in enumerate(corpus_files):
+        breeder.extend_corpus(file) # read in a new file
+
+        # Count and test in word intervals
+        if test_interval_in_words is not None:
+            if file_n+1 == len(corpus_files) and len(breeder.words()) < wc+test_interval_in_words: # last run
+                #TODO implement the last run of the pipeline
+            while len(breeder.words()) >= wc+test_interval_in_words: # as long as there are enough words for a whole slice
+                t_thisrun = time.time()  # ends before logging
+
+                """ Initialize paths for the current run """ #TODO extract to a method
+                run = int(wc / test_interval_in_words) + 1
+                if verbose: print("\n\nNEW RUN OF THE PIPELINE:", run, "\n")
+                breeder.flyfile = fly_location + "fly_run_" + str(run) + ".cfg"  # for logging
+                space_file = space_location + "space_run_" + str(run) + ".dh"
+                results_file = results_location + "stats_run_" + str(run) + ".txt"
+                vip_words_file = vip_words_location + "words_run_" + str(run) + ".txt"
+
+                """ Count words and expand fruitfly, then log the count model for flying """ #TODO maybe improve on the verbose option?
+                try:  # take a slice from the corpus
+                    count_these = breeder.words[wc: wc + test_interval_in_words]
+                    if verbose: print("Size of corpus slice for run", run, ":", len(count_these))
+                except IndexError as e: #TODO does the exception ever occur? Maybe #CLEANUP?
+                    count_these = breeder.words[wc:len(breeder.words)]
+                    if verbose: print("This batch of words only has", len(count_these), "items")
+
+                # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
+                breeder.count_cooccurrences(words=count_these, window=window) #TODO implement timed-option to count_cooccurrences
+                is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
+
+                breeder.log_matrix()
+
+                """ Read in the count model and apply the FFA """
+                unhashed_space = utils.readDM(breeder.outspace)
+                #print("length of unhashed_space:", len(unhashed_space))  # CLEANUP
+                i_to_words, words_to_i = utils.readCols(breeder.outcols)
+                #print("length of words_to_i obtained from unhashed_space: {0}".format(len(words_to_i)))  # CLEANUP
+
+                # only select words that will be needed for evaluation:
+                if overlap_file is None:
+                    fly_these = unhashed_space  # in this case, fly() is applied to the whole of unhashed_space
+                else:
+                    words_for_flight = breeder.read_checklist(checklist_filepath=overlap_file,
+                                                              with_pos_tags=breeder.postag_simple)
+                    fly_these = {w: unhashed_space[w] for w in words_for_flight if w in unhashed_space}
+                #print("length of words_to_i:", len(breeder.words_to_i))  # CLEANUP
+                #print("length of fly_these:", len(fly_these))  # CLEANUP
+
+                # space_dic and space_ind are the words_to_i and i_to_words of the cropped vectors (done in Fruitfly.fit_space())
+                hashed_space, space_dic, space_ind, t_flight = breeder.fruitfly.fly(fly_these, words_to_i, timed=True)
+                #print("length of space_dic:", len(space_dic))  # space_dic = {word:i}; space_ind = {i:word} # or hash unhashed_space in stead of fly_these? #CLEANUP
+
+                """ Evaluate the hashed space """
+                spb, tsb = MEN.compute_men_spearman(unhashed_space, testset_file)
+                spa, tsa = MEN.compute_men_spearman(hashed_space, testset_file)
+                sp_diff = spa - spb
+
+                connectednesses = [len(cons) for cons in breeder.fruitfly.pn_to_kc.values()]
+                avg_PN_con = round(sum(connectednesses) / breeder.fruitfly.pn_size, 6)
+                var_PN_con = round(np.var(connectednesses, ddof=1), 6)
+                std_PN_con = round(np.std(connectednesses, ddof=1), 6)
+
+                t_thisrun = time.time() - t_thisrun
+
+
+            wc += test_interval_in_words
+
+
+
+
+
+        # Count and test once per file
+        else:
+            run += 1
+            t_thisrun = time.time()  # ends before logging
+
+            """ Initialize paths for the current run """
+            run = int(wc / test_interval_in_words) + 1
+            if verbose: print("\n\nNEW RUN OF THE PIPELINE:", run, "\n")
+            breeder.flyfile = fly_location + "fly_run_" + str(run) + ".cfg"  # for logging
+            space_file = space_location + "space_run_" + str(run) + ".dh"
+            results_file = results_location + "stats_run_" + str(run) + ".txt"
+            vip_words_file = vip_words_location + "words_run_" + str(run) + ".txt"
+
+
+
+
+
+
+#=====
+
+
+
     for i in range(0, len(breeder.words), test_interval_in_words): #TODO change to iterate over resource files in a directory
+
+########## THE NEW LOOP IS IMPLEMENTED STARTING FROM HERE #CLEANUP
+
         t_thisrun = time.time() # ends before logging
         run = int(i/test_interval_in_words)+1
         print("\n\nNEW RUN OF THE PIPELINE:",run,"\n")
@@ -138,8 +256,8 @@ try:
         results_file = results_location+"stats_run_"+str(run)+".txt" 
         vip_words_file = vip_words_location+"words_run_"+str(run)+".txt" 
 
-
         #========== COUNT AND EXPAND, THEN LOG FOR FLYING
+
         try: # take a slice from the corpus
             count_these = breeder.words[i:i+test_interval_in_words]
             print("Size of corpus slice for run",run,":",len(count_these))
@@ -160,7 +278,7 @@ try:
         #breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
         breeder.log_matrix()
 
-        #========== FLY AND EVALUATE    
+        #========== FLY AND EVALUATE
         unhashed_space = utils.readDM(breeder.outspace)
         print("length of unhashed_space:",len(unhashed_space)) #CLEANUP
         i_to_words, words_to_i = utils.readCols(breeder.outcols)
@@ -194,8 +312,11 @@ try:
 
         t_thisrun = time.time()-t_thisrun
 
+########## THE NEW LOOP IS IMPLEMENTED UP TO HERE #CLEANUP
+
+
         #if allow_disconnection:
-        #    #breeder.fruitfly.selective_disconnect(<in the notes>) #TODO implement!
+        #    #breeder.fruitfly.selective_disconnect(<in the notes>) #TODO implement?
 
 
         #========== LOGGING (SPACE, FLY, PERFORMANCE)
@@ -224,7 +345,7 @@ try:
                               .format(t[0],t[1],t[2],t[3],t[4])+\
                               "AVG PN CON.:  {0}\nVAR PN CON.: {1}\nSTD PN CON.: {2}\n\n"\
                               .format(avg_PN_con, var_PN_con, std_PN_con)
-            time_string = "TIME TAKEN: \nFLYING: {0}\nTOTAL: {1}\n\n".format(t_flight, t_thisrun)
+            time_string = "TIME TAKEN: \nFLYING: {0}\nTOTAL: {1}\n\n".format(t_flight, t_thisrun) #TODO add time for counting, [to be extended]
             file_string = "RELATED FILES:\nFRUITFLY: {0}\nSPACE: {1}\nVIP WORDS: {2}\n"\
                           .format(breeder.flyfile, space_file, vip_words_file)
 
