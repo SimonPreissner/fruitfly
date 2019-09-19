@@ -22,6 +22,7 @@ OBACHT!
 
 import re
 import os
+import time
 from typing import Dict, Any
 
 import numpy as np
@@ -371,7 +372,14 @@ class Incrementor:
                         self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
                 self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
 
-    def count_cooccurrences(self, words=None, window=5):
+    def count_cooccurrences(self, words=None, window=5, timed=False):
+        """
+        :param words: list of tokens to be counted
+        :param window: int. specifies window size to one side.
+        :param timed: bool. If True, this method returns the time taken to executethe method
+        :return: float. Seconds taken to execute the method
+        """
+        t0 = time.time()
         if words is None: words = self.words # to allow partial counting
         if self.verbose: print("\ncounting inner cooccurrences within",window,"words distance...")
         #if self.postag_simple: #CLEANUP
@@ -394,6 +402,11 @@ class Incrementor:
             print("vocabulary size:",len(self.words_to_i))
             print("first words in the vocabulary:\n\t",
                   [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
+
+        if timed is True:
+            return time.time()-t0
+        else:
+            pass
 
 
 

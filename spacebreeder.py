@@ -106,7 +106,7 @@ try:
     if os.path.isfile(corpus_dir):
         corpus_files = [corpus_dir]
     else:
-        for (dirpath, dirnames, filenames) in walk(corpus_dir):
+        for (dirpath, dirnames, filenames) in os.walk(corpus_dir):
             corpus_files.extend([dirpath + "/" + f for f in filenames])
 
     """ This step is taken because Incrementor can't do custom initialization """
@@ -137,7 +137,25 @@ except Exception as e:
         f.write(str(e)[:500])
     print("An error occured. Check", errorlog, "for further information.")
 
-#========== LOOP
+
+
+#========== FUNCTIONS AND METHODS
+
+def new_paths(run, verbose=False):
+    """
+        :param run: int
+        :param verbose: bool
+        :return: str, str, str, str
+        """
+    if verbose: print("\n\nNEW RUN OF THE PIPELINE:", run, "\n")
+    a = fly_location + "fly_run_" + str(run) + ".cfg"  # for logging
+    b = space_location + "space_run_" + str(run) + ".dh"
+    c = results_location + "stats_run_" + str(run) + ".txt"
+    d = vip_words_location + "words_run_" + str(run) + ".txt"
+    return a,b,c,d
+
+
+# ========== LOOP
 
 # breeder.words contains the currently available text  #CLEANUP
 
@@ -156,17 +174,14 @@ try: #TODO make the try:except blocks smaller
         # Count and test in word intervals
         if test_interval_in_words is not None:
             if file_n+1 == len(corpus_files) and len(breeder.words()) < wc+test_interval_in_words: # last run
-                #TODO implement the last run of the pipeline
+                print("IMPLEMENT THE LAST RUN OF THE PIPELINE") #TODO implement the last run of the pipeline
             while len(breeder.words()) >= wc+test_interval_in_words: # as long as there are enough words for a whole slice
                 t_thisrun = time.time()  # ends before logging
 
-                """ Initialize paths for the current run """ #TODO extract to a method
+                """ Initialize paths for the current run """
                 run = int(wc / test_interval_in_words) + 1
-                if verbose: print("\n\nNEW RUN OF THE PIPELINE:", run, "\n")
-                breeder.flyfile = fly_location + "fly_run_" + str(run) + ".cfg"  # for logging
-                space_file = space_location + "space_run_" + str(run) + ".dh"
-                results_file = results_location + "stats_run_" + str(run) + ".txt"
-                vip_words_file = vip_words_location + "words_run_" + str(run) + ".txt"
+                breeder.flyfile, space_file, results_file, vip_words_file = new_paths(run, verbose=verbose)
+
 
                 """ Count words and expand fruitfly, then log the count model for flying """ #TODO maybe improve on the verbose option?
                 try:  # take a slice from the corpus
@@ -177,7 +192,10 @@ try: #TODO make the try:except blocks smaller
                     if verbose: print("This batch of words only has", len(count_these), "items")
 
                 # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
-                breeder.count_cooccurrences(words=count_these, window=window) #TODO implement timed-option to count_cooccurrences
+                t_count = breeder.count_cooccurrences(words=count_these, window=window, timed=True)
+                #TODO implement the deletion of the most infrequent dimensions (look at w2v_min_count and implement the
+                # method in Incrementor. Make the deletion an option at the input; let the minimum count be specified.)
+
                 is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
 
                 breeder.log_matrix()
@@ -215,24 +233,104 @@ try: #TODO make the try:except blocks smaller
                 t_thisrun = time.time() - t_thisrun
 
 
-            wc += test_interval_in_words
+                """ Log the hashed space, the fruitfly, and the evaluation """
+                utils.writeDH(hashed_space, space_file)  # space_file is updated above
 
+                # log most important words for each word
+                print("Logging most important words to", vip_words_file, "...")
+                with open(vip_words_file, "w") as f:
+                    for w in tqdm(hashed_space):
+                        vip_words = breeder.fruitfly.important_words_for(hashed_space[w], space_ind, n=number_of_vip_words)
+                        vip_words_string = ", ".join(vip_words)
+                        f.write("{0} --> {1}\n".format(w, vip_words_string))
 
+                # log the whole fruitfly
+                breeder.log_fly()  # breeder.flyfile is updated at the very beginning of the run
 
+                # log the results
+                with open(results_file, "w") as f:
+                    result_string = "RESULTS FOR RUN " + str(run) + ":\n" + \
+                                    "\nsp_corr_diff:       " + str(sp_diff) +  \
+                                    "\nsp_corr_after:      " + str(spa) + \
+                                    "\nsp_corr_before:     " + str(spb) + \
+                                    "\nitems_tested_after: " + str(tsa) + \
+                                    "\nitems_tested_before:" + str(tsb) + "\n"
+                    fc = breeder.fruitfly.get_specs() # fly config
+                    t = (fc["flattening"], fc["pn_size"], fc["kc_size"], fc["proj_size"], fc["hash_percent"])
+                    fruitfly_string = "\nFFA_CONFIG: ({0}, {1}, {2}, {3}, {4})".format(t[0], t[1], t[2], t[3], t[4]) + \
+                                      "\navg_PN_connections: " + str(avg_PN_con) + \
+                                      "\nvar_PN_connections: " + str(var_PN_con) + \
+                                      "\nstd_PN_connections: " + str(std_PN_con) + "\n"
+                    time_string = "\nTIME TAKEN: " + \
+                                  "\ncounting: " + str(t_count) + \
+                                  "\nflying:   " + str(t_flight) + \
+                                  "\ntotal:    " + str(t_thisrun) + "\n"
+                    file_string = "\nRELATED FILES:" \
+                                  "\nfruitfly:        " + flyfile + \
+                                  "\nhashed_space:    " + space_file + \
+                                  "\nimportant_words: " + vip_words_file + "\n"
+                    f.write(result_string + fruitfly_string + time_string + file_string)
 
+                # keep internal log
+                performance_summary[run] = [len(count_these), fc["pn_size"], tsb, spb, spa, sp_diff, t_thisrun]
+
+                # TODO extract the whole Word2Vec part to one or multiple method(s)
+                """ Train and evaluate a Word2Vec model """
+                if (len(w2v_exe_file) > 0):  # TODO check for errors in the else-case (missing stats to log?)
+                    print("\nRUNNING WORD-2-VEC\n")
+                    # add the current text slice to a file that can be used by w2v
+                    with open(w2v_corpus_file, "a") as f:
+                        f.write(" ".join(count_these) + " ")
+
+                    # choose the minimum word count for the w2v run: it's the lowest count in the FFA's PN layer
+                    occs = sorted([sum(vec) for vec in breeder.cooc])[:breeder.fruitfly.max_pn_size]
+                    w2v_min_count = math.floor(occs[0] / (window * 2))  # selects the smallest number
+
+                    w2v_space_file = w2v_space_location + "space.txt"
+                    w2v_vocab_file = w2v_space_location + "space.vocab"
+                    print("training w2v with minimum count", w2v_min_count, "...")
+
+                    # run the w2v code
+                    try:
+                        t_w2v = time.time()
+                        os.system(w2v_exe_file + " " + \
+                                  "-train " + w2v_corpus_file + \
+                                  "-output " + w2v_space_file + \
+                                  "-size 300 " + \
+                                  "-window " + str(window) + \
+                                  "-sample 1e-3 " + \
+                                  "-negative 10 " + \
+                                  "-iter 1 " + \
+                                  "-min-count " + str(w2v_min_count) + \
+                                  "-save-vocab " + w2v_vocab_file)
+                        t_train = time.time() - t_w2v
+                    except Exception as e:
+                        with open(errorlog, "a") as f:
+                            f.write(str(e)[:500])
+                        print("An error occured while running word2vec. Check", errorlog, "for further information.")
+
+                    # evaluate the w2v model
+                    w2v_space = utils.readDM(w2v_space_file)
+                    spcorr, pairs = MEN.compute_men_spearman(w2v_space, testset_file)
+                    with open(w2v_results_file, "a+") as f:
+                        f.write("RUN " + run + ":" + \
+                                "\tSP_CORR: " + spcorr + \
+                                "\tTEST_PAIRS: " + pairs + \
+                                "\tTRAIN_TIME: " + t_train + "\n")
+                    # keep internal log
+                    performance_summary[run].extend([spcorr, pairs, t_train])
+
+                wc += test_interval_in_words # last statement of the while loop
 
         # Count and test once per file
         else:
-            run += 1
             t_thisrun = time.time()  # ends before logging
 
             """ Initialize paths for the current run """
-            run = int(wc / test_interval_in_words) + 1
-            if verbose: print("\n\nNEW RUN OF THE PIPELINE:", run, "\n")
-            breeder.flyfile = fly_location + "fly_run_" + str(run) + ".cfg"  # for logging
-            space_file = space_location + "space_run_" + str(run) + ".dh"
-            results_file = results_location + "stats_run_" + str(run) + ".txt"
-            vip_words_file = vip_words_location + "words_run_" + str(run) + ".txt"
+            run += 1
+            breeder.flyfile, space_file, results_file, vip_words_file = new_paths(run, verbose=verbose)
+
+            # TODO implement the case of testing once for each file
 
 
 
@@ -240,166 +338,7 @@ try: #TODO make the try:except blocks smaller
 
 
 #=====
-
-
-
-    for i in range(0, len(breeder.words), test_interval_in_words): #TODO change to iterate over resource files in a directory
-
-########## THE NEW LOOP IS IMPLEMENTED STARTING FROM HERE #CLEANUP
-
-        t_thisrun = time.time() # ends before logging
-        run = int(i/test_interval_in_words)+1
-        print("\n\nNEW RUN OF THE PIPELINE:",run,"\n")
-
-        breeder.flyfile = fly_location+"fly_run_"+str(run)+".cfg" # for logging 
-        space_file = space_location+"space_run_"+str(run)+".dh" 
-        results_file = results_location+"stats_run_"+str(run)+".txt" 
-        vip_words_file = vip_words_location+"words_run_"+str(run)+".txt" 
-
-        #========== COUNT AND EXPAND, THEN LOG FOR FLYING
-
-        try: # take a slice from the corpus
-            count_these = breeder.words[i:i+test_interval_in_words]
-            print("Size of corpus slice for run",run,":",len(count_these))
-        except IndexError as e:
-            count_these = breeder.words[i:len(breeder.words)]
-            print("This batch of words only has",len(count_these),"items")
-
-        # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
-        breeder.count_cooccurrences(words=count_these, window=window)#[1] # [1] selects the stats tuple
-        is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
-
-        # only log the cooccurrence counts that will be evaluated (to speed things up)
-        #words_for_log = breeder.read_checklist(checklist_filepath=overlap_file, with_pos_tags=breeder.postag_simple) # disable this for full logging #CLEANUP?
-        #print("length of checklist (= words_for_log):",len(words_for_log)) #CLEANUP
-        #log_these = {w:breeder.words_to_i[w] for w in words_for_log if w in breeder.words_to_i} # disable this for full logging
-        #print("length of words_to_i:",len(breeder.words_to_i))
-        #print("length of log_these:",len(log_these))
-        #breeder.log_matrix(only_these=log_these)#[1] # no update of the filepath needed # run without optional params for full logging
-        breeder.log_matrix()
-
-        #========== FLY AND EVALUATE
-        unhashed_space = utils.readDM(breeder.outspace)
-        print("length of unhashed_space:",len(unhashed_space)) #CLEANUP
-        i_to_words, words_to_i = utils.readCols(breeder.outcols)
-        print("length of words_to_i obtained from unhashed_space: {0}".format(len(words_to_i))) #CLEANUP
-
-        # only select words that will be needed for evaluation:
-        if overlap_file is None:
-            fly_these = unhashed_space # in this case, fly() is applied to the whole of unhashed_space
-        else:
-            words_for_flight = breeder.read_checklist(checklist_filepath=overlap_file,
-                                                      with_pos_tags=breeder.postag_simple)
-            fly_these = {w:unhashed_space[w] for w in words_for_flight if w in unhashed_space}
-        print("length of words_to_i:",len(breeder.words_to_i)) #CLEANUP
-        print("length of fly_these:",len(fly_these)) #CLEANUP
-        
-        
-        # this is where the magic happens
-        # space_dic and space_ind are the words_to_i and i_to_words of the cropped vectors (done in Fruitfly.fit_space())
-        hashed_space, space_dic, space_ind, t_flight = breeder.fruitfly.fly(fly_these, words_to_i, timed=True)
-        print("length of space_dic:",len(space_dic)) # space_dic = {word:i}; space_ind = {i:word} # or hash unhashed_space in stead of fly_these?
-
-        spb,tsb = MEN.compute_men_spearman(unhashed_space, testset_file) 
-        spa,tsa = MEN.compute_men_spearman(hashed_space, testset_file)
-        sp_diff = spa-spb
-
-
-        connectednesses = [len(cons) for cons in breeder.fruitfly.pn_to_kc.values()]
-        avg_PN_con = round(sum(connectednesses)/breeder.fruitfly.pn_size,6)
-        var_PN_con = round(np.var(connectednesses, ddof=1),6)
-        std_PN_con = round(np.std(connectednesses, ddof=1),6)
-
-        t_thisrun = time.time()-t_thisrun
-
-########## THE NEW LOOP IS IMPLEMENTED UP TO HERE #CLEANUP
-
-
-        #if allow_disconnection:
-        #    #breeder.fruitfly.selective_disconnect(<in the notes>) #TODO implement?
-
-
-        #========== LOGGING (SPACE, FLY, PERFORMANCE)
-        utils.writeDH(hashed_space, space_file) # space_file is updated above
-
-        # log most important words for each word
-        print("Logging most important words to",vip_words_file,"...")
-        with open(vip_words_file, "w") as f:
-            for w in tqdm(hashed_space):
-                vip_words = breeder.fruitfly.important_words_for(
-                    hashed_space[w], space_ind, n=number_of_vip_words)
-                vip_words_string = ", ".join(vip_words)
-                f.write("{0} --> {1}\n".format(w, vip_words_string))
-
-        # log the whole fruitfly
-        breeder.log_fly()#[1] # flyfile is updated above
-
-        # log the results
-        with open(results_file, "w") as f:
-            result_string = "RESULTS FOR RUN "+str(run)+":\n\n"+\
-                            "SP_DIFF:   {0}\nSP_AFTER:  {1}\nSP_BEFORE: {2}\nTESTED_AFT.: {3}\nTESTED_BEF.: {4}\n\n"\
-                            .format(sp_diff, spa, spb, tsa, tsb)
-            fly_specs = breeder.fruitfly.get_specs()
-            t = (fly_specs["flattening"], fly_specs["pn_size"], fly_specs["kc_size"], fly_specs["proj_size"], fly_specs["hash_percent"])
-            fruitfly_string = "FLY CONFIG: ({0}, {1}, {2}, {3}, {4})\n"\
-                              .format(t[0],t[1],t[2],t[3],t[4])+\
-                              "AVG PN CON.:  {0}\nVAR PN CON.: {1}\nSTD PN CON.: {2}\n\n"\
-                              .format(avg_PN_con, var_PN_con, std_PN_con)
-            time_string = "TIME TAKEN: \nFLYING: {0}\nTOTAL: {1}\n\n".format(t_flight, t_thisrun) #TODO add time for counting, [to be extended]
-            file_string = "RELATED FILES:\nFRUITFLY: {0}\nSPACE: {1}\nVIP WORDS: {2}\n"\
-                          .format(breeder.flyfile, space_file, vip_words_file)
-
-            f.write(result_string \
-                    +fruitfly_string \
-                    +time_string \
-                    +file_string)
-
-        # keep internal log
-        performance_summary[run] = [len(count_these),fly_specs["pn_size"], tsb, spb, spa, sp_diff, t_thisrun]
-
-
-
-
-
-        #========== TRAIN WORD_2_VEC
-        if (len(w2v_exe_file) > 0): # TODO check for errors in the else-case (missing stats to log?)
-            print("\nRUNNING WORD-2-VEC\n")
-            # add the current text slice to a file that can be used by w2v
-            with open(w2v_corpus_file, "a") as f:
-                f.write(" ".join(count_these))
-                f.write(" ")
-
-            # choose the minimum word count for the w2v run
-            occs = sorted([sum(vec) for vec in breeder.cooc]) # has only 10k dimensions
-            w2v_min_count = math.floor(occs[0]/(window*2)) # selects the lowest number
-
-            w2v_space_file = w2v_space_location+"space.txt"
-            w2v_vocab_file = w2v_space_location+"space.vocab"
-            print("training w2v with minimum count",w2v_min_count,"...")
-
-            # run the w2v code
-            try:
-                os.system("{0} -train {1} -output {2} -size 300 -window {3} -sample 1e-3 -negative 10 -iter 1 -min-count {4} -save-vocab {5}"\
-                    .format(w2v_exe_file, w2v_corpus_file, w2v_space_file, window, w2v_min_count, w2v_vocab_file))
-            except Exception as w2v_error:
-                print("OBACHT!!! An error occured while running word2vec. Look at the errorlog.")
-                with open(errorlog, "a") as f:
-                    f.write(str(w2v_error))
-
-            #========== EVALUATE WORD_2_VEC
-            w2v_space = utils.readDM(w2v_space_file)
-
-            spcorr,pairs = MEN.compute_men_spearman(w2v_space, testset_file)
-
-            with open(w2v_results_file, "a+") as f:
-                f.write("RUN {0}:\tSP_CORR: {1}\tTEST_PAIRS: {2}\n".format(run, spcorr, pairs))
-
-            #keep internal log
-            performance_summary[run].extend([spcorr,pairs])
-
-
-
-
+    #TODO make this prettier!
     print("\n\nFINISHED ALL RUNS. ALMOST DONE.")
     # make a summary file
     with open(results_summary_file,"w") as f:
@@ -410,7 +349,7 @@ try: #TODO make the try:except blocks smaller
 
 
     print("done.")
-except Exception as e:
+except Exception as e: #TODO is this try:except obsolete?
     with open(errorlog, "a") as f:
         f.write(str(e)[:500])
         
