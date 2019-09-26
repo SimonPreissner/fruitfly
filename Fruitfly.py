@@ -197,7 +197,7 @@ class Fruitfly:
         for cell in self.proj_functions:
             weighted_kcs[cell] = 1.0/(1+len(self.proj_functions[cell]))
             weighted_kcs[cell] = weighted_kcs[cell]*np.random.rand()
-        winners = sorted(weighted_kcs, key=weighted_kcs.get, reverse=True)[:new_avg_pn_con]
+        winners = sorted(weighted_kcs, key=weighted_kcs.get, reverse=True)[:new_avg_pn_con] # these connect to the new PN
 
         """fully connected winner KCs experience connection switching"""
         for kc in winners: # add PN to connections of the winner KCs

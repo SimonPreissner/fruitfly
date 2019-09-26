@@ -75,15 +75,17 @@ try:
     print("=== Other Parameters ===")
     s = input("Window size (to each side) for counting (default: 5):")
     window = int(s) if len(s) > 0 else 5  # one-directional window size for counting (+/- 5 words)
-    s = input("Maximal vocabulary size for the count (skip this for true incrementality):")
+    s = input("Periodic deletion of infrequent words from the count (optional) -- minimum occurrences:")
+    min_occs_in_text = int(s) if len(s) > 0 else None # this will keep the count matrix' dimensions smaller
+    s = input("Maximum vocabulary size for the count (skip this for true incrementality):")
     max_dims = int(s) if len(s) > 0 else None
     s = input("Test interval in words (default: 1000000; file-wise testing with 'f'):") #TODO change so that 'None' means file-wise testing
     try:
         test_interval_in_words = int(s) if len(s) > 0 else 1000000
         test_filewise = False
-    except ValueError as e:
+    except ValueError:
         test_interval_in_words = None
-        test_filewise = True
+        test_filewise = True # this is redundant, but more readable than handling test_interval_in_words==None
 
     s = input("Number of important words to be extracted (default: 50):")
     number_of_vip_words = int(s) if len(s) > 0 else 50
@@ -163,13 +165,12 @@ try: #TODO make the try:except blocks smaller
     runtime_zero = time.time()
     performance_summary = {} # for a final summary
 
-#===== #TODO implement the new loop.
 
     wc = 0 # word count; used for slicing
     run = 0
     
     for (file_n, file) in enumerate(corpus_files):
-        breeder.extend_corpus(file) # read in a new file
+        breeder.extend_corpus(file) # read in a new file (but no counting yet)
 
         # Count and test in word intervals
         if test_interval_in_words is not None:
@@ -193,8 +194,11 @@ try: #TODO make the try:except blocks smaller
 
                 # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
                 t_count = breeder.count_cooccurrences(words=count_these, window=window, timed=True)
-                #TODO implement the deletion of the most infrequent dimensions (look at w2v_min_count and implement the
-                # method in Incrementor. Make the deletion an option at the input; let the minimum count be specified.)
+
+                # delete words from the count matrix which are very infrequent
+                nr_of_del_dims, t_cooc_del = breeder.reduce_count_size(min_occs_in_text, verbose=verbose, timed=True)
+                #TODO make min_occs_in_text an attribute of Incrementor?
+                #TODO log the number of deleted words and the time for deletion
 
                 is_x, x_diff = breeder.check_overlap(checklist_filepath=overlap_file, wordlist=count_these)
 
@@ -323,7 +327,7 @@ try: #TODO make the try:except blocks smaller
                 wc += test_interval_in_words # last statement of the while loop
 
         # Count and test once per file
-        else:
+        elif test_filewise is True:
             t_thisrun = time.time()  # ends before logging
 
             """ Initialize paths for the current run """
@@ -335,11 +339,8 @@ try: #TODO make the try:except blocks smaller
 
 
 
-
-
-#=====
     #TODO make this prettier!
-    print("\n\nFINISHED ALL RUNS. ALMOST DONE.")
+    if verbose: print("\n\nFinished all runs.")
     # make a summary file
     with open(results_summary_file,"w") as f:
         f.write("run\tnew_data_in_words\tPN_size\ttestset\tspearman_before\tspearman_after\tsp_diff\ttime-taken\tw2v-score\tw2v_testset\n\n")

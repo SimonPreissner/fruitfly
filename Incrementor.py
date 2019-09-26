@@ -166,7 +166,6 @@ class Incrementor:
             else:
                 self.freq[k] = v
 
-
     def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False): # matrix, vocabulary, fruitfly (if wanted)
         """
         Return a matrix, a vocabulary, and a Fruitfly object.
@@ -408,6 +407,34 @@ class Incrementor:
         else:
             pass
 
+    def reduce_count_size(self, min_count, verbose=False, timed=False):
+        #TODO test this method!
+        t0 = time.time()
+        if min_count is None:
+            if timed:
+                return 0, time.time()-t0
+            else:
+                return 0
+        else:
+            if verbose: print("Deleting infrequent words (less than",min_count,"occurrences) from the count matrix...")
+            delete_these = [w for w in self.freq if self.freq[w]>min_count]
+            # delete rows and columns from the count matrix
+            self.cooc = np.delete(self.cooc, [self.words_to_i[w] for w in delete_these], axis=0)
+            self.cooc = np.delete(self.cooc, [self.words_to_i[w] for w in delete_these], axis=1)
+            # delete elements from the dictionary
+            for w in delete_these:
+                del(self.words_to_i[w])
+            # in the index dictionary, shift words from higher dimensions to the freed-up dimensions
+            self.i_to_words = {i:w for i,w in enumerate(sorted(self.words_to_i, key=self.words_to_i.get))}
+            # update the index mapping in the dictionary
+            self.words_to_i = {w:i for i,w in self.i_to_words.items()}
+
+            if verbose: print("\t",len(delete_these),"words deleted. New count dimensions:",self.cooc.shape)
+            if timed:
+                return len(delete_these), time.time()-t0
+            else:
+                return len(delete_these)
+
 
 
 
@@ -435,6 +462,7 @@ class Incrementor:
             self.fruitfly.log_params(filename=flyfile, timestamp=False)
 
     def get_setup(self):
+        #TODO: check whether this needs to be updated
         return {
             "verbose":self.verbose,
             "corpus_dir":self.corpus_dir,
