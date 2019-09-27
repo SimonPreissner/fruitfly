@@ -1,25 +1,3 @@
-"""This is a fork program of countwords.py, forked on 2019-03-30_21:11
-
-Usage:
-  Incrementor.py [--help] 
-  Incrementor.py <text_source> <out_file> [--grow_fly [new] <config>] [options]
-
-Options:
-  -h --help          show this screen
-  -t --tokenize      run a simple tokenizer over the input text
-  -l --linewise      don't count cooccurrences across lines
-  -i --increment     load the existing space in <out_file> and extend it
-  -v --verbose       comment program status with command-line output
-  --grow_fly         develop a fruitfly alongside the space; either from scratch or from a config
-  -d=<dims>          limit space to a number of dimensions 
-  -w=<window>        number of tokens in the context (to each side) [default: 5]
-  -x=<checkfile>     check whether all words of <checkfile> are in <text_source>
-  
-OBACHT!
-  # File extensions: use them for <text_source>, <ff_config>, <checkfile>,
-                     DON'T use them for <out_file>!
-"""
-
 import re
 import os
 import time
@@ -488,25 +466,38 @@ class Incrementor:
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__)
 
-    is_verbose = arguments["--verbose"]
-    infile = arguments["<text_source>"] # e.g. "data/potato.txt"
-    outfiles = arguments["<out_file>"] # e.g. "data/potato"
-
-    tknz = arguments["--tokenize"]
-    lnws = arguments["--linewise"]
-    xvoc = arguments["-x"]
-
-    incr = arguments["--increment"]
-    try: dims=int(arguments["-d"])
-    except TypeError: dims=None
-
-    nfly = arguments["new"]
-    grow = arguments["--grow_fly"]
-    fcfg = arguments["<config>"]
-
-    window = int(arguments["-w"]) # not part of the Incrementor object
+    is_verbose  = False if input("Be verbose while running? [y/n] ").upper() == "N" else True
+    ###
+    infile = input("Path to resource(s) to be processed: ")
+    outfiles = input("Path/name of the output count data (without extension): ")
+    incr = True if input("Work incrementally (= use count data as basis)? [y/n] ").upper() == "Y" else False
+    tknz = True if input("Tokenize text before counting? [y/n] ").upper() == "Y" else False
+    s = input("Window size (to each side) for counting (default: 5):")
+    try:
+        window = int(s) if len(s) > 0 else 5 # not part of the Incrementor object
+    except TypeError:
+        print("Could not convert input to int. Continuing with window size 5.")
+    lnws = False if input("Count co-occurrences across line breaks? [y/n] ").upper() == "Y" else True
+    s = input("Path to a word list to be checked for overlap (optional): ")
+    xvoc = s if len(s) > 0 else None # e.g. "./data/MEN_natural_vocabulary"
+    s = input("Maximum dimensions of the count (optional): ")
+    try:
+        dims = int(s) if len(s) > 0 else None
+    except TypeError:
+        print("Could not convert input to int. Continuing without limitation of dimensions.")
+        dims=None
+    ###
+    grow = True if input("Maintain an FFA object alongside counting? [y/n] ").upper() == "Y" else False
+    if grow:
+        nfly = True if input("Make a new FFA? [y/n] ").upper() == "Y" else False
+        if nfly:
+            fcfg = input("File path of the new FFA's config: ")
+        else:
+            fcfg = input("File path of the existing FFA's config: ")
+    else:
+        nfly = None
+        fcfg = None
 
 
     incrementor = Incrementor(infile, outfiles,
@@ -522,9 +513,6 @@ if __name__ == '__main__':
     incrementor.log_matrix(verbose=incrementor.verbose)
     incrementor.log_fly(verbose=incrementor.verbose)
 
-    print("done.")
+    if is_verbose: print("done.")
 
-
-"""
-"""
 
