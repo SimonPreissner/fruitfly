@@ -215,6 +215,32 @@ class Fruitfly:
 
         self.pn_to_kc.update(self.forward_connections([self.pn_size-1]))
 
+    def reduce_pn_layer(self, del_indices, new_pn_size):
+        """
+        #TODO complete the documentation
+        :type del_indices: list[int] the positions that are deleted from the count
+        :type new_pn_size: int usually the size of the count matrix (in order to fit the PN layer to the count)
+        """
+
+        # make a mapping that represents the shift induced by deleting PNs (important to keep the correct connections)
+        old_to_new_i = {}
+        newi = 0
+        for oldi in range(self.pn_size):
+            if oldi in del_indices:
+                pass
+            else:
+                old_to_new_i[oldi] = newi
+                newi += 1
+        # The KC layer is independent from pn_size and can be modified before the other components
+        for kc,pns in self.proj_functions.items():
+            # choose remaining PNs and do a look-up in the mapping for shifted PNs
+            self.proj_functions[kc] = [old_to_new_i[oldi] for oldi in list(set(pns).difference(set(del_indices)))]
+        # update the pn_layer to be of same size as the count matrix
+        self.pn_size = new_pn_size
+        self.pn_layer = np.zeros(self.pn_size)
+        # re-do the forward connections
+        self.pn_to_kc = self.forward_connections([i for i in range(self.pn_size)])
+
     def fit_space(self, unhashed_space, words_to_i):
         if self.max_pn_size is None:
             return unhashed_space, words_to_i, {v: k for k, v in words_to_i.items()}

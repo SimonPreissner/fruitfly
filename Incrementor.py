@@ -386,7 +386,6 @@ class Incrementor:
             pass
 
     def reduce_count_size(self, min_count, verbose=False, timed=False):
-        #TODO test this method!
         t0 = time.time()
         if min_count is None:
             if timed:
@@ -394,24 +393,45 @@ class Incrementor:
             else:
                 return 0
         else:
+            #print("count dimensions before reducing:",self.cooc.shape)#CLEANUP
+            #print("fruitfly PN layer size before reducing:", self.fruitfly.pn_size)#CLEANUP
+            #connectednesses = [len(cons) for cons in self.fruitfly.pn_to_kc.values()]  # CLEANUP
+            #print("avg. pn connectedness BEFORE:", round(sum(connectednesses) / self.fruitfly.pn_size, 6))  # CLEANUP
+            #connectednesses = [len(cons) for cons in self.fruitfly.proj_functions.values()]  # CLEANUP
+            #print("avg. kc connectedness BEFORE:", round(sum(connectednesses) / self.fruitfly.kc_size, 6))  # CLEANUP
+            #print("std of kc connectedness BEFORE:", round(np.std(connectednesses, ddof=1), 6)) #CLEANUP
+
+            counted_freq_words = set(self.words_to_i).intersection(set(self.freq)) # because freq and words_to_i might differ!
             if verbose: print("Deleting infrequent words (less than",min_count,"occurrences) from the count matrix...")
-            delete_these = [w for w in self.freq if self.freq[w]>min_count]
+            delete_these_w = [w for w in counted_freq_words if self.freq[w]<=min_count ]
+            delete_these_i = [self.words_to_i[w] for w in delete_these_w]
             # delete rows and columns from the count matrix
-            self.cooc = np.delete(self.cooc, [self.words_to_i[w] for w in delete_these], axis=0)
-            self.cooc = np.delete(self.cooc, [self.words_to_i[w] for w in delete_these], axis=1)
+            self.cooc = np.delete(self.cooc, delete_these_i, axis=0)
+            self.cooc = np.delete(self.cooc, delete_these_i, axis=1)
             # delete elements from the dictionary
-            for w in delete_these:
+            for w in delete_these_w:
                 del(self.words_to_i[w])
             # in the index dictionary, shift words from higher dimensions to the freed-up dimensions
             self.i_to_words = {i:w for i,w in enumerate(sorted(self.words_to_i, key=self.words_to_i.get))}
             # update the index mapping in the dictionary
             self.words_to_i = {w:i for i,w in self.i_to_words.items()}
+            # also reduce the FFA!
+            if self.fruitfly.pn_size > self.cooc.shape[0]:
+                self.fruitfly.reduce_pn_layer(delete_these_i, self.cooc.shape[0]) #TODO test this
 
-            if verbose: print("\t",len(delete_these),"words deleted. New count dimensions:",self.cooc.shape)
+            if verbose: print("\t",len(delete_these_w),"words deleted. New count dimensions:",self.cooc.shape)
+
+            #print("fruitfly.pn_size after reducing: ",self.fruitfly.pn_size)#CLEANUP
+            #connectednesses = [len(cons) for cons in self.fruitfly.pn_to_kc.values()] #CLEANUP
+            #print("avg. pn connectedness AFTER:",round(sum(connectednesses) / self.fruitfly.pn_size, 6)) #CLEANUP
+            #connectednesses = [len(cons) for cons in self.fruitfly.proj_functions.values()] #CLEANUP
+            #print("avg. kc connectedness AFTER:",round(sum(connectednesses) / self.fruitfly.kc_size, 6)) #CLEANUP
+            #print("std of kc connectedness AFTER:", round(np.std(connectednesses, ddof=1), 6)) #CLEANUP
+
             if timed:
-                return len(delete_these), time.time()-t0
+                return len(delete_these_w), time.time()-t0
             else:
-                return len(delete_these)
+                return len(delete_these_w)
 
 
 
