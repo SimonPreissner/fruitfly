@@ -136,13 +136,13 @@ class Incrementor:
         new_freq = self.freq_dist(new_text,
                                   size_limit=self.max_dims,
                                   required_words_file=self.required_voc,
-                                  required_words=self.freq.keys(), # for the neq freq.keys() to comply with the old one
+                                  required_words=self.freq.keys(), # for the new freq.keys() to comply with the old one
                                   verbose=self.verbose)
-        for k, v in new_freq.items():
-            if k in self.freq:
-                self.freq[k] += v
-            else:
-                self.freq[k] = v
+        # update freq with the new counts -- but this might result in len(freq) > max_dims
+        self.freq = self.merge_freqs(self.freq,
+                                     new_freq,
+                                     required_words_file=self.required_voc,
+                                     max_length=self.max_dims)
 
     def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False): # matrix, vocabulary, fruitfly (if wanted)
         """
@@ -237,6 +237,28 @@ class Incrementor:
             return {k:freq[k] for k in returnlist[:size_limit]}
         else:
             return freq
+
+    def merge_freqs(self, freq1, freq2, required_words_file=None, max_length=None): #TODO test this!
+        for k, v in freq2.items():
+            if k in freq1:
+                freq1[k] += v
+            else:
+                freq1[k] = v
+
+        frequency_sorted = sorted(freq1, key=freq1.get, reverse=True)  # list of all words, sorted
+
+        if required_words_file is None:
+            returnlist = frequency_sorted
+        else:
+            checklist = self.read_checklist(checklist_filepath=required_words_file, with_pos_tags=self.postag_simple)
+            overlap = list(set(checklist).intersection(set(frequency_sorted)))
+            rest_words = [w for w in frequency_sorted if w not in overlap]  # words that are not required; sorted by frequency
+            returnlist = overlap + rest_words
+
+        if (max_length is not None and max_length <= len(freq1)):
+            return {k: freq1[k] for k in returnlist[:max_length]}
+        else:
+            return freq1
 
     @staticmethod
     def read_checklist(checklist_filepath, with_pos_tags=False):
@@ -417,7 +439,7 @@ class Incrementor:
             self.words_to_i = {w:i for i,w in self.i_to_words.items()}
             # also reduce the FFA!
             if self.fruitfly.pn_size > self.cooc.shape[0]:
-                self.fruitfly.reduce_pn_layer(delete_these_i, self.cooc.shape[0]) #TODO test this
+                self.fruitfly.reduce_pn_layer(delete_these_i, self.cooc.shape[0])
 
             if verbose: print("\t",len(delete_these_w),"words deleted. New count dimensions:",self.cooc.shape)
 

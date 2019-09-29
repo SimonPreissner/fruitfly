@@ -242,23 +242,32 @@ class Fruitfly:
         self.pn_to_kc = self.forward_connections([i for i in range(self.pn_size)])
 
     def fit_space(self, unhashed_space, words_to_i):
-        if self.max_pn_size is None:
+        # if words_to_i hasn't reached initial pn_size yet, the vectors need to be padded to fill out the PN layer
+        if len(words_to_i) < self.pn_size:
+            print("unhashed_space needs to be padded.\nSize of unhashed_space:",len(unhashed_space),"\nSize of PN layer:",self.pn_size) #CLEANUP
+            pad_size = self.pn_size - len(words_to_i)
+            padded_space = {w:np.append(vec, np.zeros(pad_size)) for w,vec in unhashed_space.items()}
+            padded_dic = {w:i+pad_size for w,i in words_to_i.items()}
+            padded_ind = {v:k for k,v in padded_dic.items()}
+            print("Returning padded_space, padded_dic, padded_ind. Sizes:",len(padded_space[padded_space.keys()[0]]), len(padded_dic), len(padded_ind))  # CLEANUP
+            print("First vector in padded_space:",padded_space[padded_space.keys()[0]])  # CLEANUP
+            return padded_space, padded_dic, padded_ind
+        # pn_size grows with len(words_to_i) and is strictly limited by max_pn_size
+        elif self.max_pn_size is None or len(words_to_i)<=self.max_pn_size: # max_pn_size not defined or not yet reached
             return unhashed_space, words_to_i, {v: k for k, v in words_to_i.items()}
-        elif self.max_pn_size is not None and len(words_to_i)<=self.max_pn_size:
-            print("no space fitting needed.")#CLEANUP
-            return unhashed_space, words_to_i, {v:k for k,v in words_to_i.items()}
+        # the space needs to be reduced towards pn_size
         else:
             """ extract the most frequent words"""
             freq = {w:sum(vec) for w,vec in unhashed_space.items()}
             new_keys = sorted(freq, key=freq.get, reverse=True)[:self.max_pn_size]
             #print("fit_space() -- new_keys: {0} ({1})".format(new_keys, len(new_keys)))#CLEANUP
             """ delete dimensions of words that are not frequent enough"""
-
-            fitted_space = {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows
+            fitted_space = {} # {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows #CLEANUP #
             #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP
 
             old_dims = [i for w,i in words_to_i.items() if w not in new_keys]
-            for w,vec in fitted_space.items():
+            #for w,vec in fitted_space.items(): #CLEANUP
+            for w,vec in unhashed_space.items():
                 fitted_space[w] = np.delete(vec,old_dims) # reduce columns
 
             #unhashed_space = np.delete(unhashed_space, old_dims, 0) # rows #CLEANUP
@@ -269,7 +278,13 @@ class Fruitfly:
             new_ind = {v:k for k,v in new_dic.items()} # index:word
             #print("fit_space() -- fitted_space vector length:",len(fitted_space[new_ind[0]]))#CLEANUP
 
-
+            #print("Number of vectors in unhashed_space:",len(unhashed_space))  # CLEANUP
+            #print("Vector length in unhashed_space:", len(unhashed_space[list(unhashed_space.keys())[0]]))  # CLEANUP
+            #print("Number of vectors in fitted_space:",len(fitted_space))  # CLEANUP
+            #print("Vector length in fitted_space:", len(fitted_space[list(fitted_space.keys())[0]]))  # CLEANUP
+            #print("Length of words_to_i:", len(words_to_i))  # CLEANUP
+            #print("Length of new_dic:",len(new_dic))  # CLEANUP
+            #print("")  # CLEANUP
             #print("fit_space() -- new_ind: {0} ({1})".format(new_ind, len(new_ind)))#CLEANUP
 
             return fitted_space, new_dic, new_ind
@@ -326,11 +341,10 @@ class Fruitfly:
         """
         t0 = time.time()
         # choose most frequent words to hash
-        fitted_space, flight_dic, flight_ind = self.fit_space(unhashed_space, words_to_i)
-
-        space_hashed = {} # a dict of word : binary_vector (= after "flying")
         print("\nStarting flying...")
-        for w in tqdm(fitted_space): # iterate through space, word by word 
+        fitted_space, flight_dic, flight_ind = self.fit_space(unhashed_space, words_to_i)
+        space_hashed = {} # a dict of word : binary_vector (= after "flying")
+        for w in tqdm(fitted_space): # iterate through space, word by word
             self.pn_layer = self.flatten(fitted_space[w])
             self.kc_layer = self.projection()
             space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'

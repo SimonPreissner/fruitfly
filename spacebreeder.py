@@ -39,7 +39,7 @@ s = input("Path to word2vec code (optional):")
 w2v_exe_file = s if len(s) > 0 else None # "./../share/word2vec" #TODO clean up this path (i.e. no if/else)
 testset_file = input("Path to test set:")# "data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full" #TODO set correct path
 s = input("Path to a word list to be checked for overlap (optional):")
-overlap_file = s if len(s) > 0 else "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary" #TODO clean up this path (i.e. no if/else)
+overlap_file = s if len(s) > 0 else None #"./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary" #TODO clean up this path (i.e. no if/else)
 s = input("Path to the resulting directories (default: ../fly_out):")
 pipedir = s if len(s) > 0 else "/mnt/8tera/shareclic/fruitfly/pipe_postagged/" #TODO set correct default path
 
@@ -75,8 +75,8 @@ else:
 print("=== Other Parameters ===")
 s = input("Window size (to each side) for counting (default: 5):")
 window = int(s) if len(s) > 0 else 5  # one-directional window size for counting (+/- 5 words)
-s = input("Periodic deletion of infrequent words from the count (optional) -- minimum occurrences:") #TODO test with None and with 0
-min_occs_in_text = int(s) if len(s) > 0 else None # this will keep the count matrix' dimensions smaller
+s = input("Periodic deletion of infrequent words from the count (optional) -- minimum occurrences:")
+min_occs_in_text = int(s) if (len(s) > 0 and int(s) > 1) else None # this will keep the count matrix' dimensions smaller
 s = input("Maximum vocabulary size for the count (skip this for true incrementality):") #TODO test the case of not skipped
 max_dims = int(s) if len(s) > 0 else None
 s = input("Test interval in words (default: 1000000; file-wise testing with 'f'):") #TODO change so that 'None' means file-wise testing
@@ -93,7 +93,7 @@ s = input("Number of important words to be extracted (default: 50):")
 number_of_vip_words = int(s) if len(s) > 0 else 50
 
 tokenize = False if input("Tokenize the input text? [y/n]").upper() == "N" else True
-postag_simple = True if input("Only count nouns/verbs/adjectives? [y/n]").upper() == "Y" else False # if true, it will only count nouns, verbs, and adjectives.
+postag_simple = True if input("Only count nouns/verbs/adjectives? [y/n]").upper() == "Y" else False #TODO test this (True) # if true, it will only count nouns, verbs, and adjectives.
 #linewise = False # DON'T SET THIS TO True! It will break the loop. #CLEANUP
 verbose  = False if input("Be verbose while running? [y/n]").upper() == "N" else True
 
