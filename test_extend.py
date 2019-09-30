@@ -193,12 +193,12 @@ print("before: {0}\t({1} items)\nafter: {2}\t({3} items)\n\
 
 # define corpus, output files, ...
 corpus_file = "data/potato.txt"
-matrix_filename = "test/cooc"
+count_file = "test/cooc"
 flyfile = "test/flatfly.cfg"
 space_file = "test/space.dh"
 vip_words_file = "test/important_words.txt"
 
-number_of_vip_words = 30
+vip_words_n = 30
 
 # make a smallish Fruitfly
 first_fly = Fruitfly.from_scratch(
@@ -207,7 +207,7 @@ first_fly = Fruitfly.from_scratch(
 first_fly.log_params(filename=flyfile, timestamp=False)
 
 # make an Incrementor that uses this small Fruitfly
-breeder = Incrementor(corpus_file, matrix_filename,
+breeder = Incrementor(corpus_file, count_file,
                       corpus_tokenize=True, corpus_linewise=False,
                       matrix_incremental=False,
                       fly_new=False, fly_grow=True, fly_file=flyfile,
@@ -236,7 +236,7 @@ print("Logging most important words to", vip_words_file, "...")
 with open(vip_words_file, "w") as f:
     for w in hashed_space:
         vip_words = breeder.fruitfly.important_words_for(
-            hashed_space[w], breeder.i_to_words, n=number_of_vip_words)
+            hashed_space[w], breeder.i_to_words, n=vip_words_n)
         vip_words_string = ", ".join(vip_words)
         f.write("{0} --> {1}\n".format(w, vip_words_string))
 
@@ -245,7 +245,7 @@ print("Logging most important words to", vip_words_file+"_2", "...")
 with open(vip_words_file+"_2", "w") as f:
     for w in hashed_space:
         vip_words = breeder.fruitfly.important_words_for(
-            hashed_space[w], space_ind, n=number_of_vip_words)  # TODO change breeder.i_to_words to space_ind?
+            hashed_space[w], space_ind, n=vip_words_n)  # TODO change breeder.i_to_words to space_ind?
         vip_words_string = ", ".join(vip_words)
         f.write("{0} --> {1}\n".format(w, vip_words_string))
 

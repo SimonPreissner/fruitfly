@@ -88,14 +88,14 @@ class Fruitfly:
         proj_functions = {}
         print("\nCreating new projections...")
 
-        for cell in range(self.kc_size):
+        for cell in tqdm(range(self.kc_size)):
             # uniform random choice + maximally 1 connection per PN-KC pair
             activated_pns = list(set(np.random.randint(self.pn_size, size=self.proj_size)))
             proj_functions[cell] = activated_pns
 
         return proj_functions
 
-    def forward_connections(self, pn_indices): 
+    def forward_connections(self, pn_indices):
         pn_indices = [pn_indices] if type(pn_indices) != list else pn_indices
 
         pn_to_kc = {pn:[] for pn in pn_indices} # { pn_index : [connected KCs] }
@@ -136,7 +136,7 @@ class Fruitfly:
         if timestamp is True: 
             filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
         connections = ""
-        print("\nLogging fruitfly config to",filename,"...")
+        print("Logging fruitfly config to",filename,"...")
         for kc,pns in tqdm(self.proj_functions.items()):
             connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
         with open(filename, "w") as logfile:

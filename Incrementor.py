@@ -1,10 +1,10 @@
 import re
 import os
 import time
-from typing import Dict, Any
+from typing import Dict, Any #CLEANUP
 
 import numpy as np
-from docopt import docopt
+from docopt import docopt #CLEANUP
 import nltk
 
 import Fruitfly
@@ -78,7 +78,6 @@ class Incrementor:
             if verbose: print("No text resources specified. Continuing with empty corpus.")
             lines = []
         else:
-            if verbose: print("\nreading text resources from",indir,"...")
             filepaths = []
             lines = [] # list of lists of words
             nonword = re.compile("\W+(_X)?") # to delete punctuation entries in simple-POS-tagged data (_N, _V, _A, _X)
@@ -94,7 +93,7 @@ class Incrementor:
             for file in filepaths:
                 try:
                     with open(file) as f:
-                        print("reading",file,"...")
+                        print("reading text from ",file,"...", end=" ")
                         for line in f:
                             lc += 1
                             line = line.rstrip().lower()
@@ -105,7 +104,7 @@ class Incrementor:
                             linewords = []
                             for t in tokens:
                                 if postag_simple:
-                                    t = t[:-1]+t[-1].upper()
+                                    t = t[:-1]+t[-1].upper() # upper-case the POS-tags again
                                 if (re.fullmatch(nonword, t) is None): # ignores punctuation
                                     linewords.append(t) # adds the list as a unit to 'lines'
                                 wc+=1
@@ -114,7 +113,7 @@ class Incrementor:
                             lines.append(linewords)
                 except FileNotFoundError as e:
                     print(e)
-            if verbose: print("Finished reading.",wc,"words read.")
+            if verbose: print("Finished reading. Number of words:",wc)
 
         if linewise is False:
             return [w for l in lines for w in l] # flattens to a simple word list
@@ -189,16 +188,17 @@ class Incrementor:
         :param verbose: comment on workings via print statements
         :return: dict[str:int]
         """
-        if verbose: print("\ncreating frequency distribution over",len(wordlist),"tokens...")
+        if verbose: print("creating frequency distribution over",len(wordlist),"tokens...")
         freq = {}
         if self.is_linewise:
             for line in tqdm(wordlist):
                 for w in line:
-                    if self.postag_simple and w.endswith(("_N", "_V", "_J")): # leaves out all non-content words
-                        if w in freq:
-                            freq[w] += 1
-                        else:
-                            freq[w] = 1
+                    if self.postag_simple:
+                        if w.endswith(("_N", "_V", "_J")): # only counts nouns, verbs, and adjectives/adverbs
+                            if w in freq:
+                                freq[w] += 1
+                            else:
+                                freq[w] = 1
                     else:
                         if w in freq:
                             freq[w] += 1
@@ -206,11 +206,12 @@ class Incrementor:
                             freq[w] = 1
         else:
             for w in tqdm(wordlist):
-                if self.postag_simple and w.endswith(("_N", "_V", "_J")):
-                    if w in freq:
-                        freq[w] += 1
-                    else:
-                        freq[w] = 1
+                if self.postag_simple:
+                    if w.endswith(("_N", "_V", "_J")):
+                        if w in freq:
+                            freq[w] += 1
+                        else:
+                            freq[w] = 1
                 else:
                     if w in freq:
                         freq[w] += 1
@@ -251,11 +252,11 @@ class Incrementor:
             returnlist = frequency_sorted
         else:
             checklist = self.read_checklist(checklist_filepath=required_words_file, with_pos_tags=self.postag_simple)
-            overlap = list(set(checklist).intersection(set(frequency_sorted)))
+            overlap = [w for w in frequency_sorted if w in checklist] # still a frequency-sorted word list
             rest_words = [w for w in frequency_sorted if w not in overlap]  # words that are not required; sorted by frequency
             returnlist = overlap + rest_words
 
-        if (max_length is not None and max_length <= len(freq1)):
+        if (max_length is not None and len(freq1) > max_length):
             return {k: freq1[k] for k in returnlist[:max_length]}
         else:
             return freq1
@@ -268,20 +269,6 @@ class Incrementor:
         checklist = []
 
         with open(checklist_filepath, "r") as f:
-            #CLEANUP
-            """
-            This has been generalized by making vocabulary lists out of 
-            the paired lists.
-            paired_lists = ["data/MEN_dataset_natural_form_full",
-                            "./data/MEN_dataset_natural_form_full",
-                            "incrementality_sandbox/data/sandbox_MEN_pairs",
-                            "pipe/testset_MEN_pairs"]
-            if checklist_filepath in paired_lists: 
-                for line in f:
-                    words = line.rstrip().split()[:2]
-                    checklist.extend(words)
-            else:
-            """
             for word in f:
                 word = word.rstrip()
                 checklist.append(word)
@@ -380,7 +367,7 @@ class Incrementor:
         """
         t0 = time.time()
         if words is None: words = self.words # to allow partial counting
-        if self.verbose: print("\ncounting inner cooccurrences within",window,"words distance...")
+        if self.verbose: print("\ncounting co-occurrences within",window,"words distance...")
         #if self.postag_simple: #CLEANUP
         #    words = simplify_postags(words)
         if self.is_linewise:
@@ -396,11 +383,10 @@ class Incrementor:
             self.count_middle_of_text(words, window)
             self.count_end_of_text(words, window)
 
-        if self.verbose:
-            print("\nfinished counting; matrix shape:",self.cooc.shape)
-            print("vocabulary size:",len(self.words_to_i))
-            print("first words in the vocabulary:\n\t",
-                  [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
+        if self.verbose: print("finished counting; matrix shape:",self.cooc.shape)
+        #print("vocabulary size:",len(self.words_to_i)) #CLEANUP
+        #print("first words in the vocabulary:\n\t", #CLEANUP
+        #      [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
 
         if timed is True:
             return time.time()-t0
