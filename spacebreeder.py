@@ -106,7 +106,7 @@ def param_input_misc():
     s = input("Number of important words to be extracted (default: 50):")
     vip_words_n = int(s) if len(s) > 0 else 50
     tokenize = False if input("Tokenize the input text? (default: yes) [y/n]").upper() == "N" else True
-    postag_simple = True if input("Only count nouns/verbs/adjectives? [y/n]").upper() == "Y" else False
+    postag_simple = True if input("Only count NN/VB/ADJ (requires pos-tagged testset for evaluation)? [y/n]").upper() == "Y" else False
     verbose = False if input("Be verbose while running? (default: yes) [y/n]").upper() == "N" else True
 
 def setup_loop_environment():
@@ -185,8 +185,7 @@ def prepare_flight():
     if overlap_file is None:
         fly_these = unhashed_space  # in this case, fly() is applied to the whole of unhashed_space
     else:
-        words_for_flight = breeder.read_checklist(checklist_filepath=overlap_file,
-                                                  with_pos_tags=breeder.postag_simple)
+        words_for_flight = breeder.read_checklist(overlap_file)#, with_pos_tags=breeder.postag_simple) #CLEANUP
         fly_these = {w: unhashed_space[w] for w in words_for_flight if w in unhashed_space}
     # print("length of words_to_i:", len(breeder.words_to_i))  # CLEANUP
     # print("length of fly_these:", len(fly_these))  # CLEANUP

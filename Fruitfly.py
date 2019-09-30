@@ -258,9 +258,24 @@ class Fruitfly:
         # the space needs to be reduced towards pn_size
         else:
             """ extract the most frequent words"""
-            freq = {w:sum(vec) for w,vec in unhashed_space.items()}
+            vecsums = np.zeros(len(unhashed_space[list(unhashed_space.keys())[0]])) # initialize with length of a vector
+            print("size of vecsums:",vecsums.shape) #CLEANUP
+            for w,vec in unhashed_space.items():
+                vecsums += vec
+            freq = {w:vecsums[i] for w,i in words_to_i.items()}
+            print("length of freq:",len(freq)) #CLEANUP
+            print("freq:",sorted(freq, key = freq.get, reverse=True)[:50]) #CLEANUP
+
+            #for w,i in words_to_i.items(): # sum the dimensions of the vectors #CLEANUP
+            #    for e,vec in
+            #    if w in freq:
+            #        freq[w] += vec[words_to_i[w]]
+            #    else:
+            #        freq[w] += vec[words_to_i[w]]
+            #freq = {w:sum(vec) for w,vec in unhashed_space.items()} #CLEANUP?
+
             new_keys = sorted(freq, key=freq.get, reverse=True)[:self.max_pn_size]
-            #print("fit_space() -- new_keys: {0} ({1})".format(new_keys, len(new_keys)))#CLEANUP
+            print("fit_space() -- length of new_keys: {0}".format(len(new_keys)))#CLEANUP
             """ delete dimensions of words that are not frequent enough"""
             fitted_space = {} # {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows #CLEANUP #
             #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP
@@ -269,6 +284,7 @@ class Fruitfly:
             #for w,vec in fitted_space.items(): #CLEANUP
             for w,vec in unhashed_space.items():
                 fitted_space[w] = np.delete(vec,old_dims) # reduce columns
+                #print("length of fitted vector of",w,":",len(fitted_space[w])) #CLEANUP
 
             #unhashed_space = np.delete(unhashed_space, old_dims, 0) # rows #CLEANUP
             #unhashed_space = np.delete(unhashed_space, old_dims, 1) # columns #CLEANUP
@@ -343,6 +359,7 @@ class Fruitfly:
         # choose most frequent words to hash
         print("\nStarting flying...")
         fitted_space, flight_dic, flight_ind = self.fit_space(unhashed_space, words_to_i)
+
         space_hashed = {} # a dict of word : binary_vector (= after "flying")
         for w in tqdm(fitted_space): # iterate through space, word by word
             self.pn_layer = self.flatten(fitted_space[w])

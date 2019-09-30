@@ -225,7 +225,7 @@ class Incrementor:
         else:
             checklist = []
             if required_words_file is not None:
-                checklist.extend(self.read_checklist(checklist_filepath=required_words_file, with_pos_tags=self.postag_simple))
+                checklist.extend(self.read_checklist(required_words_file))#, with_pos_tags=self.postag_simple)) #CLEANUP
             if required_words is not None: # in case that freq needs to be extended
                 checklist.extend(required_words)
 
@@ -251,7 +251,7 @@ class Incrementor:
         if required_words_file is None:
             returnlist = frequency_sorted
         else:
-            checklist = self.read_checklist(checklist_filepath=required_words_file, with_pos_tags=self.postag_simple)
+            checklist = self.read_checklist(required_words_file) #, with_pos_tags=self.postag_simple) #CLEANUP
             overlap = [w for w in frequency_sorted if w in checklist] # still a frequency-sorted word list
             rest_words = [w for w in frequency_sorted if w not in overlap]  # words that are not required; sorted by frequency
             returnlist = overlap + rest_words
@@ -262,7 +262,7 @@ class Incrementor:
             return freq1
 
     @staticmethod
-    def read_checklist(checklist_filepath, with_pos_tags=False):
+    def read_checklist(checklist_filepath):#, with_pos_tags=False): #CLEANUP
         if checklist_filepath is None: #TODO why is this coded like this? maybe try/except?
             return []
 
@@ -272,12 +272,13 @@ class Incrementor:
             for word in f:
                 word = word.rstrip()
                 checklist.append(word)
-                
-        if with_pos_tags is False:
-            pos_tag = re.compile("_.+?") # get rid of simple POS-tags
-            return [re.sub(pos_tag, "", w) for w in checklist]
-        else: 
-            return checklist
+        return checklist
+        #
+        #if with_pos_tags is False:
+        #    pos_tag = re.compile("_.+?") # get rid of simple POS-tags
+        #    return [re.sub(pos_tag, "", w) for w in checklist]
+        #else:
+        #    return checklist
 
     def check_overlap(self, checklist_filepath=None, wordlist=None, verbose=False):
         if checklist_filepath is None: checklist_filepath = self.required_voc

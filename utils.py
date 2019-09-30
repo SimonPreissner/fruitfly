@@ -94,7 +94,21 @@ def neighbours(space,word,n):
     neighbours = sorted(cosines, key=cosines.get, reverse=True)[:n]
     return neighbours
 
-
+def simplify_postags(tagged_words):
+    postags = {"N": ["NN", "NNS", "NNP", "NNPS"],
+               "V": ["VB", "VBD", "VBG", "VBN", "VBZ", "VBP"],
+               "J": ["JJ", "JJR", "JJS"]}
+    simplified = []
+    for w, t in tagged_words:
+        if t in postags["N"]:
+            simplified.append("_".join([w, "N"]))
+        elif t in postags["V"]:
+            simplified.append("_".join([w, "V"]))
+        elif t in postags["J"]:
+            simplified.append("_".join([w, "J"]))
+        else:
+            simplified.append("_".join([w, "X"]))
+    return simplified
 
 """
 """
