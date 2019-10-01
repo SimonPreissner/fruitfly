@@ -27,7 +27,7 @@ global corpus_dir, testset_file, overlap_file,  \
        summary_file
 global pns, kcs, con, red, flat, max_pns
 global window, max_dims, tokenize, postag_simple, min_count, \
-       test_interval, test_filewise, vip_words_n, verbose
+       test_interval, vip_words_n, verbose
 
 # variables/objects
 global run, breeder, t_thisrun, performance_summary
@@ -40,22 +40,20 @@ def param_input_files():
            count_file, fly_dir, space_dir, vip_words_dir, results_dir, \
            w2v_corpus_file, w2v_exe_file, w2v_space_dir, w2v_results_file, \
            summary_file
-
     print("=== Resources and Output Directories ===")
-    s = input("Path to text resources (default: data/chunks_wiki): ")
-    corpus_dir = s if len(s) > 0 else "data/chunks_wiki"
-        # "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" # "../ukwac_100m/ukwac_100m.txt" # "test/pride_postagged.txt" #CLEANUP
-    s = input("Path to Word2Vec code (optional): ")
-    w2v_exe_file = s if len(s) > 0 else None
-        # "./../share/word2vec" #CLEANUP
-    s = input("Path to test set (default: data/MEN_dataset_natural_form_full): ")
-    testset_file = s if len(s) > 0 else "data/MEN_dataset_natural_form_full"
-        # "data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full" # CLEANUP
-    s = input("Path to a word list to be checked for overlap (optional): ")
-    overlap_file = s if len(s) > 0 else None
-        # "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary" # CLEANUP
-    s = input("Path to the resulting directories (default: results/pipe_00): ")
-    pipedir = s if len(s) > 0 else "results/pipe_00"
+    # "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" # "../ukwac_100m/ukwac_100m.txt" # "test/pride_postagged.txt" #CLEANUP
+    corpus_dir = utils.loop_input(rtype=str, default="data/chunks_wiki",
+                                  msg="Path to text resources (default: data/chunks_wiki): ")
+    w2v_exe_file = utils.loop_input(rtype=str, default=None,
+                                    msg="Path to Word2Vec code (optional): ") # "./../share/word2vec" #CLEANUP
+    # "data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full" # CLEANUP
+    testset_file = utils.loop_input(rtype=str, default="data/MEN_dataset_natural_form_full",
+                                    msg="Path to test set (default: data/MEN_dataset_natural_form_full): ")
+    # "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary" # CLEANUP
+    overlap_file = utils.loop_input(rtype=str, default=None,
+                                    msg="Path to a word list to be checked for overlap (optional): ")
+    pipedir = utils.loop_input(rtype=str, default="results/pipe00",
+                               msg="Path to the resulting directories (default: results/pipe_00): ")
     summary_file = pipedir + "/" + "summary.tsv"
     results_dir = pipedir + "/" + "ffa/results/stats/"
     w2v_results_file = pipedir + "/" + "w2v/results.txt" if w2v_exe_file is not None else None
@@ -74,42 +72,40 @@ def param_input_FFA():
     print("=== Fruitfly Parameters ===")
     # Initial Fruitfly parameters (taken from the ukwac_100m gridsearch on 10k dims)
     pns, kcs, con, red, flat, max_pns = 50, 40000, 20, 8, "log", 10000
-    d = True if input("use default FFA parameters ("+", ".join([str(i) for i in [pns, kcs, con, red, flat, max_pns]])+\
-                      ") [y/n]?").upper() == "Y" else False
+    d = True if input("use default FFA parameters ({0}, {1}, {2}, {3}, {4}, {5}) [y/n]? "
+                      .format(pns, kcs, con, red, flat, max_pns)).upper() == "Y" else False
     if d is False:
-        pns = int(input("Initial number of PNs:"))
-        kcs = int(input("Number of KCs:"))
-        con = int(input("Connections per KC:"))
-        red = int(input("WTA-percentage (whole number):"))
-        flat = input("Flattening function (log/log2/log10):")
-        max_pns = int(input("Maximum number of PNs:"))
+        pns = utils.loop_input(rtype=int, default=pns, msg="Initial number of PNs: ")
+        kcs = utils.loop_input(rtype=int, default=kcs, msg="Number of KCs: ")
+        con = utils.loop_input(rtype=int, default=con, msg="Connections per KC: ")
+        red = utils.loop_input(rtype=int, default=red, msg="WTA-percentage (whole number): ")
+        flat = utils.loop_input(rtype=str, default=flat, msg="Flattening function (log/log2/log10): ")
+        max_pns = utils.loop_input(rtype=int, default=max_pns, msg="Maximum number of PNs: ")
 
 def param_input_misc():
     global window, max_dims, tokenize, postag_simple, min_count, \
-           test_interval, test_filewise, vip_words_n, verbose
-
+           test_interval, vip_words_n, verbose
     print("=== Other Parameters ===")
-    s = input("Window size (to each side) for counting (default: 5):")
-    window = int(s) if len(s) > 0 else 5  # one-directional window size for counting (+/- 5 words)
-    s = input("Periodic deletion of infrequent words from the count (optional) -- minimum occurrences:")
-    min_count = int(s) if (len(s) > 0 and int(s) > 1) else None  # this will keep the count matrix' dimensions smaller
-    s = input("Maximum vocabulary size for the count (skip this for true incrementality):")
-    max_dims = int(s) if len(s) > 0 else None
-    test_interval = 1000000
-    s = input("Test interval in words (default: "+str(test_interval)+"; file-wise testing with 'f'):")
-    try:
-        test_interval = int(s) if len(s) > 0 else test_interval
-        test_filewise = False
-    except ValueError:
-        test_interval = None
-        test_filewise = True  # this is redundant, but more readable than handling test_interval==None
-    s = input("Number of important words to be extracted (default: 50):")
-    vip_words_n = int(s) if len(s) > 0 else 50
+    window = utils.loop_input(rtype=int, default=5, msg="Window size (to each side) for counting (default: 5): ")
+    min_count = utils.loop_input(rtype=int, default=None,
+                msg="Periodic deletion of words with n occurrences or fewer from the count (optional) -- n: ")
+    max_dims = utils.loop_input(rtype=int, default = None,
+                                msg="Maximum vocabulary size for the count (skip this for true incrementality): ")
+    test_interval = utils.loop_input(rtype=int, default=None,
+                                     msg="Test interval in words; leave empty for filewise testing): ")
+    vip_words_n = utils.loop_input(rtype=int, default=50,
+                                   msg="Number of important words to be extracted (default: 50): ")
     tokenize = False if input("Tokenize the input text? (default: yes) [y/n]").upper() == "N" else True
     postag_simple = True if input("Only count NN/VB/ADJ (requires pos-tagged testset for evaluation)? [y/n]").upper() == "Y" else False
     verbose = False if input("Be verbose while running? (default: yes) [y/n]").upper() == "N" else True
 
 def setup_loop_environment():
+    """
+    Compiles a list of file paths of the resource files.
+    Instantiates and logs an initial Fruitfly object.
+    Instantiates the Incrementor object (without text resources)
+    Returns the list of file paths and the Incrementor object.
+    """
     # Make a list of file paths to be passed one by one to an Incrementor object
     corpus_files = []
     if os.path.isfile(corpus_dir):
@@ -138,7 +134,7 @@ def setup_loop_environment():
                           corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=overlap_file,
                           matrix_incremental=False, matrix_maxdims=max_dims, contentwords_only=postag_simple,
                           fly_new=False, fly_grow=True, fly_file=initial_fly_file,
-                          verbose=verbose)  # TODO rename breeder
+                          verbose=verbose)
 
     return corpus_files, breeder
 
@@ -146,32 +142,33 @@ def setup_loop_environment():
 
 def new_paths(run):
     """
-        :param run: int
-        :return: str, str, str, str
-        """
+    Adds the current run's number to file paths to make the run-specific file paths
+    for the fruitfly, the hashed space, the results, and the important words.
+    Returns these 4 file paths as strings.
+    :param run: int -- the current run of the loop
+    """
     a = fly_dir + "fly_run_" + str(run) + ".cfg"  # for logging
-    b = space_dir + "space_run_" + str(run) + ".dh"
+    b = space_dir + "space_run_" + str(run) + ".dh" # the hashes
     c = results_dir + "stats_run_" + str(run) + ".txt"
     d = vip_words_dir + "words_run_" + str(run) + ".txt"
     return a,b,c,d
 
 def count_test_log(count_these):
-    # TODO maybe improve on the verbose option within this whole method?
     # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
-    t_count = breeder.count_cooccurrences(words=count_these, window=window, timed=True) #TODO ad verbose option?
+    t_count = breeder.count_cooccurrences(words=count_these, window=window, timed=True)
     # delete words from the count matrix which are very infrequent
     nr_of_del_dims, t_cooc_del = breeder.reduce_count_size(min_count, verbose=verbose, timed=True) # TODO make min_count an attribute of Incrementor?
     breeder.log_matrix()
 
     fly_these, unhashed_space, words_to_i = prepare_flight()
     # space_dic and space_ind are the words_to_i and i_to_words of the cropped vectors (done in Fruitfly.fit_space())
-    hashed_space, space_dic, space_ind, t_flight = breeder.fruitfly.fly(fly_these, words_to_i, timed=True) #TODO add verbose option?
+    hashed_space, space_dic, space_ind, t_flight = breeder.fruitfly.fly(fly_these, words_to_i, timed=True)
     eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, t_flight, unhashed_space)
 
     if w2v_exe_file is not None:
-        w2v_min_count, w2v_space_file, w2v_vocab_file = prepare_w2v(count_these) #TODO add verbose option?
+        w2v_min_count, w2v_space_file, w2v_vocab_file = prepare_w2v(count_these)
         t_train = execute_w2v(w2v_min_count, w2v_space_file, w2v_vocab_file)
-        eval_and_log_w2v(t_train, w2v_space_file) #TODO add verbose option?
+        eval_and_log_w2v(t_train, w2v_space_file)
 
 #========== FFA application functions
 
@@ -272,7 +269,7 @@ def execute_w2v(w2v_min_count, w2v_space_file, w2v_vocab_file):
               "-min-count " + str(w2v_min_count) +
               "-save-vocab " + w2v_vocab_file)
     t_train = time.time() - t_w2v
-    # except Exception as e:
+    # except Exception as e: #CLEANUP?
     #    with open(errorlog, "a") as f:
     #        f.write(str(e)[:500]+"\n")
     #    print("An error occured while running Word2Vec. Check", errorlog, "for further information.")
@@ -281,6 +278,7 @@ def execute_w2v(w2v_min_count, w2v_space_file, w2v_vocab_file):
 def eval_and_log_w2v(t_train, w2v_space_file):
     global performance_summary
     # evaluate the w2v model
+    if verbose: print("evaluating and logging the Word2Vec model ...")
     w2v_space = utils.readDM(w2v_space_file)
     spcorr, pairs = MEN.compute_men_spearman(w2v_space, testset_file)
     with open(w2v_results_file, "a+") as f:
@@ -350,7 +348,7 @@ if __name__ == '__main__':
                 wc += test_interval # last statement of the while loop
                 if verbose: print("End of run "+str(run)+".\n\n")
 
-        elif test_filewise is True or test_interval == None:
+        else:
             # Count and test once per file
             t0_thisrun = time.time()  # ends before logging
             run += 1

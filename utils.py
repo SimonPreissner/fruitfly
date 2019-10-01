@@ -110,6 +110,17 @@ def simplify_postags(tagged_words):
             simplified.append("_".join([w, "X"]))
     return simplified
 
+def loop_input(rtype=str, default=None, msg=""):
+    while True:
+        try:
+            s = input(msg)
+            return rtype(s) if len(s) > 0 else default
+        except ValueError:
+            print("Input needs to be convertable to",rtype,"-- try again.")
+            continue
+        else:
+            break
+
 """
 """
 

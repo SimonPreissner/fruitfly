@@ -249,8 +249,8 @@ class Fruitfly:
             padded_space = {w:np.append(vec, np.zeros(pad_size)) for w,vec in unhashed_space.items()}
             padded_dic = {w:i+pad_size for w,i in words_to_i.items()}
             padded_ind = {v:k for k,v in padded_dic.items()}
-            print("Returning padded_space, padded_dic, padded_ind. Sizes:",len(padded_space[padded_space.keys()[0]]), len(padded_dic), len(padded_ind))  # CLEANUP
-            print("First vector in padded_space:",padded_space[padded_space.keys()[0]])  # CLEANUP
+            #print("Returning padded_space, padded_dic, padded_ind. Sizes:",len(padded_space[padded_space.keys()[0]]), len(padded_dic), len(padded_ind))  # CLEANUP
+            #print("First vector in padded_space:",padded_space[padded_space.keys()[0]])  # CLEANUP
             return padded_space, padded_dic, padded_ind
         # pn_size grows with len(words_to_i) and is strictly limited by max_pn_size
         elif self.max_pn_size is None or len(words_to_i)<=self.max_pn_size: # max_pn_size not defined or not yet reached
@@ -259,12 +259,12 @@ class Fruitfly:
         else:
             """ extract the most frequent words"""
             vecsums = np.zeros(len(unhashed_space[list(unhashed_space.keys())[0]])) # initialize with length of a vector
-            print("size of vecsums:",vecsums.shape) #CLEANUP
+            #print("size of vecsums:",vecsums.shape) #CLEANUP
             for w,vec in unhashed_space.items():
                 vecsums += vec
             freq = {w:vecsums[i] for w,i in words_to_i.items()}
-            print("length of freq:",len(freq)) #CLEANUP
-            print("freq:",sorted(freq, key = freq.get, reverse=True)[:50]) #CLEANUP
+            #print("length of freq:",len(freq)) #CLEANUP
+            #print("freq:",sorted(freq, key = freq.get, reverse=True)[:50]) #CLEANUP
 
             #for w,i in words_to_i.items(): # sum the dimensions of the vectors #CLEANUP
             #    for e,vec in
@@ -275,7 +275,7 @@ class Fruitfly:
             #freq = {w:sum(vec) for w,vec in unhashed_space.items()} #CLEANUP?
 
             new_keys = sorted(freq, key=freq.get, reverse=True)[:self.max_pn_size]
-            print("fit_space() -- length of new_keys: {0}".format(len(new_keys)))#CLEANUP
+            #print("fit_space() -- length of new_keys: {0}".format(len(new_keys)))#CLEANUP
             """ delete dimensions of words that are not frequent enough"""
             fitted_space = {} # {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows #CLEANUP #
             #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP

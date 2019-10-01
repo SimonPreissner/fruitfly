@@ -317,63 +317,100 @@ class Incrementor:
             self.fruitfly.extend() # extend if needed (incl. "catching up" with vocabulary size)
 
     def count_start_of_text(self, words, window): # for the first couple of words
-        #global cooc, words_to_i #CLEANUP
+        """
+        Counts co-occurrences of the first words of a text in the same fashion
+        as count_middle_of_text and count_end_of_text.
+        Only counts words that are also in self.freq.
+        If a new word is encountered, the extension mechanism is called.
+        :param words: list[str]
+        :param window: int -- window to one side
+        """
+        # iterate over the first words
         for i in range(window):
             if words[i] in self.freq:
-                for c in range(i+window+1): # iterate over the context
+                # iterate over the context
+                for c in range(i+window+1):
                     if words[c] in self.freq:
                         self.extend_incremental_parts_if_necessary(words[i])
                         self.extend_incremental_parts_if_necessary(words[c])
                         self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
-                self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+                # delete "self-occurrence"
+                self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1
 
-    def count_middle_of_text(self, words, window): # for most of the words
-        #global cooc, words_to_i #CLEANUP
-        if self.is_linewise: # this loop is without tqdm, the other loop with.
+    def count_middle_of_text(self, words, window):
+        """
+        Counts co-occurrences of most of the words of a text.
+        The counting was split up for better performance and in order to avoid index errors.
+        Only counts words that are also in self.freq.
+        If a new word is encountered, the extension mechanism is called.
+        :param words: list[str]
+        :param window: int -- window to one side
+        """
+        # this part is without tqdm; the other one is with.
+        if self.is_linewise:
+            # iterate over words (of a line)
             for i in range(window, len(words)-window):
                 if words[i] in self.freq:
-                    for c in range(i-window, i+window+1): # iterate over the context
+                    # iterate over the context
+                    for c in range(i-window, i+window+1):
                         if words[c] in self.freq:
                             self.extend_incremental_parts_if_necessary(words[i])
                             self.extend_incremental_parts_if_necessary(words[c])
                             self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
-                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+                    # delete "self-occurrence"
+                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1
+        # count assuming that the whole text is passed -> tqdm is feasible
         else:
+            # iterate over words
             for i in tqdm(range(window, len(words)-window)):
                 if words[i] in self.freq:
-                    for c in range(i-window, i+window+1): # iterate over the context
+                    # iterate over the context
+                    for c in range(i-window, i+window+1):
                         if words[c] in self.freq:
                             self.extend_incremental_parts_if_necessary(words[i])
                             self.extend_incremental_parts_if_necessary(words[c])
                             self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
-                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+                    # delete "self-occurrence"
+                    self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1
 
-    def count_end_of_text(self, words, window): # for the last couple of words
-        #global cooc, words_to_i #CLEANUP
+    def count_end_of_text(self, words, window):
+        """
+        Counts co-occurrences of the last words of a text in the same fashion
+        as count_start_of_text and count_middle_of_text.
+        Only counts words that are also in self.freq.
+        If a new word is encountered, the extension mechanism is called.
+        :param words: list[str]
+        :param window: int -- window to one side
+        """
+        # iterate over the last words
         for i in range(len(words)-window, len(words)):
             if words[i] in self.freq:
-                for c in range(i-window, len(words)): # iterate over the context
+                # iterate over the context
+                for c in range(i-window, len(words)):
                     if words[c] in self.freq:
                         self.extend_incremental_parts_if_necessary(words[i])
                         self.extend_incremental_parts_if_necessary(words[c])
                         self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[c]]] += 1
-                self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1 # delete "self-occurrence"
+                # delete "self-occurrence"
+                self.cooc[self.words_to_i[words[i]]][self.words_to_i[words[i]]]-=1
 
     def count_cooccurrences(self, words=None, window=5, timed=False):
         """
-        :param words: list of tokens to be counted
-        :param window: int. specifies window size to one side.
-        :param timed: bool. If True, this method returns the time taken to executethe method
-        :return: float. Seconds taken to execute the method
+        Wraps up the three methods which count co-occurrences and comments on
+        the progress if Incrementor.verbose==True.
+        :param words: list[str] -- tokens to be counted
+        :param window: int -- specifies window size to one side.
+        :param timed: bool -- If True, this method returns the time taken to execute the method
+        :return: float -- Seconds taken to execute the method
         """
         t0 = time.time()
-        if words is None: words = self.words # to allow partial counting
+        # allow counting of not every word (e.g. of only content words)
+        if words is None: words = self.words
         if self.verbose: print("\ncounting co-occurrences within",window,"words distance...")
-        #if self.postag_simple: #CLEANUP
-        #    words = simplify_postags(words)
         if self.is_linewise:
             for line in tqdm(words):
-                if len(line) >= 2*window: # to avoid index errors
+                # to avoid index errors
+                if len(line) >= 2*window:
                     self.count_start_of_text(line, window)
                     self.count_middle_of_text(line, window)
                     self.count_end_of_text(line, window)
@@ -383,11 +420,7 @@ class Incrementor:
             self.count_start_of_text(words, window)
             self.count_middle_of_text(words, window)
             self.count_end_of_text(words, window)
-
         if self.verbose: print("finished counting; matrix shape:",self.cooc.shape)
-        #print("vocabulary size:",len(self.words_to_i)) #CLEANUP
-        #print("first words in the vocabulary:\n\t", #CLEANUP
-        #      [str(self.words_to_i[key])+":"+key for key in sorted(self.words_to_i, key=self.words_to_i.get)][:10])
 
         if timed is True:
             return time.time()-t0
