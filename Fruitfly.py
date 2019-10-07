@@ -19,7 +19,7 @@ class Fruitfly:
 
 #========== CONSTRUCTORS AND SETUP
 
-    def __init__(self, flattening, pn_size, kc_size, proj_size, hash_percent, max_pn_size=None, old_proj=None):
+    def __init__(self, pn_size, kc_size, proj_size, hash_percent, flattening, max_pn_size=None, old_proj=None):
         """Create layers and random projections. For initialization, use one of the class methods"""
         self.flattening = flattening
         if self.flattening not in ["log", "log2", "log10"]:
@@ -71,18 +71,18 @@ class Fruitfly:
                 values = line.split()
                 connections[int(values[0])] = [int(v) for v in values[1:]]
 
-            return cls(specs["flattening"], specs["pn_size"], specs["kc_size"],
-                       specs["proj_size"], specs["hash_perc"],
+            return cls(specs["pn_size"], specs["kc_size"],
+                       specs["proj_size"], specs["hash_perc"], specs["flattening"],
                        max_pn_size=specs["max_pn_size"], old_proj=connections)
         except FileNotFoundError:
             print("FileNotFoundError in Fruitfly.from_config()!\n"
-                  "\tcontinuing with a fruitfly from scratch (log,50,30000,6,5)!")
+                  "\tcontinuing with a fruitfly from scratch (50, 40000, 6, 5, log)!")
             return Fruitfly.from_scratch()
 
     @classmethod
-    def from_scratch(cls, flattening="log", pn_size=50, kc_size=30000, proj_size=6, hash_percent=5, max_pn_size=None):
+    def from_scratch(cls, pn_size=50, kc_size=40000, proj_size=6, hash_percent=5, flattening="log", max_pn_size=None):
         """ This is a workaround for issues with the default constructor """
-        return cls(flattening, pn_size, kc_size, proj_size, hash_percent, max_pn_size=max_pn_size)
+        return cls(pn_size, kc_size, proj_size, hash_percent, flattening, max_pn_size=max_pn_size)
 
     def create_projections(self):
         proj_functions = {}
@@ -97,9 +97,10 @@ class Fruitfly:
 
     def forward_connections(self, pn_indices):
         pn_indices = [pn_indices] if type(pn_indices) != list else pn_indices
+        print("\nCreating index of projections...")
 
         pn_to_kc = {pn:[] for pn in pn_indices} # { pn_index : [connected KCs] }
-        for kc,connections in self.proj_functions.items():
+        for kc,connections in tqdm(self.proj_functions.items()):
             for pn in pn_indices: # only for the PNs given to the method!
                 if pn in connections:
                     pn_to_kc[pn].append(kc)
@@ -112,23 +113,23 @@ class Fruitfly:
             
     def show_off(self):
         """ for command line output """
-        statement = "flattening: " +str(self.flattening)+"\t"+\
-                    "pn_size: "    +str(self.pn_size)+"\t"+\
+        statement = "pn_size: "    +str(self.pn_size)+"\t"+\
                     "kc_factor: "  +str(self.kc_factor)+"\t"+\
                     "kc_size: "    +str(self.kc_size)+"\t"+\
                     "proj_size: "  +str(self.proj_size)+"\t"+\
-                    "hash-perc: "  +str(self.hash_percent)+"\t"+\
+                    "hash-perc: "  +str(self.hash_percent)+"\t"+ \
+                    "flattening: " + str(self.flattening) + "\t" + \
                     "max_pn_size: "+str(self.max_pn_size)
         return statement
 
     def get_specs(self):
         """ for in-code usage """
-        return {"flattening":self.flattening,
-                "pn_size":self.pn_size, 
+        return {"pn_size":self.pn_size,
                 "kc_factor":self.kc_factor, 
                 "kc_size":self.kc_size,
                 "proj_size":self.proj_size, 
                 "hash_percent":self.hash_percent,
+                "flattening": self.flattening,
                 "max_pn_size":self.max_pn_size}
 
     def log_params(self, filename="log/configs/ff_config.cfg", timestamp=True):
@@ -140,13 +141,13 @@ class Fruitfly:
         for kc,pns in tqdm(self.proj_functions.items()):
             connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
         with open(filename, "w") as logfile:
-            logfile.write("flattening " +str(self.flattening)+"\n"+
-                          "pn_size "    +str(self.pn_size)+"\n"+
-                          "kc_factor "  +str(self.kc_factor)+"\n"+
-                          "kc_size "    +str(self.kc_size)+"\n"+
-                          "proj_size "  +str(self.proj_size)+"\n"+
-                          "hash_perc "  +str(self.hash_percent)+"\n"+
-                          "max_pn_size "+str(self.max_pn_size)+"\n")
+            logfile.write("pn_size "    + str(self.pn_size)+"\n"+
+                          "kc_factor "  + str(self.kc_factor)+"\n"+
+                          "kc_size "    + str(self.kc_size)+"\n"+
+                          "proj_size "  + str(self.proj_size)+"\n"+
+                          "hash_perc "  + str(self.hash_percent)+"\n"+
+                          "flattening " + str(self.flattening) + "\n" +
+                          "max_pn_size "+ str(self.max_pn_size)+"\n")
             logfile.write(connections)
 
     def important_words_for(self, word_hash, pn_dic, n=None):
@@ -371,3 +372,131 @@ class Fruitfly:
             return space_hashed, flight_dic, flight_ind
 
 
+if __name__ == '__main__':
+    import sys
+    import MEN
+    import utils
+
+    # parameter input
+    while True:
+        spacefiles = utils.loop_input(rtype=str, default=None, msg="Space to be used (without file extension): ")
+        try:
+            data = spacefiles + ".dm"
+            column_labels = spacefiles + ".cols"
+            unhashed_space = utils.readDM(data)  # returns dict of word : word_vector
+            i_to_cols, cols_to_i = utils.readCols(
+                column_labels)  # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
+        except FileNotFoundError as e:
+            print("Unable to find files for input space and/or vocabulary.\n\
+                   - correct file path?\n\
+                   - are the file extensions '.dm' and '.cols'?\n\
+                   - don't specify the file extension.")
+            continue
+        else:
+            break
+    MEN_annot = utils.loop_input(rtype=str, default=None, msg="Testset to be used: ")
+
+    evaluate_mode = True if input("Only evaluate the space (without flying)? [y/n] ").upper() == "Y" else False
+
+    if evaluate_mode is False:
+        # Fruitfly parameters
+        flattening = utils.loop_input(rtype=str, default="log",
+                                      msg="Choose flattening function ([log, log2, log10] -- default: log): ")
+        # pn_size is dictated by the size of the unhashed space
+        pn_size = len(cols_to_i)  # length of word vector (= input dimension)
+        print("Number of PNs:", pn_size)
+        kc_size = utils.loop_input(rtype=int, default=10000, msg="Number of KCs (default: 10000): ")
+        proj_size = utils.loop_input(rtype=int, default=6, msg="Number of projections per KC (default: 6): ")
+        hash_percent = utils.loop_input(rtype=int, default=5, msg="Percentage of winners in the hash (default: 5): ")
+
+        iterations = utils.loop_input(rtype=int, default=1, msg="How many runs (default: 1): ")
+        verbose = True if input("Verbose mode (prints out important words)? [y/n] ").upper() == "Y" else False
+
+    # executive code
+    all_spb = []
+    all_spa = []
+    all_spd = []
+
+    for i in range(iterations):
+        if iterations > 1:
+            print("\n#=== NEW RUN:", i + 1, "===#")
+        # for pure evaluation of unhashed spaces
+        if evaluate_mode:
+            spb, count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
+            print("Performance:", round(spb, 4), "(calculated over", count, "items.)")
+            sys.exit()
+
+        # initiating and applying a Fruitfly object
+        fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent, flattening)
+        space_hashed, space_dic, space_ind = fruitfly.fly(unhashed_space, cols_to_i)  # returns {word:hash_signature}
+
+        if verbose:
+            for w in space_hashed:
+                # prints out the words corresponding to a hashed word's most active PNs
+                words = fruitfly.important_words_for(space_hashed[w], space_ind, n=6)
+                print("{0} IMPORTANT WORDS: {1}".format(w, words))
+
+        # evaluation and statistics
+        spb, count = MEN.compute_men_spearman(unhashed_space, MEN_annot)
+        print("Spearman before flying:", round(spb, 4), "(calculated over", count, "items.)")
+        spa, count = MEN.compute_men_spearman(space_hashed, MEN_annot)
+        print("Spearman after flying: ", round(spa, 4), "(calculated over", count, "items.)")
+        print("difference:", round(spa - spb, 4))
+
+        all_spb.append(spb)
+        all_spa.append(spa)
+        all_spd.append(spa - spb)
+
+    if iterations > 1:
+        best = sorted(all_spd, reverse=True)
+
+        print("\nFinished all", iterations, "runs. Summary:")
+        print("best and worst runs:", [round(e, 4) for e in best[:3]].extend([round(e, 4) for e in best[:-3]]))
+        print("mean Sp. before:    ", round(np.average(all_spb), 4))
+        print("mean Sp. after:     ", round(np.average(all_spa), 4))
+        print("mean Sp. difference:", round(np.average(all_spd), 4))
+        print("var of Sp. before:    ", round(float(np.var(all_spb, ddof=1), 8)))
+        print("var of Sp. after:     ", round(float(np.var(all_spa, ddof=1), 8)))
+        print("var of Sp. difference:", round(float(np.var(all_spd, ddof=1), 8)))
+        print("std of Sp. before:     ", round(float(np.std(all_spb, ddof=1), 8)))
+        print("std of Sp. after:      ", round(float(np.std(all_spa, ddof=1), 8)))
+        print("std of Sp. difference: ", round(float(np.std(all_spd, ddof=1), 8)))
+
+    #CLEANUP
+    """
+    data = 
+        "data/BNC-MEN.dm"
+        "data/wiki_all.dm"
+        "data/wiki_abs-freq.dm"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
+        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_w2v_400.txt"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.dm"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.dm"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.dm"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.dm"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.dm"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.dm"
+        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_1000_dim.dm"
+        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_5000_dim.dm"
+    
+    column_labels = 
+        "data/BNC-MEN.cols"
+        "data/wiki_all.cols"
+        "data/wiki_abs-freq.cols"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
+        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_w2v_400.vocab"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.cols"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.cols"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.cols"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.cols"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.cols"
+        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
+        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_1000_dim.cols"
+        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_5000_dim.cols"
+    
+    MEN_annot = 
+        "data/MEN_dataset_natural_form_full"
+        "data/MEN_dataset_lemma_form_full"
+        "incrementality_sandbox/data/sandbox_MEN_pairs"
+    
+    """

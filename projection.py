@@ -19,12 +19,13 @@ MEN_annot = input("Testset to be used: ")
 try:
     unhashed_space = utils.readDM(data) # returns dict of word : word_vector
     i_to_cols, cols_to_i = utils.readCols(column_labels) # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
-except FileNotFoundError as e:
+except FileNotFoundError as e: #TODO make this try:except like in spacebreeder.
     print("Unable to find files for input space and/or vocabulary.\n\
            - correct file path?\n\
            - are the file extensions '.dm' and '.cols'?\n\
            - don't specify the file extension.")
     sys.exit()
+#TODO make the input like in spacebreeder.py!
 
 evaluate_mode = True if input("Only evaluate the space (without flying)? [y/n] ").lower()=="y" else False
 flattening = input("Choose flattening function: ")
@@ -55,13 +56,13 @@ for i in range(iterations):
 
     #=============== INITIATING AND OPERATING FRUITFLY
 
-    fruitfly = Fruitfly.from_scratch(flattening, pn_size, kc_size, proj_size, hash_percent)
+    fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent, flattening)
 
     space_hashed, space_dic, space_ind = fruitfly.fly(unhashed_space, cols_to_i) # a dict of word : binary_vector (= after "flying")
 
-    #utils.writeDH(space_hashed, "testwrite.dh")
-    #loaded_hashes = utils.readDH("testwrite.dh")
-    #sparse_space = utils.sparsifyDH(loaded_hashes, 1000) # dims = kc_size
+    #utils.writeDH(space_hashed, "testwrite.dh") #CLEANUP
+    #loaded_hashes = utils.readDH("testwrite.dh") #CLEANUP
+    #sparse_space = utils.sparsifyDH(loaded_hashes, 1000) # dims = kc_size #CLEANUP
 
     if verbose: 
         for w in space_hashed:

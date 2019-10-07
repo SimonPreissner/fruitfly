@@ -67,7 +67,7 @@ def sparsifyDH(dense_space, dims):
     """
     sparse_space = {}
     for w,h in dense_space.items():
-        sv = np.zeros(shape=(dims,))
+        sv = np.zeros(shape=(dims,)) # sparse vector
         for i in h:
             sv[i] = 1
         sparse_space[w] = sv

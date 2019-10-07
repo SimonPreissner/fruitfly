@@ -17,7 +17,7 @@ class Incrementor:
 
     def __init__(self, corpus_dir, matrix_file,
                  corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
-                 matrix_incremental=True, matrix_maxdims=None, contentwords_only=False,
+                 matrix_incremental=True, matrix_maxdims=None, min_count=None, contentwords_only=False,
                  fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
                  verbose=False):
 
@@ -32,6 +32,7 @@ class Incrementor:
         self.outcols  = matrix_file+".cols"
         self.is_incremental = matrix_incremental
         self.max_dims = matrix_maxdims
+        self.min_count = min_count
         self.postag_simple = contentwords_only
 
         self.is_new_fly  = fly_new
@@ -165,7 +166,7 @@ class Incrementor:
         if self.is_grow_fly:
             if self.is_new_fly:
                 if verbose: print("\ncreating new fruitfly...")
-                fruitfly = Fruitfly.from_scratch(max_pn_size=self.fly_max_pn) # default config: (50,30000,6,5)
+                fruitfly = Fruitfly.from_scratch(max_pn_size=self.fly_max_pn) # default config: (50,40000,6,5)
             else:
                 if verbose: print("\nloading fruitfly...")
                 fruitfly = Fruitfly.from_config(flyfile)
@@ -281,6 +282,7 @@ class Incrementor:
         #    return checklist
 
     def check_overlap(self, checklist_filepath=None, wordlist=None, verbose=False):
+        if verbose: print("\nchecking overlap...")
         if checklist_filepath is None: checklist_filepath = self.required_voc
         if wordlist is None: wordlist = self.freq.keys()
         checklist = self.read_checklist(checklist_filepath, with_pos_tags=self.postag_simple)
@@ -427,9 +429,9 @@ class Incrementor:
         else:
             pass
 
-    def reduce_count_size(self, min_count, verbose=False, timed=False):
+    def reduce_count_size(self, verbose=False, timed=False):
         t0 = time.time()
-        if min_count is None:
+        if self.min_count is None:
             if timed:
                 return 0, time.time()-t0
             else:
@@ -444,8 +446,8 @@ class Incrementor:
             #print("std of kc connectedness BEFORE:", round(np.std(connectednesses, ddof=1), 6)) #CLEANUP
 
             counted_freq_words = set(self.words_to_i).intersection(set(self.freq)) # because freq and words_to_i might differ!
-            if verbose: print("Deleting infrequent words (less than",min_count,"occurrences) from the count matrix...")
-            delete_these_w = [w for w in counted_freq_words if self.freq[w]<=min_count ]
+            if verbose: print("Deleting infrequent words (less than",self.min_count,"occurrences) from the count matrix...")
+            delete_these_w = [w for w in counted_freq_words if self.freq[w]<=self.min_count ]
             delete_these_i = [self.words_to_i[w] for w in delete_these_w]
             # delete rows and columns from the count matrix
             self.cooc = np.delete(self.cooc, delete_these_i, axis=0)
@@ -513,6 +515,7 @@ class Incrementor:
             "outcols":self.outcols,
             "is_incremental":self.is_incremental,
             "max_dims":self.max_dims,
+            "min_count":self.min_count,
             "is_new_fly":self.is_new_fly,
             "is_grow_fly":self.is_grow_fly,
             "flyfile":self.flyfile,
@@ -528,49 +531,43 @@ class Incrementor:
 
 
 if __name__ == '__main__':
+    # File input
+    infile = utils.loop_input(rtype=str, default="data/chunks_wiki",
+                              msg="Path to text resources (default: data/chunks_wiki): ")
+    outfiles = utils.loop_input(rtype=str, default="data/count",
+                                msg="Path/name of the output count data (without extension; default: data/count): ")
+    xvoc = utils.loop_input(rtype=str, default=None, msg="Path to a word list to be checked for overlap (optional): ")
 
-    is_verbose  = False if input("Be verbose while running? [y/n] ").upper() == "N" else True
-    ###
-    infile = input("Path to resource(s) to be processed: ")
-    outfiles = input("Path/name of the output count data (without extension): ")
-    incr = True if input("Work incrementally (= use count data as basis)? [y/n] ").upper() == "Y" else False
-    tknz = True if input("Tokenize text before counting? [y/n] ").upper() == "Y" else False
-    s = input("Window size (to each side) for counting (default: 5):")
-    try:
-        window = int(s) if len(s) > 0 else 5 # not part of the Incrementor object
-    except TypeError:
-        print("Could not convert input to int. Continuing with window size 5.")
-    lnws = False if input("Count co-occurrences across line breaks? [y/n] ").upper() == "Y" else True
-    s = input("Path to a word list to be checked for overlap (optional): ")
-    xvoc = s if len(s) > 0 else None # e.g. "./data/MEN_natural_vocabulary"
-    s = input("Maximum dimensions of the count (optional): ")
-    try:
-        dims = int(s) if len(s) > 0 else None
-    except TypeError:
-        print("Could not convert input to int. Continuing without limitation of dimensions.")
-        dims=None
-    ###
-    grow = True if input("Maintain an FFA object alongside counting? [y/n] ").upper() == "Y" else False
+    # Parameters for counting process
+    tknz = False if input("Tokenize the input text? (default: yes) [y/n]").upper() == "N" else True
+    incr = True if input("Work incrementally (= use count data as basis) (default: no)? [y/n]: ").upper() == "Y" else False
+    window = utils.loop_input(rtype=int, default=5, msg="Window size (to each side) for counting (default: 5): ")
+    dims = utils.loop_input(rtype=int, default=None,
+                            msg="Maximum vocabulary size for the count (skip this for true incrementality): ")
+    minc = utils.loop_input(rtype=int, default=None,
+                        msg="Periodic deletion of words with n occurrences or fewer from the count (optional) -- n: ")
+
+    # FFA parameter input
+    grow = utils.loop_input(rtype=bool, default=False,
+                            msg="Maintain an FFA object alongside counting (default: no)? [y/n]: ")
     if grow:
-        nfly = True if input("Make a new FFA? [y/n] ").upper() == "Y" else False
+        nfly = True if input("Make a new standard FFA (default: no)? [y/n]: ").upper() == "Y" else False
         if nfly:
-            fcfg = input("File path of the new FFA's config: ")
+            fcfg = utils.loop_input(rtype=str, default="data/fly_config", msg="File path of the new FFA's config: ")
         else:
-            fcfg = input("File path of the existing FFA's config: ")
+            fcfg = utils.loop_input(rtype=str, default="data/fly_config", msg="File path of the existing FFA config: ")
     else:
         nfly = None
         fcfg = None
+    is_verbose = False if input("Be verbose while running? (default: yes) [y/n]").upper() == "N" else True
 
-
+    # working code
     incrementor = Incrementor(infile, outfiles,
-                              corpus_tokenize=tknz, corpus_linewise=lnws, corpus_checkvoc=xvoc,
-                              matrix_incremental=incr, matrix_maxdims=dims,
+                              corpus_tokenize=tknz, corpus_linewise=False, corpus_checkvoc=xvoc,
+                              matrix_incremental=incr, matrix_maxdims=dims, min_count=minc,
                               fly_new=nfly, fly_grow=grow, fly_file=fcfg, fly_max_pn=None,
                               verbose=is_verbose)
-
-    if is_verbose: print("\nchecking overlap...")
     all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc, verbose=incrementor.verbose)
-
     incrementor.count_cooccurrences(words=incrementor.words, window=window, verbose=incrementor.verbose)
     incrementor.log_matrix(verbose=incrementor.verbose)
     incrementor.log_fly(verbose=incrementor.verbose)

@@ -8,6 +8,7 @@ evaluates the results, and logs them.
 """
 
 import os
+import sys
 import time
 
 import math
@@ -19,13 +20,16 @@ import utils
 from Fruitfly import Fruitfly
 from Incrementor import Incrementor
 
-# parameters (via console input)
+"""parameters (via console input)"""
+# paths
 global corpus_dir, testset_file, overlap_file,  \
        pipedir, \
        count_file, fly_dir, space_dir, results_dir, vip_words_dir, \
        w2v_corpus_file, w2v_exe_file, w2v_space_dir, w2v_results_file, \
        summary_file
+# Fruitfly parameters
 global pns, kcs, con, red, flat, max_pns
+# Incrementor parameters
 global window, max_dims, tokenize, postag_simple, min_count, \
        test_interval, vip_words_n, verbose
 
@@ -107,34 +111,40 @@ def setup_loop_environment():
     Returns the list of file paths and the Incrementor object.
     """
     # Make a list of file paths to be passed one by one to an Incrementor object
-    corpus_files = []
-    if os.path.isfile(corpus_dir):
-        corpus_files = [corpus_dir]
-    else:
-        for (dirpath, dirnames, filenames) in os.walk(corpus_dir):
-            corpus_files.extend([dirpath + "/" + f for f in filenames])
-    # Create the initial FFA beforehand because Incrementor can't do custom FFA initialization
-    initial_fly_file = fly_dir + "fly_run_0.cfg"
-    first_fly = Fruitfly.from_scratch(flattening=flat, pn_size=pns, kc_size=kcs,
-                                      proj_size=con, hash_percent=red, max_pn_size=max_pns)
-    first_fly.log_params(filename=initial_fly_file, timestamp=False)
-    """
-    The constructor of Incrementor 
-    1) reads in text files from a directory (if specified)
-    2) computes a frequency distribution over the current text 
-    3) sets up or loads a Fruitfly object from an already-logged Fruitfly
-    4) sets up or loads a co-occurence matrix, with a limit if specified
-    - matrix_incremental=False because it would need to load an existing matrix; 
-      however, in this setup, as only one Incrementor object is used, 
-      it can increment all the way from an initial matrix.
-    - corpus_linewise=False because it cannot be handled by the loop as of now. 
-    - Initialization without corpus. File paths are passed to the Incrementor via the loop.
-    """
-    breeder = Incrementor(None, count_file,
-                          corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=overlap_file,
-                          matrix_incremental=False, matrix_maxdims=max_dims, contentwords_only=postag_simple,
-                          fly_new=False, fly_grow=True, fly_file=initial_fly_file,
-                          verbose=verbose)
+    try:
+        corpus_files = []
+        if os.path.isfile(corpus_dir):
+            corpus_files = [corpus_dir]
+        else:
+            for (dirpath, dirnames, filenames) in os.walk(corpus_dir):
+                corpus_files.extend([dirpath + "/" + f for f in filenames])
+        # Create the initial FFA beforehand because Incrementor can't do custom FFA initialization
+        initial_fly_file = fly_dir + "fly_run_0.cfg"
+        first_fly = Fruitfly.from_scratch(pn_size=pns, kc_size=kcs, proj_size=con,
+                                          hash_percent=red, max_pn_size=max_pns, flattening=flat, )
+        first_fly.log_params(filename=initial_fly_file, timestamp=False)
+        """
+        The constructor of Incrementor 
+        1) reads in text files from a directory (if specified)
+        2) computes a frequency distribution over the current text 
+        3) sets up or loads a Fruitfly object from an already-logged Fruitfly
+        4) sets up or loads a co-occurence matrix, with a limit if specified
+        - matrix_incremental=False because it would need to load an existing matrix; 
+          however, in this setup, as only one Incrementor object is used, 
+          it can increment all the way from an initial matrix.
+        - corpus_linewise=False because it cannot be handled by the loop as of now. 
+        - Initialization without corpus. File paths are passed to the Incrementor via the loop.
+        """
+        breeder = Incrementor(None, count_file,
+                              corpus_tokenize=tokenize, corpus_linewise=False, corpus_checkvoc=overlap_file,
+                              matrix_incremental=False, matrix_maxdims=max_dims, min_count=min_count,
+                              contentwords_only=postag_simple, fly_new=False, fly_grow=True, fly_file=initial_fly_file,
+                              verbose=verbose)
+    except Exception as e:
+        with open(errorlog, "a") as f:
+            f.write(str(e)[:500]+"\n")
+        print("An error occured while setting up the loop environment. Check", errorlog, "for further information.")
+        sys.exit()
 
     return corpus_files, breeder
 
@@ -157,7 +167,7 @@ def count_test_log(count_these):
     # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
     t_count = breeder.count_cooccurrences(words=count_these, window=window, timed=True)
     # delete words from the count matrix which are very infrequent
-    nr_of_del_dims, t_cooc_del = breeder.reduce_count_size(min_count, verbose=verbose, timed=True) # TODO make min_count an attribute of Incrementor?
+    nr_of_del_dims, t_cooc_del = breeder.reduce_count_size(verbose=verbose, timed=True)
     breeder.log_matrix()
 
     fly_these, unhashed_space, words_to_i = prepare_flight()
@@ -175,17 +185,13 @@ def count_test_log(count_these):
 def prepare_flight():
     """ read in the count vectors etc. and choose which ones to fly """
     unhashed_space = utils.readDM(breeder.outspace)
-    # print("length of unhashed_space:", len(unhashed_space))  # CLEANUP
     i_to_words, words_to_i = utils.readCols(breeder.outcols)
-    # print("length of words_to_i obtained from unhashed_space: {0}".format(len(words_to_i)))  # CLEANUP
     # only select words that will be needed for evaluation:
     if overlap_file is None:
         fly_these = unhashed_space  # in this case, fly() is applied to the whole of unhashed_space
     else:
-        words_for_flight = breeder.read_checklist(overlap_file)#, with_pos_tags=breeder.postag_simple) #CLEANUP
+        words_for_flight = breeder.read_checklist(overlap_file)
         fly_these = {w: unhashed_space[w] for w in words_for_flight if w in unhashed_space}
-    # print("length of words_to_i:", len(breeder.words_to_i))  # CLEANUP
-    # print("length of fly_these:", len(fly_these))  # CLEANUP
     return fly_these, unhashed_space, words_to_i
 
 def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, t_flight, unhashed_space):
@@ -201,16 +207,16 @@ def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, 
 
     t_thisrun = time.time() - t0_thisrun
 
-    """ Log the hashed space, the fruitfly, and the evaluation """
+    # Log the hashed space
     utils.writeDH(hashed_space, space_file)  # space_file is updated above
-    # log most important words for each word
+    # Log words of the most important PNs for each word
     if verbose: print("Logging most important words to", vip_words_file, "...")
     with open(vip_words_file, "w") as f:
         for w in tqdm(hashed_space):
             vip_words = breeder.fruitfly.important_words_for(hashed_space[w], space_ind, n=vip_words_n)
             vip_words_string = ", ".join(vip_words)
             f.write("{0} --> {1}\n".format(w, vip_words_string))
-    # log the whole fruitfly
+    # Log the whole fruitfly (parameters and connections
     breeder.log_fly()  # breeder.flyfile is updated at the very beginning of the run
     # log the results
     with open(results_file, "w") as f:
@@ -242,7 +248,7 @@ def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, 
 #========== Word2Vec application functions
 
 def prepare_w2v(count_these):
-    if verbose: print("\nRunning Word2Vec ...\n")
+    if verbose: print("\nPreparing to run Word2Vec ...\n")
     # add the current text slice to a file that can be used by w2v
     with open(w2v_corpus_file, "a") as f:
         f.write(" ".join(count_these) + " ")
@@ -256,38 +262,45 @@ def prepare_w2v(count_these):
 def execute_w2v(w2v_min_count, w2v_space_file, w2v_vocab_file):
     if verbose: print("training Word2Vec with minimum count", w2v_min_count, "...")
     # run the w2v code
-    # try: #CLEANUP?
-    t_w2v = time.time()
-    os.system(w2v_exe_file + " " +
-              "-train " + w2v_corpus_file +
-              "-output " + w2v_space_file +
-              "-size 300 " +
-              "-window " + str(window) +
-              "-sample 1e-3 " +
-              "-negative 10 " +
-              "-iter 1 " +
-              "-min-count " + str(w2v_min_count) +
-              "-save-vocab " + w2v_vocab_file)
-    t_train = time.time() - t_w2v
-    # except Exception as e: #CLEANUP?
-    #    with open(errorlog, "a") as f:
-    #        f.write(str(e)[:500]+"\n")
-    #    print("An error occured while running Word2Vec. Check", errorlog, "for further information.")
+    try:
+        t_w2v = time.time()
+        os.system(w2v_exe_file + " " +
+                  "-train " + w2v_corpus_file +
+                  "-output " + w2v_space_file +
+                  "-size 300 " +
+                  "-window " + str(window) +
+                  "-sample 1e-3 " +
+                  "-negative 10 " +
+                  "-iter 1 " +
+                  "-min-count " + str(w2v_min_count) +
+                  "-save-vocab " + w2v_vocab_file)
+        t_train = time.time() - t_w2v
+    except Exception as e:
+        with open(errorlog, "a") as f:
+            f.write(str(e)[:500]+"\n")
+        print("An error occured while running Word2Vec. Check", errorlog, "for further information.")
+        print("Continuing without running Word2Vec ...")
     return t_train
 
 def eval_and_log_w2v(t_train, w2v_space_file):
     global performance_summary
-    # evaluate the w2v model
     if verbose: print("evaluating and logging the Word2Vec model ...")
-    w2v_space = utils.readDM(w2v_space_file)
-    spcorr, pairs = MEN.compute_men_spearman(w2v_space, testset_file)
-    with open(w2v_results_file, "a+") as f:
-        f.write("RUN " + str(run) + ":" + \
-                "\tSP_CORR: " + str(spcorr) + \
-                "\tTEST_PAIRS: " + str(pairs) + \
-                "\tTRAIN_TIME: " + str(t_train) + "\n")
-    # keep internal log
-    performance_summary[run].extend([spcorr, pairs, t_train])
+    # evaluate the w2v model
+    try:
+        w2v_space = utils.readDM(w2v_space_file)
+        spcorr, pairs = MEN.compute_men_spearman(w2v_space, testset_file)
+        with open(w2v_results_file, "a+") as f:
+            f.write("RUN " + str(run) + ":" + \
+                    "\tSP_CORR: " + str(spcorr) + \
+                    "\tTEST_PAIRS: " + str(pairs) + \
+                    "\tTRAIN_TIME: " + str(t_train) + "\n")
+        # keep internal log
+        performance_summary[run].extend([spcorr, pairs, t_train])
+    except Exception as e:
+        with open(errorlog, "a") as f:
+            f.write(str(e)[:500]+"\n")
+        print("An error occured while evaluating Word2Vec. Check", errorlog, "for further information.")
+
 
 #==========
 
@@ -306,7 +319,7 @@ def log_final_summary(): # TODO make this prettier!
 #========== END OF FUNCTIONS
 
 if __name__ == '__main__':
-    errorlog = "spacebreeder_errorlog.txt" #CLEANUP?
+    errorlog = "spacebreeder_errorlog.txt"
 
     # parameter input via terminal
     param_input_files()
@@ -366,12 +379,4 @@ if __name__ == '__main__':
 
 
 
-
-
-#==========================
-# try: #TODO make more try:except blocks, or get rid of them alltogether?
-# except Exception as e:
-#    with open(errorlog, "a") as f:
-#        f.write(str(e)[:500]+"\n")
-#    print("An error occured. Check", errorlog, "for further information.")
 
