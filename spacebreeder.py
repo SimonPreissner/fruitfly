@@ -1,12 +1,3 @@
-"""
-This is the full pipeline of the incremental Fruitfly.
-It reads text resources as needed,
-counts co-occurrences and grows a Fruitfly alongside,
-then applies the FFA to the counts,
-optionally runs Word2Vec on the same corpus,
-evaluates the results, and logs them.
-"""
-
 import os
 import sys
 import time
@@ -32,7 +23,6 @@ global pns, kcs, con, red, flat, max_pns
 # Incrementor parameters
 global window, max_dims, tokenize, postag_simple, min_count, \
        test_interval, vip_words_n, verbose
-
 # variables/objects
 global run, breeder, t_thisrun, performance_summary
 
@@ -45,15 +35,12 @@ def param_input_files():
            w2v_corpus_file, w2v_exe_file, w2v_space_dir, w2v_results_file, \
            summary_file
     print("=== Resources and Output Directories ===")
-    # "/mnt/8tera/shareclic/fruitfly/ukwac_100m_tok-tagged.txt" # "../ukwac_100m/ukwac_100m.txt" # "test/pride_postagged.txt" #CLEANUP
     corpus_dir = utils.loop_input(rtype=str, default="data/chunks_wiki",
                                   msg="Path to text resources (default: data/chunks_wiki): ")
     w2v_exe_file = utils.loop_input(rtype=str, default=None,
-                                    msg="Path to Word2Vec code (optional): ") # "./../share/word2vec" #CLEANUP
-    # "data/MEN_dataset_lemma_form_full" # "./data/MEN_dataset_natural_form_full" # CLEANUP
+                                    msg="Path to Word2Vec code (optional): ")
     testset_file = utils.loop_input(rtype=str, default="data/MEN_dataset_natural_form_full",
                                     msg="Path to test set (default: data/MEN_dataset_natural_form_full): ")
-    # "./data/MEN_lemma_vocabulary" # "./data/MEN_natural_vocabulary" # CLEANUP
     overlap_file = utils.loop_input(rtype=str, default=None,
                                     msg="Path to a word list to be checked for overlap (optional): ")
     pipedir = utils.loop_input(rtype=str, default="results/pipe00",
@@ -164,9 +151,17 @@ def new_paths(run):
     return a,b,c,d
 
 def count_test_log(count_these):
-    # only counts cooccurrences of words within the freq_dist (which can be limited by matrix_maxdims)
+    """
+    The core part of the loop setting.
+    Lets an Incrementor object count co-occurrences (and maintain a Fruitfly object).
+    Saves the new count to a file and applies the FFA to it.
+    Evaluates the resulting hashes and logs them along with the FFA.
+    If specified, trains a Word2Vec model on the accumulated text data.
+    :param count_these: [str] -- tokens to be taken into the co-occurrence count
+    """
+    # only counts co-occurrences of words within breeder.freq (which can be limited by matrix_maxdims)
     t_count = breeder.count_cooccurrences(words=count_these, window=window, timed=True)
-    # delete words from the count matrix which are very infrequent
+    # delete very infrequent words from the count matrix
     nr_of_del_dims, t_cooc_del = breeder.reduce_count_size(verbose=verbose, timed=True)
     breeder.log_matrix()
 
@@ -183,23 +178,46 @@ def count_test_log(count_these):
 #========== FFA application functions
 
 def prepare_flight():
-    """ read in the count vectors etc. and choose which ones to fly """
+    """
+    read in the count vectors etc. and choose which ones to fly
+    based on a list of required words.
+    :return fly_these: {str:[float]} -- possibly a subset of unhashed_space
+    :return unhashed_space: {str:[float]} -- words and their corresponding co-occurrence counts
+    :return_words_to_i: {str:int} -- mapping of context words to their position in the count
+    """
     unhashed_space = utils.readDM(breeder.outspace)
     i_to_words, words_to_i = utils.readCols(breeder.outcols)
     # only select words that will be needed for evaluation:
     if overlap_file is None:
-        fly_these = unhashed_space  # in this case, fly() is applied to the whole of unhashed_space
+        # in this case, fly() is applied to the whole of unhashed_space
+        fly_these = unhashed_space
     else:
         words_for_flight = breeder.read_checklist(overlap_file)
         fly_these = {w: unhashed_space[w] for w in words_for_flight if w in unhashed_space}
     return fly_these, unhashed_space, words_to_i
 
 def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, t_flight, unhashed_space):
+    """
+    Evaluates hashes that were produced by a Fruitfly object. The evaluation metric is
+    the Spearman correlation. Evaluation is designed to use the MEN dataset described in
+    Bruni et al. (2014).
+    Logs the results along with times taken for counting and "flying", and other stats.
+    :param count_these: [str] -- tokens to be taken into the co-occurrence count
+    :param hashed_space: {str:[int]} -- words and their associated hash signatures
+    :param space_ind: {int:str} -- mapping of index:word for the input to the FFA
+    :param t_count: float -- time taken to count co-occurrences
+    :param t_cooc_del: float -- time taken to delete infrequent words from the count
+    :param t_flight: float -- time taken to apply the FFA
+    :param unhashed_space: {str:[float]} -- words and their corresponding co-occurrence counts
+    """
     global performance_summary
 
+    # Evaluate the hashed space
+    if verbose: print("Evaluating against",testset_file,"...")
     spb, tsb = MEN.compute_men_spearman(unhashed_space, testset_file)
     spa, tsa = MEN.compute_men_spearman(hashed_space, testset_file)
     sp_diff = spa - spb
+    if verbose: print("Spearman correlations of the spaces (before/after flying, diff):", spb,"/", spa, sp_diff)
     connectednesses = [len(cons) for cons in breeder.fruitfly.pn_to_kc.values()]
     avg_PN_con = round(sum(connectednesses) / breeder.fruitfly.pn_size, 6)
     var_PN_con = round(float(np.var(connectednesses, ddof=1)), 6)
@@ -216,8 +234,8 @@ def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, 
             vip_words = breeder.fruitfly.important_words_for(hashed_space[w], space_ind, n=vip_words_n)
             vip_words_string = ", ".join(vip_words)
             f.write("{0} --> {1}\n".format(w, vip_words_string))
-    # Log the whole fruitfly (parameters and connections
-    breeder.log_fly()  # breeder.flyfile is updated at the very beginning of the run
+    # logs parameters and connections to a new file (breeder.flyfile is updated at the very beginning of the run)
+    breeder.log_fly()
     # log the results
     with open(results_file, "w") as f:
         result_string = "RESULTS FOR RUN " + str(run) + ":\n" + \
@@ -226,7 +244,8 @@ def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, 
                         "\nsp_corr_before:     " + str(spb) + \
                         "\nitems_tested_after: " + str(tsa) + \
                         "\nitems_tested_before:" + str(tsb) + "\n"
-        fc = breeder.fruitfly.get_specs()  # fly config
+        # fly config
+        fc = breeder.fruitfly.get_specs()
         t = [fc["pn_size"], fc["kc_size"], fc["proj_size"], fc["hash_percent"], fc["flattening"], fc["max_pn_size"]]
         fruitfly_string = "\nFFA_CONFIG: (" + ", ".join([str(i) for i in t]) + ")" + \
                           "\navg_PN_connections: " + str(avg_PN_con) + \
@@ -248,22 +267,38 @@ def eval_and_log_FFA(count_these, hashed_space, space_ind, t_count, t_cooc_del, 
 #========== Word2Vec application functions
 
 def prepare_w2v(count_these):
+    """
+    Prepares the input file, the minimum count, and the output file names for
+    the execution of Word2Vec code.
+    :param count_these: [str] -- list of tokens to be added to a .txt file.
+    :return w2v_min_count: int -- minimum occurrences of a word in the text data to be taken into account by w2v
+    :return w2v_space_file: str -- file path of the w2v model to be trained
+    :return w2v_vocab_file: str -- file path to the vocabulary of the w2v embeddings
+    """
     if verbose: print("\nPreparing to run Word2Vec ...\n")
     # add the current text slice to a file that can be used by w2v
     with open(w2v_corpus_file, "a") as f:
         f.write(" ".join(count_these) + " ")
-    # choose the minimum word count for the w2v run: it's the lowest count in the FFA's PN layer
+    # choose the minimum word count for the w2v run: it's connected to the lowest count in the FFA's PN layer
     occs = sorted([sum(vec) for vec in breeder.cooc])[:breeder.fruitfly.max_pn_size]
-    w2v_min_count = math.floor(occs[0] / (window * 2))  # selects the smallest number
+    # selects the smallest number
+    w2v_min_count = math.floor(occs[0] / (window * 2))
     w2v_space_file = w2v_space_dir + "space.txt"
     w2v_vocab_file = w2v_space_dir + "space.vocab"
     return w2v_min_count, w2v_space_file, w2v_vocab_file
 
 def execute_w2v(w2v_min_count, w2v_space_file, w2v_vocab_file):
+    """
+    Runs Word2Vec code with a terminal command.
+    :param w2v_min_count: int -- minimum occurrences of a word in the text data to be taken into account by w2v
+    :param w2v_space_file: str -- file path of the w2v model to be trained
+    :param w2v_vocab_file: str -- file path to the vocabulary of the w2v embeddings
+    :return: float -- time taken to execute the Word2Vec code
+    """
     if verbose: print("training Word2Vec with minimum count", w2v_min_count, "...")
     # run the w2v code
+    t0 = time.time()
     try:
-        t_w2v = time.time()
         os.system(w2v_exe_file + " " +
                   "-train " + w2v_corpus_file +
                   "-output " + w2v_space_file +
@@ -274,15 +309,20 @@ def execute_w2v(w2v_min_count, w2v_space_file, w2v_vocab_file):
                   "-iter 1 " +
                   "-min-count " + str(w2v_min_count) +
                   "-save-vocab " + w2v_vocab_file)
-        t_train = time.time() - t_w2v
     except Exception as e:
         with open(errorlog, "a") as f:
             f.write(str(e)[:500]+"\n")
         print("An error occured while running Word2Vec. Check", errorlog, "for further information.")
         print("Continuing without running Word2Vec ...")
-    return t_train
+    return time.time() - t0
 
 def eval_and_log_w2v(t_train, w2v_space_file):
+    """
+    Evaluates the trained Word2Vec model. The evaluation metric is the Spearman correlation.
+    Evaluation is designed to use the MEN dataset described in Bruni et al. (2014).
+    :param t_train: float -- time taken to train the Word2Vec model
+    :param w2v_space_file: str -- file path of the w2v model that was trained
+    """
     global performance_summary
     if verbose: print("evaluating and logging the Word2Vec model ...")
     # evaluate the w2v model
@@ -304,21 +344,41 @@ def eval_and_log_w2v(t_train, w2v_space_file):
 
 #==========
 
-def log_final_summary(): # TODO make this prettier!
+def log_final_summary(run_to_stats):
+    """
+    Creates a file that contains the most important statistics of every run.
+    This is useful for an overview of a setup with many iterations (=runs)
+    :param run_to_stats: {int:[float]} -- sore statistics collected throughout the runs
+    """
     if verbose: print("\n\nFinished all runs.")
-    # make a summary file
+    column_labels = ["run",
+                     "new_data_in_words", "PN_size", "testset",
+                     "sp.corr_before", "sp.corr_after", "sp_diff",
+                     "time-taken", "w2v_score", "w2v_testset"]
+    # +1 because the first row is the run (which is not contained in the values of the summary dict)
+    row_length = len(run_to_stats[list(run_to_stats.keys())[0]])+1
+
     with open(summary_file, "w") as f:
-        column_labels = ["run", "new_data_in_words", "PN_size", "testset",
-                         "sp.corr_before", "sp.corr_after", "sp_diff", "time-taken",
-                         "w2v_score", "w2v_testset"]
-        f.write("\t".join(
-            column_labels[:len(performance_summary[list(performance_summary.keys())[-1]])+1]) + "\n\n")  # last element is length indicator
-        for k, stat_tuple in performance_summary.items():
+        # summary header
+        f.write("\t".join(column_labels[:row_length]) + "\n\n")
+        # summary body
+        for k, stat_tuple in run_to_stats.items():
             f.write(str(k) + "\t" + "\t".join([str(v) for v in stat_tuple]) + "\n")
+
+
 
 #========== END OF FUNCTIONS
 
 if __name__ == '__main__':
+    """
+    This is the full pipeline of the incremental Fruitfly.
+    It reads text resources as needed,
+    counts co-occurrences and grows a Fruitfly alongside,
+    then applies the FFA to the counts,
+    optionally runs Word2Vec on the same corpus,
+    evaluates the results, and logs them.
+    """
+
     errorlog = "spacebreeder_errorlog.txt"
 
     # parameter input via terminal
@@ -330,52 +390,62 @@ if __name__ == '__main__':
 
     # set up resource paths, initial Fruitfly, and Incrementor
     corpus_files, breeder = setup_loop_environment()
-    performance_summary = {} # for a final summary
-    t0_thisrun, wc, run = 0, 0, 0 # wc = word count; used for slicing
+    # for a final summary
+    performance_summary = {}
+    # wc = word count; used for slicing breeder.words
+    t0_thisrun, wc, run = 0, 0, 0
 
     for (file_n, file) in enumerate(corpus_files):
-        breeder.extend_corpus(file) # read in a new file (but no counting yet)
+        # read in a new file (but no counting yet)
+        breeder.extend_corpus(file)
 
+        # Count and test in word intervals
         if test_interval is not None:
-            # Count and test in word intervals
+            # Last run with the remaining words of breeder.words
             if file_n+1 == len(corpus_files) and len(breeder.words) < wc+test_interval:
-                # Last run with the remaining words of breeder.words
-                t0_thisrun = time.time()  # ends before logging
+                # ends before logging
+                t0_thisrun = time.time()
                 run += 1
                 if verbose: print("\n\nStarting the last run ...")
                 breeder.flyfile, space_file, results_file, vip_words_file = new_paths(run)
-                count_these = breeder.words[wc:len(breeder.words)] # take the whole rest of breeder.words()
+                # take the whole rest of breeder.words()
+                count_these = breeder.words[wc:len(breeder.words)]
                 if verbose: print("Size of the final corpus slice:", len(count_these))
-                count_test_log(count_these) # this is the actual loop content
+                # this is the actual loop content
+                count_test_log(count_these)
                 if verbose: print("End of the last run.\n\n")
 
+            # Loop as long as there are enough words for a whole slice
             while len(breeder.words) >= wc+test_interval:
-                # Loop as long as there are enough words for a whole slice
-                t0_thisrun = time.time()  # ends before logging
+                # ends before logging
+                t0_thisrun = time.time()
                 run = int(wc / test_interval) + 1
                 if verbose: print("\n\nStarting run",run,"...")
                 breeder.flyfile, space_file, results_file, vip_words_file = new_paths(run)
                 count_these = breeder.words[wc: wc + test_interval]
                 if verbose: print("Size of corpus slice:", len(count_these))
-                count_test_log(count_these) # this is the actual loop content
-                wc += test_interval # last statement of the while loop
+                # this is the actual loop content
+                count_test_log(count_these)
+                wc += test_interval
                 if verbose: print("End of run "+str(run)+".\n\n")
 
+        # Count and test once per file
         else:
-            # Count and test once per file
-            t0_thisrun = time.time()  # ends before logging
+            # ends before logging
+            t0_thisrun = time.time()
             run += 1
             if verbose: print("\n\nStarting run", run, "with file", file, "...")
             breeder.flyfile, space_file, results_file, vip_words_file = new_paths(run)
-            count_these = breeder.words[wc:len(breeder.words)] # count the whole newly read-in document
+            # count the whole newly read-in document
+            count_these = breeder.words[wc:len(breeder.words)]
             if verbose: print("Size of text resource in this run:", len(count_these))
-            count_test_log(count_these)  # this is the actual loop content
+            # this is the actual loop content
+            count_test_log(count_these)
             wc = len(breeder.words)
             if verbose: print("End of run " + str(run) + ".\n\n")
 
-    log_final_summary()
-
-    print("done.")
+    log_final_summary(performance_summary)
+    print("Finished all runs. Total time taken:",time.time()-runtime_zero,"\ndone.")
 
 
 
