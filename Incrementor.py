@@ -1,15 +1,13 @@
 import re
 import os
 import time
-from typing import Dict, Any #CLEANUP
 
 import numpy as np
-from docopt import docopt #CLEANUP
 import nltk
 
-import Fruitfly
 from tqdm import tqdm
 import utils
+import Fruitfly
 from Fruitfly import Fruitfly
 
 
@@ -20,7 +18,32 @@ class Incrementor:
                  matrix_incremental=True, matrix_maxdims=None, min_count=None, contentwords_only=False,
                  fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
                  verbose=False):
-
+        """
+        The purpose of Incrementor objects is to to count co-occurrences of words in text resources and
+        maintain a Fruitfly object alongside counting. Both tasks come with several options; most of them
+        are realized as attributes of an Incrementor object.
+        :param corpus_dir: str -- file path or directory to text resources
+        :param matrix_file:  str -- file path (without extension) to the co-occurrence count (e.g., for logging)
+        :param corpus_tokenize: bool -- option to tokenize the input text
+        :param corpus_linewise: bool -- option to count lines separately (not stable; leave this set to False)
+        :param corpus_checkvoc: str -- path to a list of prioritized words (1 word/line) in case of size limitations
+        :param matrix_incremental: bool -- use the already existing co-occurrence count in matrix_file
+        :param matrix_maxdims: int -- limit the number size of the count (e.g. for faster performance)
+        :param min_count: int -- only keep dimensions of words with at least these many occurrences
+        :param contentwords_only: bool -- only count tokens tagged with _N,_V,_J, but not _X (requires POS-tagged data)
+        :param fly_new: bool -- set up a new Fruitfly object from scratch (only possible with default parameters)
+        :param fly_grow: bool -- extend and reduce the Fruitfly's PN layer in parallel to the co-occurrence count
+        :param fly_file: str -- file path of the Fruitfly object's config (parameters and connections)
+        :param fly_max_pn: int -- limit the number of PNs of the Fruitfly object (doesn't affect matrix_maxdims)
+        :param verbose: bool -- comment on current processes via print statements
+        :attribute ourcols: str -- file path to the count's vocabulary
+        :attribute words: [str] -- text resource as a list of words
+        :attribute cooc: ndarray [[]] -- co-occurrence matrix
+        :attribute words_to_i: {str:int} -- mapping of the count's vocabulary to the count's dimensions
+        :attribute i_to_words: {int:str} -- inverse mapping of words_to_i
+        :attribute fruitfly: Fruitfly -- the Fruitfly object to be maintained
+        :attribute freq: {str:int} -- frequency distribution of tokens in the current text resource (and earlier ones)
+        """
         self.verbose = verbose
 
         self.corpus_dir   = corpus_dir
@@ -28,7 +51,7 @@ class Incrementor:
         self.is_linewise  = corpus_linewise
         self.required_voc = corpus_checkvoc
 
-        self.outspace = matrix_file+".dm" # e.g. "data/potato"
+        self.outspace = matrix_file+".dm"
         self.outcols  = matrix_file+".cols"
         self.is_incremental = matrix_incremental
         self.max_dims = matrix_maxdims
@@ -68,24 +91,32 @@ class Incrementor:
     @staticmethod
     def read_corpus(indir, tokenize_corpus=False, postag_simple=False, linewise=False, verbose=False):
         """
-        :param indir: a directory or a single file as text resource
-        :param tokenize_corpus:
-        :param postag_simple:
-        :param linewise:
-        :param verbose:
-        :return:
+        Read text from a file or directory and apply various pre-processing functions.
+        Tokenization is optional; set postag_simple=True if the input is POS-tagged with {_N, _V, _J, _X}.
+        Returns tokens a single list of strings if linewise==False, or else as list of lists of strings.
+        :param indir: str -- a directory or a single file as text resource
+        :param tokenize_corpus: bool -- apply nltk.word_tokenize()
+        :param postag_simple: bool -- re-uppercase POS-tags
+        :param linewise: bool -- not tested; leave this False
+        :param verbose: bool -- comment the workings via print statements
+        :return: [str] or [[str]] -- depending on the value of linewise
         """
-        if indir is None: # i.e. for initialization without resources
+        # this is for initialization of an Incrementor object without resources
+        if indir is None:
             if verbose: print("No text resources specified. Continuing with empty corpus.")
             lines = []
         else:
             filepaths = []
-            lines = [] # list of lists of words
-            nonword = re.compile("\W+(_X)?") # to delete punctuation entries in simple-POS-tagged data (_N, _V, _A, _X)
-            lc = 0 # for files with more than one line
-            wc = 0 # wordcount
-
-            if os.path.isfile(indir): # for a single file that is passed
+            # list of lists of words
+            lines = []
+            # to delete punctuation entries in simple-POS-tagged data (_N, _V, _J, _X)
+            nonword = re.compile("\W+(_X)?")
+            # line count
+            lc = 0
+            # word count
+            wc = 0
+            # for a single file that is passed
+            if os.path.isfile(indir):
                 filepaths = [indir]
             else:
                 for (dirpath, dirnames, filenames) in os.walk(indir):
@@ -94,37 +125,42 @@ class Incrementor:
             for file in filepaths:
                 try:
                     with open(file) as f:
-                        print("reading text from ",file,"...", end=" ")
+                        if verbose: print("reading text from ",file,"...", end=" ")
                         for line in f:
                             lc += 1
                             line = line.rstrip().lower()
                             if tokenize_corpus:
-                                tokens = nltk.word_tokenize(line) # CLEANUP tokenizer.tokenize(line)
+                                tokens = nltk.word_tokenize(line)
                             else:
                                 tokens = line.split()
                             linewords = []
                             for t in tokens:
+                                # upper-case the POS-tags again
                                 if postag_simple:
-                                    t = t[:-1]+t[-1].upper() # upper-case the POS-tags again
-                                if (re.fullmatch(nonword, t) is None): # ignores punctuation
-                                    linewords.append(t) # adds the list as a unit to 'lines'
+                                    t = t[:-1]+t[-1].upper()
+                                # only appends if the token is not a non-word (=ignores punctuation)
+                                if (re.fullmatch(nonword, t) is None):
+                                    linewords.append(t)
                                 wc+=1
                                 if verbose and wc%1000000 == 0:
                                     print("\twords read:",wc/1000000,"million",end="\r")
+                            # appends the list of tokens of the current line to the list of lines
                             lines.append(linewords)
                 except FileNotFoundError as e:
                     print(e)
             if verbose: print("Finished reading. Number of words:",wc)
 
         if linewise is False:
-            return [w for l in lines for w in l] # flattens to a simple word list
+            # flattens to a simple word list
+            return [w for l in lines for w in l]
         else:
             return(lines)
 
     def extend_corpus(self, text_resource):
         """
         Takes a file path, reads the file's content, and extends the Incrementor object's available text
-        as well as its freq_dist.
+        as well as its frequency distribution. Any options and input parameters (e.g., tokenization) are
+        handled by the Incrementor object's attributes.
         :param text_resource: file path
         """
         new_text = self.read_corpus(text_resource,
@@ -136,41 +172,52 @@ class Incrementor:
         new_freq = self.freq_dist(new_text,
                                   size_limit=self.max_dims,
                                   required_words_file=self.required_voc,
-                                  required_words=self.freq.keys(), # for the new freq.keys() to comply with the old one
+                                  # The following prioritizes old freq keys over new freq keys
+                                  required_words=self.freq.keys(),
                                   verbose=self.verbose)
-        # update freq with the new counts -- but this might result in len(freq) > max_dims
+        # update freq with the new counts
         self.freq = self.merge_freqs(self.freq,
                                      new_freq,
                                      required_words_file=self.required_voc,
                                      max_length=self.max_dims)
 
-    def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False): # matrix, vocabulary, fruitfly (if wanted)
+    def read_incremental_parts(self, outspace, outcols, flyfile, verbose=False):
         """
-        Return a matrix, a vocabulary, and a Fruitfly object.
-        The matrix can be newly instantiated or taken from an already 
-        existing space; the vocabulary aswell.
-        The fruitfly can be optionally created alongside, also either new 
-        or from an already existing config file.
+        Returns a co-occurrence matrix, a corresponding vocabulary and its index, and a Fruitfly object.
+        The matrix and the vocabulary can be newly instantiated or taken from existing files.
+        The Fruitfly object can be optionally created alongside, also either new or from an
+        existing file. All these options are handled by attributes of the Incrementor object
+        from which this method is called.
+        :param outspace: str -- file path to a co-occurrence count
+        :param outcols: str -- file path to the corresponding vocabulary
+        :param flyfile: str -- file path to a Fruitfly config (parameters and connections)
+        :param verbose: bool -- comment on the workings via print statements
+        :return: ndarray [[]] -- co-occurrence matrix (two axes, each of length n)
+        :return: {str:int} -- mapping of vocabulary to matrix positions (length: n)
+        :return: {int:str} -- mapping of matrix indices to vocabulary (length: n)
+        :return: Fruitfly -- Fruitfly object (or None if not wanted)
         """
         if self.is_incremental:
-            if verbose: print("\nloading existing space...")
-            unhashed_space = utils.readDM(outspace) # returns dict of word : vector
+            if verbose: print("\nLoading existing co-occurrence count from",outspace,"...")
+            # returns dict of word : vector
+            unhashed_space = utils.readDM(outspace)
             i_to_words, words_to_i = utils.readCols(outcols)
             dimensions = sorted(words_to_i, key=words_to_i.get)
             cooc = np.stack(tuple([unhashed_space[w] for w in dimensions]))
         else:
-            cooc = np.array([[]]) # cooccurrence count (only numbers)
-            words_to_i = {} # vocabulary and word positions
+            cooc = np.array([[]])
+            words_to_i = {}
             i_to_words = {}
 
         if self.is_grow_fly:
             if self.is_new_fly:
-                if verbose: print("\ncreating new fruitfly...")
-                fruitfly = Fruitfly.from_scratch(max_pn_size=self.fly_max_pn) # default config: (50,40000,6,5)
+                if verbose: print("creating new fruitfly...")
+                # default config: (50,40000,6,5,log)
+                fruitfly = Fruitfly.from_scratch(max_pn_size=self.fly_max_pn)
             else:
-                if verbose: print("\nloading fruitfly...")
+                if verbose: print("loading fruitfly from",flyfile,"...")
                 fruitfly = Fruitfly.from_config(flyfile)
-                self.fly_max_pn = fruitfly.max_pn_size # update the attribute
+                self.fly_max_pn = fruitfly.max_pn_size
         else:
             fruitfly = None
 
@@ -182,20 +229,22 @@ class Incrementor:
         The obtained dictionary is used as vocabulary reference of the current corpus at several processing steps.
         For true incrementality, size_limit is None and the dictionary is computed over the currently available corpus.
         If size_limit is None, required_words has no effect on the obtained dictionary.
-        :param wordlist: list of (word) tokens from the text resource
-        :param size_limit: maximum length of the returned frequency distribution
-        :param required_words_file: file path to a list with prioritized words (regardless of their frequencies)
-        :param required_words: list of words; used to pass already existing freq keys if freq needs to be extended
-        :param verbose: comment on workings via print statements
-        :return: dict[str:int]
+        :param wordlist: [str] -- list of (word) tokens from the text resource
+        :param size_limit: int -- maximum length of the returned frequency distribution
+        :param required_words_file: str -- file path to a list with prioritized words (regardless of their frequencies)
+        :param required_words: [str] -- used to pass already existing freq keys if freq needs to be extended
+        :param verbose: bool -- comment on workings via print statements
+        :return: {str:int} -- frequency distribution
         """
         if verbose: print("creating frequency distribution over",len(wordlist),"tokens...")
         freq = {}
+        # the linewise option is not tested.
         if self.is_linewise:
             for line in tqdm(wordlist):
                 for w in line:
                     if self.postag_simple:
-                        if w.endswith(("_N", "_V", "_J")): # only counts nouns, verbs, and adjectives/adverbs
+                        # only counts nouns, verbs, and adjectives/adverbs
+                        if w.endswith(("_N", "_V", "_J")):
                             if w in freq:
                                 freq[w] += 1
                             else:
@@ -219,42 +268,58 @@ class Incrementor:
                     else:
                         freq[w] = 1
 
-        frequency_sorted = sorted(freq, key=freq.get, reverse=True) # list of all words
-
+        # list of all words
+        frequency_sorted = sorted(freq, key=freq.get, reverse=True)
+        # find out the required words
         if required_words_file is None and required_words is None:
             returnlist = frequency_sorted
         else:
+            # required words can be passed as [str] or as file path, and both at the same time is possible
             checklist = []
             if required_words_file is not None:
-                checklist.extend(self.read_checklist(required_words_file))#, with_pos_tags=self.postag_simple)) #CLEANUP
-            if required_words is not None: # in case that freq needs to be extended
+                checklist.extend(self.read_checklist(required_words_file))
+            if required_words is not None:
                 checklist.extend(required_words)
 
             overlap = list(set(checklist).intersection(set(frequency_sorted)))
-            rest_words = [w for w in frequency_sorted if w not in overlap] # words that are not required; sorted by frequency
+            # words that are not required; sorted by frequency
+            rest_words = [w for w in frequency_sorted if w not in overlap]
             returnlist = overlap+rest_words
-
-
+        # impose a size limit if wanted
         if(size_limit is not None and size_limit <= len(freq)):
             return {k:freq[k] for k in returnlist[:size_limit]}
         else:
             return freq
 
-    def merge_freqs(self, freq1, freq2, required_words_file=None, max_length=None): #TODO test this!
+    def merge_freqs(self, freq1, freq2, required_words_file=None, max_length=None):
+        """
+        Merges two frequency distributions while preserving the possible required words and
+        a possible length restriction. As for the returned frequency distribution,
+        length restriction has a higher priority than required words and more frequent words
+        have a higher priority to be returned than less frequent words.
+        :param freq1: {str:i} -- frequency distribution over word tokens
+        :param freq2: [str:i} -- frequency distribution over word tokens
+        :param required_words_file: str -- file path to a word list (one word per line)
+        :param max_length: int
+        :return: {str:i} -- merged frequency distribution, possibly limited in length
+        """
         for k, v in freq2.items():
             if k in freq1:
                 freq1[k] += v
             else:
                 freq1[k] = v
 
-        frequency_sorted = sorted(freq1, key=freq1.get, reverse=True)  # list of all words, sorted
+        # list of all words, sorted by frequency
+        frequency_sorted = sorted(freq1, key=freq1.get, reverse=True)
 
         if required_words_file is None:
             returnlist = frequency_sorted
         else:
-            checklist = self.read_checklist(required_words_file) #, with_pos_tags=self.postag_simple) #CLEANUP
-            overlap = [w for w in frequency_sorted if w in checklist] # still a frequency-sorted word list
-            rest_words = [w for w in frequency_sorted if w not in overlap]  # words that are not required; sorted by frequency
+            checklist = self.read_checklist(required_words_file)
+            # still a frequency-sorted word list
+            overlap = [w for w in frequency_sorted if w in checklist]
+            # words that are not required; sorted by frequency
+            rest_words = [w for w in frequency_sorted if w not in overlap]
             returnlist = overlap + rest_words
 
         if (max_length is not None and len(freq1) > max_length):
@@ -263,36 +328,46 @@ class Incrementor:
             return freq1
 
     @staticmethod
-    def read_checklist(checklist_filepath):#, with_pos_tags=False): #CLEANUP
-        if checklist_filepath is None: #TODO why is this coded like this? maybe try/except?
-            return []
+    def read_checklist(checklist_filepath):
+        """
+        Reads a file, but continues with empty checklist if the file cannot be found.
+        :param checklist_filepath: str -- file with one word per line
+        :return: [str] -- words to be checked for overlap
+        """
+        try:
+            checklist = []
+            with open(checklist_filepath, "r") as f:
+                for word in f:
+                    word = word.rstrip()
+                    checklist.append(word)
+            return checklist
+        except FileNotFoundError:
+            if checklist_filepath is None:
+                return []
+            else:
+                print("Checklist file path not found. Continuing without checklist.")
+                return []
 
-        checklist = []
-
-        with open(checklist_filepath, "r") as f:
-            for word in f:
-                word = word.rstrip()
-                checklist.append(word)
-        return checklist
-        #
-        #if with_pos_tags is False:
-        #    pos_tag = re.compile("_.+?") # get rid of simple POS-tags
-        #    return [re.sub(pos_tag, "", w) for w in checklist]
-        #else:
-        #    return checklist
-
-    def check_overlap(self, checklist_filepath=None, wordlist=None, verbose=False):
-        if verbose: print("\nchecking overlap...")
+    def check_overlap(self, checklist_filepath=None, wordlist=None):
+        """
+        Compares two lists of words (one from a file and one internal list) for complete overlap.
+        :param checklist_filepath: str -- file should contain oe word per line
+        :param wordlist: [str] -- default value: the Incrementor object's vocabulary
+        :return: bool -- whether there is a complete overlap
+        :return: [str] -- words that are in checklist but not in wordlist
+        """
+        if self.verbose: print("\nchecking overlap...")
         if checklist_filepath is None: checklist_filepath = self.required_voc
         if wordlist is None: wordlist = self.freq.keys()
-        checklist = self.read_checklist(checklist_filepath, with_pos_tags=self.postag_simple)
-        if len(checklist) == 0: # if no checking is specified, go on without checking
-            if verbose: print("\tcheck_overlap(): nothing to check.")
+        checklist = self.read_checklist(checklist_filepath)
+
+        if len(checklist) == 0:
+            if self.verbose: print("\tcheck_overlap(): nothing to check.")
             return True, []
 
         unshared_words = list(set(checklist).difference(set(wordlist)))
 
-        if verbose:
+        if self.verbose:
             if len(unshared_words) == 0:
                 print("\tComplete overlap with",checklist_filepath)
             else:
@@ -301,7 +376,6 @@ class Incrementor:
                       "\n\texamples:",unshared_words[:10])
 
         return len(unshared_words) == 0, unshared_words
-
 
 
     #========== CO-OCCURRENCE COUNTING
@@ -595,10 +669,10 @@ if __name__ == '__main__':
                               fly_new=nfly, fly_grow=grow, fly_file=fcfg, fly_max_pn=None,
                               verbose=is_verbose)
     # checking for overlap is not really necessary, but might be informative
-    all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc, verbose=incrementor.verbose)
+    all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc)
     incrementor.count_cooccurrences(words=incrementor.words, window=window)
-    incrementor.log_matrix(verbose=incrementor.verbose)
-    incrementor.log_fly(verbose=incrementor.verbose)
+    incrementor.log_matrix()
+    incrementor.log_fly()
 
     if is_verbose: print("done.")
 

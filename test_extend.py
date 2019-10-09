@@ -5,6 +5,8 @@ import MEN
 import numpy as np
 from Fruitfly import Fruitfly
 from Incrementor import Incrementor
+import Incrementor
+import nltk
 
 
 
@@ -260,6 +262,68 @@ print("spacewords:",spacewords)
 overlap = breederwords.difference(spacewords)
 print("vocabulary difference:",len(overlap),"\n", overlap)
 """
+
+"""
+#TEST_08
+# test Incrementor.merge_freqs()
+
+def make_freq(words):
+    freq = {}
+    for w in words:
+        if w in freq:
+            freq[w] += 1
+        else:
+            freq[w] = 1
+    return freq
+
+def read_file(fpath):
+    words = []
+    with open(fpath, "r") as f:
+        for line in f:
+            words.extend(nltk.word_tokenize(line.rstrip().lower()))
+    return words
+
+file1 = "data/chunks_small/text_0.txt"
+file2 = "data/chunks_small/text_1.txt"
+checkvoc = "./test/checklist_mergefreqs" # "data/MEN_natural_vocabulary"
+
+freq1 = make_freq(read_file(file1))
+freq2 = make_freq(read_file(file2))
+
+commons = len([k for k in freq2 if k in freq1])
+print("number of common words:", commons)
+print("supposed length of merged:", len(freq1)+len(freq2)-commons)
+
+sf1 = sorted(freq1, key=freq1.get, reverse=True)
+sf2 = sorted(freq2, key=freq2.get, reverse=True)
+print("single freqs:")
+for i in range(10):
+    try:
+        print (sf1[i],"\t",freq1[sf1[i]], "\t", sf2[i],"\t", freq2[sf2[i]])
+    except IndexError:
+        break
+print("length of freq1:",len(freq1))
+print("length of freq2:",len(freq2))
+
+
+ingo = Incrementor.Incrementor("", "",
+                              corpus_tokenize=False, corpus_linewise=False, corpus_checkvoc=None,
+                              matrix_incremental=False, matrix_maxdims=None, min_count=None,
+                              fly_new=False, fly_grow=False, fly_file=None, fly_max_pn=None,
+                              verbose=False)
+print("braa")
+merged = ingo.merge_freqs(freq1, freq2, required_words_file=None, max_length=5)
+
+
+sm = sorted(merged, key=merged.get, reverse=True)
+for i in range(20):
+    try:
+        print (sm[i],"\t", merged[sm[i]])
+    except IndexError:
+        break
+print("length of sm:",len(sm))
+"""
+
 
 
 
