@@ -132,9 +132,9 @@ class Fruitfly:
                 "flattening": self.flattening,
                 "max_pn_size":self.max_pn_size}
 
-    def log_params(self, filename="log/configs/ff_config.cfg", timestamp=True):
+    def log_params(self, filename="log/configs/ff_config.cfg", timestamp=False):
         """ writes parameters and projection connections to a specified file"""
-        if timestamp is True: 
+        if timestamp is True:
             filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
         connections = ""
         print("Logging fruitfly config to",filename,"...")

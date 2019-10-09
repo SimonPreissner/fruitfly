@@ -128,10 +128,10 @@ class Incrementor:
         :param text_resource: file path
         """
         new_text = self.read_corpus(text_resource,
-                                   tokenize_corpus=self.is_tokenize,
-                                   postag_simple=self.postag_simple,
-                                   linewise=self.is_linewise,
-                                   verbose=self.verbose)
+                                    tokenize_corpus=self.is_tokenize,
+                                    postag_simple=self.postag_simple,
+                                    linewise=self.is_linewise,
+                                    verbose=self.verbose)
         self.words.extend(new_text)
         new_freq = self.freq_dist(new_text,
                                   size_limit=self.max_dims,
@@ -287,8 +287,7 @@ class Incrementor:
         if wordlist is None: wordlist = self.freq.keys()
         checklist = self.read_checklist(checklist_filepath, with_pos_tags=self.postag_simple)
         if len(checklist) == 0: # if no checking is specified, go on without checking
-            if verbose:
-                print("\tcheck_overlap(): nothing to check.")
+            if verbose: print("\tcheck_overlap(): nothing to check.")
             return True, []
 
         unshared_words = list(set(checklist).difference(set(wordlist)))
@@ -301,22 +300,31 @@ class Incrementor:
                       "\n\twords missing in the corpus:",len(unshared_words),
                       "\n\texamples:",unshared_words[:10])
 
-        return (unshared_words is True), unshared_words
+        return len(unshared_words) == 0, unshared_words
 
 
 
     #========== CO-OCCURRENCE COUNTING
 
-    def extend_incremental_parts_if_necessary(self, w): # matrix dimensions and fruitfly PN layer
-        #global cooc, words_to_i #CLEANUP
+    def extend_incremental_parts_if_necessary(self, w):
+        """
+        If a new (i.e. not in Incrementor.words_to_i) word is passed, this adds a new dimension along both axes
+        of the count matrix and, if a Fruitfly object is maintained, calls the Fruitfly.py extension mechanism.
+        This method is not optimized for efficiency and slows down the counting process.
+        :param w: str -- word to be checked for necessity to extend
+        """
         if w not in self.words_to_i:
-            self.words_to_i[w] = len(self.words_to_i) # extend the vocabulary
-            self.i_to_words[self.words_to_i[w]] = w # extend the 'backwards vocabulary'
-            temp = np.zeros((len(self.words_to_i), len(self.words_to_i))) # make bigger matrix
-            temp[0:self.cooc.shape[0], 0:self.cooc.shape[1]] = self.cooc # paste current matrix into the new one
+            # extend the vocabulary and index
+            self.words_to_i[w] = len(self.words_to_i)
+            self.i_to_words[self.words_to_i[w]] = w
+            # make bigger matrix
+            temp = np.zeros((len(self.words_to_i), len(self.words_to_i)))
+            # paste current matrix into the new one
+            temp[0:self.cooc.shape[0], 0:self.cooc.shape[1]] = self.cooc
             self.cooc = temp
-        if self.fruitfly is not None and len(self.words_to_i) > self.fruitfly.pn_size:
-            self.fruitfly.extend() # extend if needed (incl. "catching up" with vocabulary size)
+            # PN layer extension only needed if count size is greater than PN layer size
+            if self.fruitfly is not None and len(self.words_to_i) > self.fruitfly.pn_size:
+                self.fruitfly.extend()
 
     def count_start_of_text(self, words, window): # for the first couple of words
         """
@@ -324,7 +332,7 @@ class Incrementor:
         as count_middle_of_text and count_end_of_text.
         Only counts words that are also in self.freq.
         If a new word is encountered, the extension mechanism is called.
-        :param words: list[str]
+        :param words: [str]
         :param window: int -- window to one side
         """
         # iterate over the first words
@@ -345,7 +353,7 @@ class Incrementor:
         The counting was split up for better performance and in order to avoid index errors.
         Only counts words that are also in self.freq.
         If a new word is encountered, the extension mechanism is called.
-        :param words: list[str]
+        :param words: [str]
         :param window: int -- window to one side
         """
         # this part is without tqdm; the other one is with.
@@ -381,7 +389,7 @@ class Incrementor:
         as count_start_of_text and count_middle_of_text.
         Only counts words that are also in self.freq.
         If a new word is encountered, the extension mechanism is called.
-        :param words: list[str]
+        :param words: [str]
         :param window: int -- window to one side
         """
         # iterate over the last words
@@ -430,6 +438,15 @@ class Incrementor:
             pass
 
     def reduce_count_size(self, verbose=False, timed=False):
+        """
+        Uses the Incrementor object's frequency distribution (over the currently processed text)
+        to delete the dimensions of words that occur less often than a given threshold. It also
+        makes a call to the Fruitfly object to reduce the PN layer, if needed.
+        This is costly, but preserves incrementality and is cognitively plausible by acting like
+        a rudimentary attention mechanism.
+        :return: int -- number of words that are deleted by reducing
+        :return: float -- time taken to execute this method
+        """
         t0 = time.time()
         if self.min_count is None:
             if timed:
@@ -437,17 +454,10 @@ class Incrementor:
             else:
                 return 0
         else:
-            #print("count dimensions before reducing:",self.cooc.shape)#CLEANUP
-            #print("fruitfly PN layer size before reducing:", self.fruitfly.pn_size)#CLEANUP
-            #connectednesses = [len(cons) for cons in self.fruitfly.pn_to_kc.values()]  # CLEANUP
-            #print("avg. pn connectedness BEFORE:", round(sum(connectednesses) / self.fruitfly.pn_size, 6))  # CLEANUP
-            #connectednesses = [len(cons) for cons in self.fruitfly.proj_functions.values()]  # CLEANUP
-            #print("avg. kc connectedness BEFORE:", round(sum(connectednesses) / self.fruitfly.kc_size, 6))  # CLEANUP
-            #print("std of kc connectedness BEFORE:", round(np.std(connectednesses, ddof=1), 6)) #CLEANUP
-
-            counted_freq_words = set(self.words_to_i).intersection(set(self.freq)) # because freq and words_to_i might differ!
+            # freq (current words) and words_to_i (all words encountered so far) might differ
+            counted_freq_words = set(self.words_to_i).intersection(set(self.freq))
             if verbose: print("Deleting infrequent words (less than",self.min_count,"occurrences) from the count matrix...")
-            delete_these_w = [w for w in counted_freq_words if self.freq[w]<=self.min_count ]
+            delete_these_w = [w for w in counted_freq_words if self.freq[w]<=self.min_count]
             delete_these_i = [self.words_to_i[w] for w in delete_these_w]
             # delete rows and columns from the count matrix
             self.cooc = np.delete(self.cooc, delete_these_i, axis=0)
@@ -455,56 +465,63 @@ class Incrementor:
             # delete elements from the dictionary
             for w in delete_these_w:
                 del(self.words_to_i[w])
-            # in the index dictionary, shift words from higher dimensions to the freed-up dimensions
+            # in the index, shift words from higher dimensions to the freed-up dimensions
             self.i_to_words = {i:w for i,w in enumerate(sorted(self.words_to_i, key=self.words_to_i.get))}
             # update the index mapping in the dictionary
             self.words_to_i = {w:i for i,w in self.i_to_words.items()}
-            # also reduce the FFA!
-            if self.fruitfly.pn_size > self.cooc.shape[0]:
+            # also reduce the PN layer of the Fruitfly!
+            if self.fruitfly is not None and self.fruitfly.pn_size > self.cooc.shape[0]:
                 self.fruitfly.reduce_pn_layer(delete_these_i, self.cooc.shape[0])
 
             if verbose: print("\t",len(delete_these_w),"words deleted. New count dimensions:",self.cooc.shape)
-
-            #print("fruitfly.pn_size after reducing: ",self.fruitfly.pn_size)#CLEANUP
-            #connectednesses = [len(cons) for cons in self.fruitfly.pn_to_kc.values()] #CLEANUP
-            #print("avg. pn connectedness AFTER:",round(sum(connectednesses) / self.fruitfly.pn_size, 6)) #CLEANUP
-            #connectednesses = [len(cons) for cons in self.fruitfly.proj_functions.values()] #CLEANUP
-            #print("avg. kc connectedness AFTER:",round(sum(connectednesses) / self.fruitfly.kc_size, 6)) #CLEANUP
-            #print("std of kc connectedness AFTER:", round(np.std(connectednesses, ddof=1), 6)) #CLEANUP
-
             if timed:
                 return len(delete_these_w), time.time()-t0
             else:
                 return len(delete_these_w)
 
 
-
-
     #========== LOGGING
 
-    def log_matrix(self, outspace=None, outcols=None, only_these=None, verbose=False):
+    def log_matrix(self, outspace=None, outcols=None, only_these=None):
+        """
+        Writes the Incrementor object's count matrix and the corresponding dictionary
+        to a file each. It is also possible to only log a certain selection of vectors.
+        Without parameter specification, the Incrementor object's variables are used.
+        :param outspace: str -- file path for the count to be logged
+        :param outcols: str -- file path for the count's vocabulary to be logged
+        :param only_these: {str:int} words and their indices (subset of words_to_i)
+        """
+        # optional parameters allow external use
         if outspace is None: outspace = self.outspace
-        if outcols  is None: outcols  = self.outcols
-        if only_these is None: only_these  = self.words_to_i
+        if outcols  is None: outcols = self.outcols
+        if only_these is None: only_these = self.words_to_i
 
         with open(outspace, "w") as dm_file, open(outcols, "w") as cols_file:
-            if self.verbose:
-                print("\nwriting vectors to",outspace,
-                      "\nwriting dictionary to",outcols,"...")
-
+            if self.verbose: print("\nwriting vectors to",outspace,"\nwriting dictionary to",outcols,"...")
+            # sorted by index
             for word,i in tqdm(sorted(only_these.items(), key=lambda x: x[1])):
+                # line number represents index in the cols file
                 cols_file.write(word+"\n")
                 vectorstring = " ".join([str(v) for v in self.cooc[i]])
                 dm_file.write(word+" "+vectorstring+"\n")
 
-    def log_fly(self, flyfile=None, verbose=False): # allows to specify a destination
+    def log_fly(self, flyfile=None):
+        """
+        This is a wrapper for Fruitfly.log_params().
+        By default, it logs to the Incrementor object's 'flyfile' attribute
+        :param flyfile: str -- file path for the fly to be logged
+        """
         if flyfile is None: flyfile = self.flyfile
         if flyfile is not None and self.fruitfly is not None:
-            if verbose: print("\nlogging fruitfly to",flyfile,"...")
-            self.fruitfly.log_params(filename=flyfile, timestamp=False)
+            if self.verbose: print("logging fruitfly to",flyfile,"...")
+            self.fruitfly.log_params(filename=flyfile)
 
     def get_setup(self):
-        #TODO: check whether this needs to be updated
+        """
+        Get a dictionary with all parameters and attributes of the Incrementor object.
+        Returns a small extract from those attributes with larger data structures.
+        :return: {str:object}
+        """
         return {
             "verbose":self.verbose,
             "corpus_dir":self.corpus_dir,
@@ -516,12 +533,14 @@ class Incrementor:
             "is_incremental":self.is_incremental,
             "max_dims":self.max_dims,
             "min_count":self.min_count,
+            "postag_simple":self.postag_simple,
             "is_new_fly":self.is_new_fly,
             "is_grow_fly":self.is_grow_fly,
             "flyfile":self.flyfile,
             "fly_max_pn":self.fly_max_pn,
             "cooc":self.cooc[:10,:10],
             "words_to_i":sorted(self.words_to_i, key=self.words_to_i.get)[:10],
+            "i_to_words":sorted(self.i_to_words)[:10],
             "fruitfly":self.fruitfly.get_specs(),
             "words":self.words[:20],
             "freq":sorted(self.freq, key=self.freq.get, reverse=True)[:10]
@@ -531,6 +550,14 @@ class Incrementor:
 
 
 if __name__ == '__main__':
+    """
+    This working example of the Incrementor class
+    reads in a text resource, counts co-occurrences,
+    optionally maintains a Fruitfly object alongside,
+    and logs the resulting parts.
+    The FFA is not applied here.    
+    """
+
     # File input
     infile = utils.loop_input(rtype=str, default="data/chunks_wiki",
                               msg="Path to text resources (default: data/chunks_wiki): ")
@@ -567,8 +594,9 @@ if __name__ == '__main__':
                               matrix_incremental=incr, matrix_maxdims=dims, min_count=minc,
                               fly_new=nfly, fly_grow=grow, fly_file=fcfg, fly_max_pn=None,
                               verbose=is_verbose)
+    # checking for overlap is not really necessary, but might be informative
     all_in, unshared_words = incrementor.check_overlap(checklist_filepath=xvoc, verbose=incrementor.verbose)
-    incrementor.count_cooccurrences(words=incrementor.words, window=window, verbose=incrementor.verbose)
+    incrementor.count_cooccurrences(words=incrementor.words, window=window)
     incrementor.log_matrix(verbose=incrementor.verbose)
     incrementor.log_fly(verbose=incrementor.verbose)
 
