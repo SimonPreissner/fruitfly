@@ -1,26 +1,35 @@
-import time  # for logging
-
+import time
 import numpy as np
 from math import ceil
 from tqdm import tqdm
 
 
-# noinspection SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection,SpellCheckingInspection
 class Fruitfly:
     """
     This class contains all the architecture and methods of the FFA:
     - PN layer, KC layer, projection connections
     - input flattening, projection, hashing
     - output and configuration logging
-    - dynamic growth of PN layer and connections
-    It does not implement any cooccurrence counting or evaluation.
+    - dynamic growth and reduction of PN layer and connections
+    It does not implement any co-occurrence counting or evaluation.
     """
-
 
 #========== CONSTRUCTORS AND SETUP
 
     def __init__(self, pn_size, kc_size, proj_size, hash_percent, flattening, max_pn_size=None, old_proj=None):
-        """Create layers and random projections. For initialization, use one of the class methods"""
+        """
+        Creates layers and random projections. For initialization, use one of the class methods.
+        :param pn_size: int -- (initial) size of the PN layer (PN = Projection Neuron)
+        :param kc_size: int -- size of the KC layer (fixed) (KC = Kenyon Cell)
+        :param proj_size: int -- number of connections per KC
+        :param hash_percent: int -- percentage of winners in the WTA procedure
+        :param flattening: str -- function by which to counter-act the natural word frequency effects
+        :param max_pn_size: int -- size limit of the PN layer
+        :param old_proj: {int:[int]} mapping of KC index to PN indices (if constructing from a file)
+        :attribute proj_functions: {int:[int]} mapping of KC index to PN indices ("incoming connections")
+        :attribute pn_to_kc: {int:[int]} mapping of PN index to KC indices (i.e. inverse mapping of proj_functions)
+        """
+
         self.flattening = flattening
         if self.flattening not in ["log", "log2", "log10"]:
             print("No valid flattening method for the FFA. Continuing without flattening.")
@@ -29,11 +38,10 @@ class Fruitfly:
         self.kc_factor = kc_size/pn_size
         self.proj_size = proj_size
         self.hash_percent = hash_percent
-
-        self.pn_layer = np.zeros(self.pn_size) # input layer
-        self.kc_layer = np.zeros(self.kc_size) 
-
         self.max_pn_size = max_pn_size
+
+        self.pn_layer = np.zeros(self.pn_size)
+        self.kc_layer = np.zeros(self.kc_size)
 
         # arrays of PNs that are connected to any one KC 
         self.proj_functions = old_proj if old_proj is not None else self.create_projections() 
@@ -41,47 +49,68 @@ class Fruitfly:
 
     @classmethod
     def from_config(cls, filename):
-        """ load parameters from a file in the log/configs folder """
+        """
+        Reads parameters from a file that starts with the parameters (1 per line, name folloewd by value),
+        followed by the connections (KC index followed by its connected PN indices, sparated by spaces,
+        1 KC per line). The actual initialization is executed in the constructor, which is called upon return.
+        :param filename: file path to configuration file
+        :return: call to the constructor
+        """
         try:
             with open(filename, "r") as f:
                 lines = f.readlines()
             specs = {}
 
             lnr = 0
-            con_ind = 0 # will be set to the line number of the first connection
+            # marks beginning of conncetions
+            con_ind = 0
+
+            # read in parameters
             paramline = True
             while paramline:
+                # first element of params contains a string if parameter, else an int (if connections)
                 params = lines[lnr].rstrip().split()
+                # only connection lines have int-able first elements
                 try:
-                    int(params[0]) # only connection lines have int-able first elements
+                    int(params[0])
                     paramline = False
                     con_ind = lnr
-                except ValueError: # non-int-able first elements are from paramlines
+                except ValueError:
+                    # treats line as containing a parameter (and not as containing connections)
                     try:
-                        specs[params[0]]=int(params[1]) # converts to int if possible
+                        specs[params[0]]=int(params[1])
                     except ValueError:
-                        specs[params[0]]=params[1] # leaves string parameters as strings
+                        # leaves string parameters (e.g. flattening) as strings
+                        specs[params[0]]=params[1]
                     lnr+=1
 
             if "max_pn_size" not in specs or specs["max_pn_size"] == "None":
                 specs["max_pn_size"] = None
 
+            # read in connections
             connections = {}
             for line in lines[con_ind:]:
                 values = line.split()
+                # makes a mapping of {kc:[pn]}
                 connections[int(values[0])] = [int(v) for v in values[1:]]
 
-            return cls(specs["pn_size"], specs["kc_size"],
-                       specs["proj_size"], specs["hash_perc"], specs["flattening"],
-                       max_pn_size=specs["max_pn_size"], old_proj=connections)
+            return cls(specs["pn_size"], specs["kc_size"], specs["proj_size"], specs["hash_perc"],
+                       specs["flattening"], max_pn_size=specs["max_pn_size"], old_proj=connections)
         except FileNotFoundError:
             print("FileNotFoundError in Fruitfly.from_config()!\n"
-                  "\tcontinuing with a fruitfly from scratch (50, 40000, 6, 5, log)!")
+                  "\tcontinuing with a default Fruitfly object (50, 40000, 6, 5, log)!")
             return Fruitfly.from_scratch()
 
     @classmethod
     def from_scratch(cls, pn_size=50, kc_size=40000, proj_size=6, hash_percent=5, flattening="log", max_pn_size=None):
-        """ This is a workaround for issues with the default constructor """
+        """
+        This is a workaround for issues with the default constructor.
+        :param pn_size: int -- (initial) size of the PN layer (PN = Projection Neuron)
+        :param kc_size: int -- size of the KC layer (fixed) (KC = Kenyon Cell)
+        :param proj_size: int -- number of connections per KC
+        :param hash_percent: int -- percentage of winners in the WTA procedure
+        :param flattening: str -- function by which to counter-act the natural word frequency effects
+        :param max_pn_size: int -- size limit of the PN layer"""
         return cls(pn_size, kc_size, proj_size, hash_percent, flattening, max_pn_size=max_pn_size)
 
     def create_projections(self):
@@ -112,14 +141,14 @@ class Fruitfly:
 #========== STRINGS AND LOGGING
             
     def show_off(self):
-        """ for command line output """
-        statement = "pn_size: "    +str(self.pn_size)+"\t"+\
-                    "kc_factor: "  +str(self.kc_factor)+"\t"+\
-                    "kc_size: "    +str(self.kc_size)+"\t"+\
-                    "proj_size: "  +str(self.proj_size)+"\t"+\
-                    "hash-perc: "  +str(self.hash_percent)+"\t"+ \
-                    "flattening: " + str(self.flattening) + "\t" + \
-                    "max_pn_size: "+str(self.max_pn_size)
+        """ for command line output and logging """
+        statement = "pn_size\t"     + str(self.pn_size)+"\n"+\
+                    "kc_factor\t"   + str(self.kc_factor)+"\n"+\
+                    "kc_size\t"     + str(self.kc_size)+"\n"+\
+                    "proj_size\t"   + str(self.proj_size)+"\n"+\
+                    "hash-perc\t"   + str(self.hash_percent)+"\n"+ \
+                    "flattening\t"  + str(self.flattening) + "\n" + \
+                    "max_pn_size\t" + str(self.max_pn_size)
         return statement
 
     def get_specs(self):
@@ -141,13 +170,7 @@ class Fruitfly:
         for kc,pns in tqdm(self.proj_functions.items()):
             connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
         with open(filename, "w") as logfile:
-            logfile.write("pn_size "    + str(self.pn_size)+"\n"+
-                          "kc_factor "  + str(self.kc_factor)+"\n"+
-                          "kc_size "    + str(self.kc_size)+"\n"+
-                          "proj_size "  + str(self.proj_size)+"\n"+
-                          "hash_perc "  + str(self.hash_percent)+"\n"+
-                          "flattening " + str(self.flattening) + "\n" +
-                          "max_pn_size "+ str(self.max_pn_size)+"\n")
+            logfile.write(self.show_off()+"\n")
             logfile.write(connections)
 
     def important_words_for(self, word_hash, pn_dic, n=None):
