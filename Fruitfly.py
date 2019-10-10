@@ -44,7 +44,7 @@ class Fruitfly:
         self.kc_layer = np.zeros(self.kc_size)
 
         # arrays of PNs that are connected to any one KC 
-        self.proj_functions = old_proj if old_proj is not None else self.create_projections() 
+        self.proj_functions = old_proj if old_proj is not None else self.create_projections
         self.pn_to_kc = self.forward_connections([i for i in range(self.pn_size)])
 
     @classmethod
@@ -114,6 +114,10 @@ class Fruitfly:
         return cls(pn_size, kc_size, proj_size, hash_percent, flattening, max_pn_size=max_pn_size)
 
     def create_projections(self):
+        """
+        Creates random connections between the PN layer and the KC layer.
+        :return: {int:ndarray[int]} -- mapping of KC to the PNs that are connected to it
+        """
         proj_functions = {}
         print("\nCreating new projections...")
 
@@ -125,23 +129,32 @@ class Fruitfly:
         return proj_functions
 
     def forward_connections(self, pn_indices):
+        """
+        For the passed PNs, returns a mapping to the KCs to which each PN connects.
+        The retured mapping is a subset of the inverse of the mapping returned by create_projections().
+        :param pn_indices: int or [int] -- PN indices
+        :return: {int:[int]} -- mapping of PN index to connected KC indices
+        """
         pn_indices = [pn_indices] if type(pn_indices) != list else pn_indices
         print("\nCreating index of projections...")
 
-        pn_to_kc = {pn:[] for pn in pn_indices} # { pn_index : [connected KCs] }
+        # { pn_index : [connected KCs] }
+        pn_to_kc = {pn:[] for pn in pn_indices}
         for kc,connections in tqdm(self.proj_functions.items()):
-            for pn in pn_indices: # only for the PNs given to the method!
+            # only for the PNs given to the method!
+            for pn in pn_indices:
                 if pn in connections:
                     pn_to_kc[pn].append(kc)
 
         return pn_to_kc
 
-
-
 #========== STRINGS AND LOGGING
             
     def show_off(self):
-        """ for command line output and logging """
+        """
+        Return the Fruitfly algorithm parameter values as string. Useful for command line output and logging.
+        :return: str
+        """
         statement = "pn_size\t"     + str(self.pn_size)+"\n"+\
                     "kc_factor\t"   + str(self.kc_factor)+"\n"+\
                     "kc_size\t"     + str(self.kc_size)+"\n"+\
@@ -152,7 +165,10 @@ class Fruitfly:
         return statement
 
     def get_specs(self):
-        """ for in-code usage """
+        """
+        Return the Fruitfly algorithm parameter values as dictionary. Useful for in-code usage
+        :return: {str:int or str} -- keys are the same as class attribute names.
+        """
         return {"pn_size":self.pn_size,
                 "kc_factor":self.kc_factor, 
                 "kc_size":self.kc_size,
@@ -162,22 +178,33 @@ class Fruitfly:
                 "max_pn_size":self.max_pn_size}
 
     def log_params(self, filename="log/configs/ff_config.cfg", timestamp=False):
-        """ writes parameters and projection connections to a specified file"""
+        """
+        Writes parameters and projection connections to a specified file.
+        :param filename: str -- file path, should have the extension .cfg
+        :param timestamp: bool -- optionally include a time stamp in the file name
+        """
         if timestamp is True:
             filename = time.strftime("%Y-%m-%d_%H:%M:%S", time.gmtime())+"_"+filename
         connections = ""
         print("Logging fruitfly config to",filename,"...")
         for kc,pns in tqdm(self.proj_functions.items()):
+            # connections logged as: kc pn pn pn pn...; 1 KC per line
             connections+=(str(kc)+" "+" ".join([str(pn) for pn in pns])+"\n")
         with open(filename, "w") as logfile:
+            # first log the parameters
             logfile.write(self.show_off()+"\n")
+            # then log the connections
             logfile.write(connections)
 
     def important_words_for(self, word_hash, pn_dic, n=None):
         """ 
-        For every PN that is connected to an activated KC of the given 
-        hash, count the number of connections from that PN to connected
-        KCs.
+        For every PN that is connected to an activated KC of the given hash, count the number of connections
+        from that PN to KCs that are activated in that hash. The more often an active KC is connected to a
+        certain PN, the more important will that PN be (and subsequently, the word which is represented by the PN)
+        :param word_hash: [int] -- binary hash signature
+        :param pn_dic: {int:str} -- mapping of PN index to the word that it represents
+        :param n: int -- number of words to be returned
+        :return: [str] -- words whose PNs were important during FFA application; sorted (descending) by importance
         """
         if len(pn_dic) != self.pn_size:
             print("WARNING: in Fruitfly.important_words_for(): \
@@ -186,66 +213,89 @@ class Fruitfly:
             Continuing with 'wrong' vocabulary")
         important_words = {} # dict of word:count_of_connections
         for i in range(len(word_hash)):
+            # only look at PNs of activated KCs
             if int(word_hash[i]) == 1:
-                activated_pns = self.proj_functions[i] # retrieve transitions of an activated KC
-                for pn in activated_pns: # count which word helped how many times to lead to 'word_hash'
-                    w = pn_dic[pn]  # retrieve word from PN index
+                # retrieve transitions of the activated KC
+                activated_pns = self.proj_functions[i]
+                # and iterate over those PNs
+                for pn in activated_pns:
+                    # retrieve word from PN index
+                    w = pn_dic[pn]
                     if w in important_words:
                         important_words[w]+=1 
                     else:
                         important_words[w]=1
+
+        #TODO this could be changed to return important_words itself to also return a number of importance for a word
         count_ranked = sorted(important_words, key=important_words.get, reverse=True)
         if n is None: 
-            return count_ranked # only print the most important words
+            return count_ranked
         else:
+            # only return the n most important words
             return count_ranked[:n]
-
-
 
 #========== INCREMENTALITY
 
     def extend(self):
-        """ don't extend if there's a limit that has been reached"""
+        """
+        Extends the Fruitfly object's PN layer and connects it to the KC layer by either making
+        new connections to KCs that have not yet reached the limit of connections or, if a KC is
+        "full", by reallocating existing connections from other PNs.
+        The choice of KCs to which the new PN is connected is random, but biased towards less
+        often connected KCs. This ensures an even distribution of the connections coming into the
+        KC layer.
+        The reallocation mechanism chooses connected PNs for the "stealing" of connections with a
+        priority on towards PNs with an above-average number of outgoing connections.
+        This ensures an even distribution of the connections going from the PN layer.
+        """
+        # don't extend if there's a limit.
         if self.max_pn_size is not None and self.pn_size == self.max_pn_size:
-            return None
-        """ add a PN to the fruitfly and connect it"""
+            return
+
+        # add a PN to the Fruitfly and change its parameters accordingly
         self.pn_size+=1
         self.pn_layer = np.append(self.pn_layer, [0])
-        self.kc_factor = self.kc_size/self.pn_size 
-
-        """number of connections from the new PN = avg. PN connectedness"""
+        self.kc_factor = self.kc_size/self.pn_size
+        # number of connections from the new PN = avg. PN connectedness
         new_avg_pn_con = int(sum([len(p) for k,p in self.proj_functions.items()])/self.pn_size)
 
-        """weight KCs with inverse of their respective connectednesses"""
         weighted_kcs = {}
         for cell in self.proj_functions:
+            # weight the KC with the inverse of its connectedness
             weighted_kcs[cell] = 1.0/(1+len(self.proj_functions[cell]))
             weighted_kcs[cell] = weighted_kcs[cell]*np.random.rand()
-        winners = sorted(weighted_kcs, key=weighted_kcs.get, reverse=True)[:new_avg_pn_con] # these connect to the new PN
+        # these winners connect to the new PN
+        winners = sorted(weighted_kcs, key=weighted_kcs.get, reverse=True)[:new_avg_pn_con]
 
-        """fully connected winner KCs experience connection switching"""
-        for kc in winners: # add PN to connections of the winner KCs
-            if len(self.proj_functions[kc]) == self.proj_size: # full KC
+        # add PN to connections of the winner KCs
+        for kc in winners:
+            # fully connected winner KCs experience connection switching
+            if len(self.proj_functions[kc]) == self.proj_size:
                 pn_con = {pn:len(self.pn_to_kc[pn]) for pn in self.proj_functions[kc]}
-                # the most connected PN gets robbed
+                # the most connected of the PNs for this winner KC gets robbed
                 robbed_pn = sorted(pn_con, key=pn_con.get, reverse=True)[0]
                 # replace PN indices in proj_functions
                 self.proj_functions[kc][self.proj_functions[kc].index(robbed_pn)] = self.pn_size-1
                 # update pn_to_kc
-                del self.pn_to_kc[robbed_pn][self.pn_to_kc[robbed_pn].index(kc)] 
-        
-            else: # make new connections
+                del self.pn_to_kc[robbed_pn][self.pn_to_kc[robbed_pn].index(kc)]
+
+            # non-full KCs receive a new connection
+            else:
                 self.proj_functions[kc].append(self.pn_size-1)
 
         self.pn_to_kc.update(self.forward_connections([self.pn_size-1]))
 
     def reduce_pn_layer(self, del_indices, new_pn_size):
         """
-        #TODO complete the documentation
-        :type del_indices: list[int] the positions that are deleted from the count
-        :type new_pn_size: int usually the size of the count matrix (in order to fit the PN layer to the count)
+        When a Fruitfly object is maintained parallelly to a co-occurrence count,
+        that count might be 'pruned' and thus dimensions might be deleted.
+        This method reduces the PN layer by the PNs of those words that are deleted
+        from the co-occurrence count.
+        This entails a change of the mapping of vocabulary to PN layer, of the mappings
+        between PN layer KC layer, and a freeing-up of KC connections.
+        :param del_indices: [int] -- the positions that are deleted from the count
+        :param new_pn_size: int -- usually the size of the count matrix (in order to fit the PN layer to the count)
         """
-
         # make a mapping that represents the shift induced by deleting PNs (important to keep the correct connections)
         old_to_new_i = {}
         newi = 0
@@ -261,6 +311,7 @@ class Fruitfly:
             self.proj_functions[kc] = [old_to_new_i[oldi] for oldi in list(set(pns).difference(set(del_indices)))]
         # update the pn_layer to be of same size as the count matrix
         self.pn_size = new_pn_size
+        # re-size the PN layer
         self.pn_layer = np.zeros(self.pn_size)
         # re-do the forward connections
         self.pn_to_kc = self.forward_connections([i for i in range(self.pn_size)])
