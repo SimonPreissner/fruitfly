@@ -317,66 +317,49 @@ class Fruitfly:
         self.pn_to_kc = self.forward_connections([i for i in range(self.pn_size)])
 
     def fit_space(self, unhashed_space, words_to_i):
-        # if words_to_i hasn't reached initial pn_size yet, the vectors need to be padded to fill out the PN layer
+        """
+        Returns vectors which fit (number of dimensions) to pn_size. This enables the Incrementor
+        to count independently from the Fruitfly. this method also pads dimensions if the vectors
+        are shorter than pn_size.
+        Dimension reduction deletes the words from the vectors which have co-occurred the least
+        often with words in the space. The dimensions of the returned space are sorted alphabetically.
+        :param unhashed_space: {str:[float]} -- words and their corresponding co-occurrence counts
+        :param words_to_i: {str:int} -- mapping of vocabulary to the dimension in the co-occurrence count
+        :return: {str:[int]} -- co-occurrence counts of length pn_size
+        :return: {str:int} -- mapping of vocabulary to PN index (and to the returned vectors)
+        :return: {int:str} -- inverse mapping: PN indices to vocabulary
+        """
+
+        # pad the vectors if they haven't reached pn_size yet (only in early stages)
         if len(words_to_i) < self.pn_size:
-            print("unhashed_space needs to be padded.\nSize of unhashed_space:",len(unhashed_space),"\nSize of PN layer:",self.pn_size) #CLEANUP
+            print("unhashed_space needs to be padded:",len(unhashed_space),"to",self.pn_size,"dimensions.")
             pad_size = self.pn_size - len(words_to_i)
             padded_space = {w:np.append(vec, np.zeros(pad_size)) for w,vec in unhashed_space.items()}
             padded_dic = {w:i+pad_size for w,i in words_to_i.items()}
             padded_ind = {v:k for k,v in padded_dic.items()}
-            #print("Returning padded_space, padded_dic, padded_ind. Sizes:",len(padded_space[padded_space.keys()[0]]), len(padded_dic), len(padded_ind))  # CLEANUP
-            #print("First vector in padded_space:",padded_space[padded_space.keys()[0]])  # CLEANUP
             return padded_space, padded_dic, padded_ind
-        # pn_size grows with len(words_to_i) and is strictly limited by max_pn_size
-        elif self.max_pn_size is None or len(words_to_i)<=self.max_pn_size: # max_pn_size not defined or not yet reached
+
+        # max_pn_size not defined or not yet reached --> fitting not needed
+        elif self.max_pn_size is None or len(words_to_i)<=self.max_pn_size:
             return unhashed_space, words_to_i, {v: k for k, v in words_to_i.items()}
-        # the space needs to be reduced towards pn_size
+
+        # the space has more dimensions than pn_size --> fitting needed
         else:
-            """ extract the most frequent words"""
-            vecsums = np.zeros(len(unhashed_space[list(unhashed_space.keys())[0]])) # initialize with length of a vector
-            #print("size of vecsums:",vecsums.shape) #CLEANUP
+            # extract the most frequent words
+            vecsums = np.zeros(len(unhashed_space[list(unhashed_space.keys())[0]]))
             for w,vec in unhashed_space.items():
                 vecsums += vec
             freq = {w:vecsums[i] for w,i in words_to_i.items()}
-            #print("length of freq:",len(freq)) #CLEANUP
-            #print("freq:",sorted(freq, key = freq.get, reverse=True)[:50]) #CLEANUP
-
-            #for w,i in words_to_i.items(): # sum the dimensions of the vectors #CLEANUP
-            #    for e,vec in
-            #    if w in freq:
-            #        freq[w] += vec[words_to_i[w]]
-            #    else:
-            #        freq[w] += vec[words_to_i[w]]
-            #freq = {w:sum(vec) for w,vec in unhashed_space.items()} #CLEANUP?
-
+            # only keep the most frequent context words
             new_keys = sorted(freq, key=freq.get, reverse=True)[:self.max_pn_size]
-            #print("fit_space() -- length of new_keys: {0}".format(len(new_keys)))#CLEANUP
-            """ delete dimensions of words that are not frequent enough"""
-            fitted_space = {} # {w:vec for w,vec in unhashed_space.items() if w in new_keys} # reduce rows #CLEANUP #
-            #print("fit_space() -- fitted_space number of vectors:",len(fitted_space))#CLEANUP
-
+            fitted_space = {}
             old_dims = [i for w,i in words_to_i.items() if w not in new_keys]
-            #for w,vec in fitted_space.items(): #CLEANUP
             for w,vec in unhashed_space.items():
-                fitted_space[w] = np.delete(vec,old_dims) # reduce columns
-                #print("length of fitted vector of",w,":",len(fitted_space[w])) #CLEANUP
-
-            #unhashed_space = np.delete(unhashed_space, old_dims, 0) # rows #CLEANUP
-            #unhashed_space = np.delete(unhashed_space, old_dims, 1) # columns #CLEANUP
-
-            new_keys.sort() # sort words alphabetically (this sorts the space)
-            new_dic = {k:new_keys.index(k) for k in new_keys} # word:index
-            new_ind = {v:k for k,v in new_dic.items()} # index:word
-            #print("fit_space() -- fitted_space vector length:",len(fitted_space[new_ind[0]]))#CLEANUP
-
-            #print("Number of vectors in unhashed_space:",len(unhashed_space))  # CLEANUP
-            #print("Vector length in unhashed_space:", len(unhashed_space[list(unhashed_space.keys())[0]]))  # CLEANUP
-            #print("Number of vectors in fitted_space:",len(fitted_space))  # CLEANUP
-            #print("Vector length in fitted_space:", len(fitted_space[list(fitted_space.keys())[0]]))  # CLEANUP
-            #print("Length of words_to_i:", len(words_to_i))  # CLEANUP
-            #print("Length of new_dic:",len(new_dic))  # CLEANUP
-            #print("")  # CLEANUP
-            #print("fit_space() -- new_ind: {0} ({1})".format(new_ind, len(new_ind)))#CLEANUP
+                fitted_space[w] = np.delete(vec,old_dims)
+            # sort words alphabetically (this sorts the space)
+            new_keys.sort()
+            new_dic = {k:new_keys.index(k) for k in new_keys}
+            new_ind = {v:k for k,v in new_dic.items()}
 
             return fitted_space, new_dic, new_ind
 
@@ -385,14 +368,17 @@ class Fruitfly:
 
     def flatten(self, frequency_vector):
         """ 
-        make extremely frequent words (especially stopwords) less important 
-        before they hit the projection algorithm
+        Counteracts the Zipfian distribution of words (which leads to very unequal co-occurrence
+        values) by applying log, log2, or log10 to each count of a given vector. The flattening
+        function is specified during initilization of the Fruitfly object.
+        :return: [float] -- 'flattened' vector
         """
         flat_vector = np.zeros(len(frequency_vector))
 
         if self.flattening == "log":
             for i, freq in enumerate(frequency_vector):
-                flat_vector[i] = np.log(1.0+freq) # '1.0+' for values < 1
+                # '1.0+' for co-occurrence values of 0
+                flat_vector[i] = np.log(1.0+freq)
         elif self.flattening == "log2":
             for i, freq in enumerate(frequency_vector):
                 flat_vector[i] = np.log2(1.0+freq)
@@ -404,22 +390,31 @@ class Fruitfly:
         return flat_vector
 
     def projection(self):
-        """ for each KC, sum up the values of the PNs that have a connection to this KC """
+        """
+        For each KC, sum up the values of the PNs that have a connection to this KC. Return the sums
+        ( = activated KC layer).
+        :return: [float] -- activated KC layer
+        """
         kc_layer = np.zeros(self.kc_size)
         for cell in range(self.kc_size):
-            activated_pns = self.proj_functions[cell] # PNs connected to the KC
-            #print("activated PNs for cell",cell,": ",activated_pns) #CLEANUP
+            # PNs connected to this particular KC
+            activated_pns = self.proj_functions[cell]
             for pn in activated_pns:
-                kc_layer[cell]+=self.pn_layer[pn] # sum activation of the PNs for the KC
+                kc_layer[cell]+=self.pn_layer[pn]
         return kc_layer
 
     def hash_kenyon(self):
-        """ choose the most activated KCs, set them to 1 and the rest to 0 """
+        """
+        Choose the most activated KCs, set them to 1 and the rest to 0
+        :return: [int] -- binary array; = hashed vector
+        """
         kc_activations = np.zeros(self.kc_size)
-        top = int(ceil(self.hash_percent * self.kc_size / 100)) # number of winners (highest activation)
+        # number of winners
+        top = int(ceil(self.hash_percent * self.kc_size / 100))
+        # select those KCs with the highest activation
         activated_kcs = np.argpartition(self.kc_layer, -top)[-top:]
         for cell in activated_kcs:
-            kc_activations[cell] = 1 # assign 1 to the winners
+            kc_activations[cell] = 1
         return kc_activations
 
     def fly(self, unhashed_space, words_to_i, timed=False):
@@ -429,17 +424,28 @@ class Fruitfly:
         choosing the most frequent words as dimensions. Afterwards, apply 
         flattening before input, afterwards project, hash, and return the 
         complete hashed space.
+        :param unhashed_space: {str:[int]} -- words and their raw co-ocurrence counts
+        :param words_to_i: {str:int} -- mapping of vocabulary to dimension in the co-occurrence count
+        :param timed: bool -- optionally return the time taken for execution
+        :return: {str:[int]} -- words and their binary hash signatures
+        :return: {str:int} -- mapping of words (from unhashed_space) to indices (of the PN layer)
+        :return: {int:str} -- inverse mapping: PN indices to words of the dimensions used for hashing
+        :return: float -- time taken for execution
         """
         t0 = time.time()
-        # choose most frequent words to hash
-        print("\nStarting flying...")
+        print("Starting flying...")
+        # choose the most frequent words in the count as dimensions for the PN layer
         fitted_space, flight_dic, flight_ind = self.fit_space(unhashed_space, words_to_i)
 
-        space_hashed = {} # a dict of word : binary_vector (= after "flying")
-        for w in tqdm(fitted_space): # iterate through space, word by word
+        space_hashed = {}
+        # hashes count vectors one by one
+        for w in tqdm(fitted_space):
+            # initialize the PN activation for this vector
             self.pn_layer = self.flatten(fitted_space[w])
+            # sum PN activations to obtain the KC activations
             self.kc_layer = self.projection()
-            space_hashed[w] = self.hash_kenyon() # same dimensionality as 'kc_layer'
+            # WTA procedure; hashes have the same dimensionality as kc_layer
+            space_hashed[w] = self.hash_kenyon()
         if timed is True:
             return space_hashed, flight_dic, flight_ind, time.time()-t0
         else:
@@ -447,6 +453,13 @@ class Fruitfly:
 
 
 if __name__ == '__main__':
+    """
+    This working example of the application of the FFA reads in a space (= words and vectors) and evaluates
+    on a given test set by means of Spearman Correlation:
+    it either applies the FFA (one or multiple times) and evaluates the improvement of the hashes over the unhashed
+    space or it evaluates just the input space, without applying the FFA.
+    """
+
     import sys
     import MEN
     import utils
@@ -457,9 +470,10 @@ if __name__ == '__main__':
         try:
             data = spacefiles + ".dm"
             column_labels = spacefiles + ".cols"
-            unhashed_space = utils.readDM(data)  # returns dict of word : word_vector
-            i_to_cols, cols_to_i = utils.readCols(
-                column_labels)  # returns both-ways dicts of the vocabulary (word:pos_in_dict); important for maintenances
+            # returns {word:word_vector}
+            unhashed_space = utils.readDM(data)
+            # returns both-ways dicts of the vocabulary (word:index_in_vector)
+            i_to_cols, cols_to_i = utils.readCols(column_labels)
         except FileNotFoundError as e:
             print("Unable to find files for input space and/or vocabulary.\n\
                    - correct file path?\n\
@@ -469,15 +483,13 @@ if __name__ == '__main__':
         else:
             break
     MEN_annot = utils.loop_input(rtype=str, default=None, msg="Testset to be used: ")
-
     evaluate_mode = True if input("Only evaluate the space (without flying)? [y/n] ").upper() == "Y" else False
-
     if evaluate_mode is False:
         # Fruitfly parameters
         flattening = utils.loop_input(rtype=str, default="log",
                                       msg="Choose flattening function ([log, log2, log10] -- default: log): ")
         # pn_size is dictated by the size of the unhashed space
-        pn_size = len(cols_to_i)  # length of word vector (= input dimension)
+        pn_size = len(cols_to_i)
         print("Number of PNs:", pn_size)
         kc_size = utils.loop_input(rtype=int, default=10000, msg="Number of KCs (default: 10000): ")
         proj_size = utils.loop_input(rtype=int, default=6, msg="Number of projections per KC (default: 6): ")
@@ -502,7 +514,8 @@ if __name__ == '__main__':
 
         # initiating and applying a Fruitfly object
         fruitfly = Fruitfly.from_scratch(pn_size, kc_size, proj_size, hash_percent, flattening)
-        space_hashed, space_dic, space_ind = fruitfly.fly(unhashed_space, cols_to_i)  # returns {word:hash_signature}
+        # this is where the magic happens
+        space_hashed, space_dic, space_ind = fruitfly.fly(unhashed_space, cols_to_i)
 
         if verbose:
             for w in space_hashed:
@@ -523,7 +536,6 @@ if __name__ == '__main__':
 
     if iterations > 1:
         best = sorted(all_spd, reverse=True)
-
         print("\nFinished all", iterations, "runs. Summary:")
         print("best and worst runs:", [round(e, 4) for e in best[:3]].extend([round(e, 4) for e in best[:-3]]))
         print("mean Sp. before:    ", round(np.average(all_spb), 4))
@@ -536,41 +548,3 @@ if __name__ == '__main__':
         print("std of Sp. after:      ", round(float(np.std(all_spa, ddof=1), 8)))
         print("std of Sp. difference: ", round(float(np.std(all_spd, ddof=1), 8)))
 
-    #CLEANUP
-    """
-    data = 
-        "data/BNC-MEN.dm"
-        "data/wiki_all.dm"
-        "data/wiki_abs-freq.dm"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_100m_w2v_400.txt"
-        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_w2v_400.txt"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.dm"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.dm"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.dm"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.dm"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.dm"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.dm"
-        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_1000_dim.dm"
-        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_5000_dim.dm"
-    
-    column_labels = 
-        "data/BNC-MEN.cols"
-        "data/wiki_all.cols"
-        "data/wiki_abs-freq.cols"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac.w2v.400.vocab"
-        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_w2v_400.vocab"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_MEN-checked.cols"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_1k_GS-checked.cols"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_MEN-checked.cols"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_5k_GS-checked.cols"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_MEN-checked.cols"
-        "/home/simon.preissner/FFP/ukwac_100m/ukwac_10k_GS-checked.cols"
-        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_1000_dim.cols"
-        "/home/simon.preissner/FFP/fruitfly/incrementality_sandbox/data/sandbox_5000_dim.cols"
-    
-    MEN_annot = 
-        "data/MEN_dataset_natural_form_full"
-        "data/MEN_dataset_lemma_form_full"
-        "incrementality_sandbox/data/sandbox_MEN_pairs"
-    
-    """
