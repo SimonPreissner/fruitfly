@@ -226,7 +226,7 @@ class Fruitfly:
                     else:
                         important_words[w]=1
 
-        #TODO this could be changed to return important_words itself to also return a number of importance for a word
+        #TODO this could be changed to return important_words itself to also return a value of importance for a word
         count_ranked = sorted(important_words, key=important_words.get, reverse=True)
         if n is None: 
             return count_ranked
