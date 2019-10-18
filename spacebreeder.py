@@ -95,7 +95,8 @@ def setup_loop_environment():
     Compiles a list of file paths of the resource files.
     Instantiates and logs an initial Fruitfly object.
     Instantiates the Incrementor object (without text resources)
-    Returns the list of file paths and the Incrementor object.
+    :return: [str] -- list of file paths
+    :return: Incrementor -- main component of the script
     """
     # Make a list of file paths to be passed one by one to an Incrementor object
     try:
