@@ -124,7 +124,7 @@ class Incrementor:
 
             for file in filepaths:
                 try:
-                    if verbose: print("reading text from ",file,"...", end=" ")
+                    if verbose: print("reading text from ",file,"...")
                     with open(file) as f:
                         for line in f:
                             lc += 1
