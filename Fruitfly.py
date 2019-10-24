@@ -44,7 +44,7 @@ class Fruitfly:
         self.kc_layer = np.zeros(self.kc_size)
 
         # arrays of PNs that are connected to any one KC 
-        self.proj_functions = old_proj if old_proj is not None else self.create_projections
+        self.proj_functions = old_proj if old_proj is not None else self.create_projections()
         self.pn_to_kc = self.forward_connections([i for i in range(self.pn_size)])
 
     @classmethod
