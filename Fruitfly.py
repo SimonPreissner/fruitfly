@@ -159,7 +159,7 @@ class Fruitfly:
                     "kc_factor\t"   + str(self.kc_factor)+"\n"+\
                     "kc_size\t"     + str(self.kc_size)+"\n"+\
                     "proj_size\t"   + str(self.proj_size)+"\n"+\
-                    "hash-perc\t"   + str(self.hash_percent)+"\n"+ \
+                    "hash_perc\t"   + str(self.hash_percent)+"\n"+ \
                     "flattening\t"  + str(self.flattening) + "\n" + \
                     "max_pn_size\t" + str(self.max_pn_size)
         return statement
