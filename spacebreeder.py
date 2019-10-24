@@ -109,7 +109,7 @@ def setup_loop_environment():
         # Create the initial FFA beforehand because Incrementor can't do custom FFA initialization
         initial_fly_file = fly_dir + "fly_run_0.cfg"
         first_fly = Fruitfly.from_scratch(pn_size=pns, kc_size=kcs, proj_size=con,
-                                          hash_percent=red, max_pn_size=max_pns, flattening=flat, )
+                                          hash_percent=red, max_pn_size=max_pns, flattening=flat)
         first_fly.log_params(filename=initial_fly_file, timestamp=False)
         """
         The constructor of Incrementor 
