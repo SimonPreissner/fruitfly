@@ -451,7 +451,7 @@ if __name__ == '__main__':
             if verbose: print("End of run " + str(run) + ".\n\n")
 
     log_final_summary(performance_summary)
-    print("Finished all runs. Total time taken:",time.time()-runtime_zero,"\ndone.")
+    print("Total time taken:",round((time.time()-runtime_zero)/60, 2),"minutes.\ndone.")
 
 
 
